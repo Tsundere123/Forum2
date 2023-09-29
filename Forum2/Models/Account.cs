@@ -11,5 +11,5 @@ public class Account
     public string? AccountAvatar { get; set; }
     public int? AccountRoleType { get; set; }
     //Navigation Property
-    public virtual List<AccountRoles>? AccountRolesList { get; set; }
+    // public virtual List<AccountRoles>? AccountRolesList { get; set; }
 }

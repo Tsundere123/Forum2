@@ -9,5 +9,5 @@ public class AccountRoles
     public string RoleName { get; set; } = string.Empty;
     public string RoleDescription { get; set; } = string.Empty;
     //Navigation Property
-    public virtual Account Account { get; set; } = default!;
+    // public virtual Account Account { get; set; } = default!;
 }
