@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Account>
+
+<div class="container">
+    <table class='table table-striped'>
+        <tr><th>Id</th><th>Name</th><th>Password</th><th>Role</th><th>Avatar</th><th>Actions</th></tr>
+        @foreach (var account in Model)
+        {
+            <tr>
+                <td>@account.AccountId</td>
+                <td>                            
+                    <a asp-controller="Account"
+                       asp-action="Details"
+                       asp-route-accountId="@account.AccountId">@account.AccountName</a>
+                </td>
+                <td>@account.AccountPassword</td>
+                <td>@account.AccountRoleType</td>
+                <td><img src="@account.AccountAvatar" width="100px" height="100px"></td>
+                <td>
+                    <a asp-controller="Account" asp-action="UpdateSelectedAccount" asp-route-accountId="@account.AccountId">Update</a>
+                    <a asp-controller="Account" asp-action="DeleteSelectedAccount" asp-route-accountId="@account.AccountId">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <p>
+        <a class="btn btn-secondary"
+           asp-controller="Account"
+           asp-action="CreateNewAccount">Create new account</a>
+    </p>
+</div>

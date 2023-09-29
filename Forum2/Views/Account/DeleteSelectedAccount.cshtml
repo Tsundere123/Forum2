@@ -1,0 +1,28 @@
+﻿@model Account
+
+<h2>Delete account "@Model.AccountName"</h2>
+
+<h3>Are you sure you want to delete account "@Model.AccountName"?</h3>
+<div>
+    <h4>Account</h4>
+    <hr/>
+    <dl class="row">
+        <dt class="col-sm-2">Account Id</dt>
+        <dd class="col-sm-10">@Model.AccountId</dd>
+        
+        <dt class="col-sm-2">Account Name</dt>
+        <dd class="col-sm-10">@Model.AccountName</dd>
+        
+        <dt class="col-sm-2">Account Password</dt>
+        <dd class="col-sm-10">@Model.AccountPassword</dd>
+        
+        <dt class="col-sm-2">Account Avatar</dt>
+        <dd class="col-sm-10">@Model.AccountAvatar</dd>
+        
+    </dl>
+    
+    <form asp-controller="Account" asp-action="ConfirmDeletedSelectedAccount" asp-route-accountId="@Model.AccountId" method="post">
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-controller="Account" asp-action="Table" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

@@ -1,0 +1,20 @@
+﻿@model Account
+
+<div class="col">
+    <div>
+        <img src="@Model.AccountAvatar" class="card-img-top" alt="@Model.AccountName">
+        <div>
+            <div class="d-flex justify-content-between mt-2">
+                <h5 class="text-start">
+                            
+                    <a asp-controller="Account"
+                       asp-action="Details"
+                       asp-route-accountId="@Model.AccountId">@Model.AccountName</a>
+                </h5>
+                <h5 class="text-nowrap">
+                    Password: @Model.AccountPassword
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
