@@ -15,6 +15,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\stran\RiderProjects\Forum2\Forum2
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/stran/RiderProjects/Forum2/Forum2/Views/AccountRole/Table.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFJvbGVcVGFibGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/stran/RiderProjects/Forum2/Forum2/Views/Account/CreateNewAccount.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxDcmVhdGVOZXdBY2NvdW50LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -53,6 +57,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/stran/RiderProjects/Forum2/Forum2/Views/Shared/_accountCard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9hY2NvdW50Q2FyZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/stran/RiderProjects/Forum2/Forum2/Views/Shared/_AccountRolesTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BY2NvdW50Um9sZXNUYWJsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/stran/RiderProjects/Forum2/Forum2/Views/Shared/_accountTable.cshtml]

@@ -1,0 +1,19 @@
+﻿@model IEnumerable<AccountRoles>
+
+<div class="container">
+    <table class="table table-striped">
+        <tr>
+            <th>Role ID</th>
+            <th>Role Name</th>
+            <th>Role Description</th>
+        </tr>
+        @foreach (var accountRole in Model)
+        {
+            <tr>
+                <td>@accountRole.RoleId</td>
+                <td>@accountRole.RoleName</td>
+                <td>@accountRole.RoleDescription</td>
+            </tr>
+        }
+    </table>
+</div>
