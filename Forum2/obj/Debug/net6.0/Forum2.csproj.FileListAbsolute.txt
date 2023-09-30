@@ -75,3 +75,7 @@ C:\Users\stran\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Mono.TextTemplating.
 C:\Users\stran\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\System.CodeDom.dll
 C:\Users\stran\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Castle.Core.dll
 C:\Users\stran\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Proxies.dll
+C:\Users\stran\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\stran\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\stran\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\stran\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

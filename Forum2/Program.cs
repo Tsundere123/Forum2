@@ -22,6 +22,12 @@ var app = builder.Build();
 
 // app.MapDefaultControllerRoute();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    InitDb.Seed(app);
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

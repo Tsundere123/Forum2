@@ -10,4 +10,5 @@ public class AccountRoles
     public string RoleDescription { get; set; } = string.Empty;
     //Navigation Property
     // public virtual Account Account { get; set; } = default!;
+    public virtual ICollection<Account>? Accounts { get; set; }
 }

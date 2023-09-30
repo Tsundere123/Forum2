@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Forum2.Models;
 
 public class Account
@@ -9,7 +11,9 @@ public class Account
     [Required]
     public string AccountPassword { get; set; } = string.Empty;
     public string? AccountAvatar { get; set; }
-    public int? AccountRoleType { get; set; }
+    [ForeignKey("AccountRoles")]
+    public int? RoleId { get; set; }
     //Navigation Property
-    // public virtual List<AccountRoles>? AccountRolesList { get; set; }
+    // public virtual ICollection<AccountRoles>? AccountRolesList { get; set; }
+    public virtual AccountRoles? AccountRoles { get; set; }
 }
