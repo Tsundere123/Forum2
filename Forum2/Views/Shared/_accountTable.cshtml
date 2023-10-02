@@ -13,7 +13,8 @@
                        asp-route-accountId="@account.AccountId">@account.AccountName</a>
                 </td>
                 <td>@account.AccountPassword</td>
-                <td>@account.RoleId</td>
+                <td>@account.RoleId
+                    @account.AccountRoles.RoleName</td>
                 <td><img src="@account.AccountAvatar" width="100px" height="100px"></td>
                 <td>
                     <a asp-controller="Account" asp-action="UpdateSelectedAccount" asp-route-accountId="@account.AccountId">Update</a>
