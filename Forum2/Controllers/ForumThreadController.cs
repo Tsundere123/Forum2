@@ -7,16 +7,16 @@ namespace Forum2.Controllers;
 
 public class ForumThreadController : Controller
 {
-    private readonly AccountDbContext _accountDbContext;
+    private readonly ForumDbContext _forumDbContext;
 
-    public ForumThreadController(AccountDbContext accountDbContext)
+    public ForumThreadController(ForumDbContext forumDbContext)
     {
-        _accountDbContext = accountDbContext;
+        _forumDbContext = forumDbContext;
     }
     public async Task<IActionResult> ForumThreadTable()
     {
-        List<Account> accounts = await _accountDbContext.Accounts.ToListAsync();
-        var forumListViewModel = new AccountListViewModel(accounts, "Table");
+        List<ForumThread> forumThreads = await _forumDbContext.ForumThread.ToListAsync();
+        var forumListViewModel = new ForumListViewModel(forumThreads, "ForumThreadTable");
         return View(forumListViewModel);
     }
 }

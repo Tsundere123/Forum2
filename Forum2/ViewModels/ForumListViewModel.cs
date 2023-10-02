@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using Forum2.Models;
 
-namespace Forum2.ViewModels;
-
-public class ForumListViewModel
+namespace Forum2.ViewModels
 {
-    public IEnumerable<Account> Accounts;
-    public string? CurrentViewName;
-
-    public ForumListViewModel(IEnumerable<Account> accounts, string? currentViewName)
+    public class ForumListViewModel
     {
-        Accounts = accounts;
-        CurrentViewName = currentViewName;
+        public IEnumerable<ForumThread> ForumThreads;
+        public string? CurrentViewName;
+
+        public ForumListViewModel(IEnumerable<ForumThread> forumThreads, string? currentViewName)
+        {
+            ForumThreads = forumThreads;
+            CurrentViewName = currentViewName;
+        }
     }
 }

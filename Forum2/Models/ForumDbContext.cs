@@ -4,20 +4,20 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Forum2.Models;
 
-public class AccountDbContext : DbContext
+public class ForumDbContext : DbContext
 {
-    public AccountDbContext(DbContextOptions<AccountDbContext> options) : base(options)
+    public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
     {
         // Database.EnsureCreated();
     }
-    public DbSet<Account> Accounts { get; set; }
-    public DbSet<AccountRoles> AccountRoles { get; set; }
+    public DbSet<ForumCategory> ForumCategory { get; set; }
+    public DbSet<ForumThread> ForumThread { get; set; }
 
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseLazyLoadingProxies();
-    }
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    // {
+    //     optionsBuilder.UseLazyLoadingProxies();
+    // }
     // protected override void OnModelCreating(ModelBuilder modelBuilder)
     // {
     //     modelBuilder.Entity<Account>()

@@ -1,4 +1,6 @@
-﻿@model IEnumerable<ForumThread>
+﻿@model ForumListViewModel
 <h1>List of forum threads</h1>
-
-<partial name="_ForumThreadList" model="Model" />
+<div class="container">
+<h1>List of Accounts (@ViewBag.CurrentViewName View)</h1>
+<partial name="_ForumThreadList" model="Model.ForumThreads" />
+</div>

@@ -17,6 +17,11 @@ builder.Services.AddDbContext<AccountDbContext>(options =>
     options.UseSqlite(
         builder.Configuration["ConnectionStrings:AccountDbContextConnection"]);
 });
+builder.Services.AddDbContext<ForumDbContext>(options =>
+{
+    options.UseSqlite(
+        builder.Configuration["ConnectionStrings:ForumDbContextConnection"]);
+});
 
 var app = builder.Build();
 
@@ -46,5 +51,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
 
 app.Run();

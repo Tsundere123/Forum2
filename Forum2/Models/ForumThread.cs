@@ -12,10 +12,13 @@ public class ForumThread
     [Required]
     [ForeignKey("ForumCategoryId")]
     public int ForumCategoryId { get; set; }
-    [ForeignKey("AccountId")]
-    public int AccountId { get; set; }
-    //Navigation Property
-    public virtual Account Account { get; set; }
-    //Navigation Property
-    public virtual ForumCategory ForumCategory { get; set; }
+    // [Required]
+    // [ForeignKey("AccountId")]
+    // public int AccountId { get; set; }
+    
+    // //Navigation Property
+    // public virtual Account? Account { get; set; }
+    
+    // //Navigation Property
+    public virtual ForumCategory? ForumCategory { get; set; }
 }
