@@ -1,0 +1,19 @@
+﻿@model IEnumerable<ForumCategory>
+
+<div class="container">
+    <table class="table table-striped">
+        <tr>
+            <th>Category ID</th>
+            <th>Category Name</th>
+            <th>Category Description</th>
+        </tr>
+        @foreach (var forumThread in Model)
+        {
+            <tr>
+                <td>@forumThread.ForumCategoryId</td>
+                <td>@forumThread.ForumCategoryName</td>
+                <td>@forumThread.ForumCategoryDescription</td>
+            </tr>
+        }
+    </table>
+</div>
