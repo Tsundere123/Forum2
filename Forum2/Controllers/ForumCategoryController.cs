@@ -19,7 +19,8 @@ public class ForumCategoryController : Controller
     public async Task<IActionResult> ForumCategoryTable()
     {
         List<ForumCategory> forumCategories = await _forumDbContext.ForumCategory.ToListAsync();
-        var forumCategoriesListViewModel = new ForumCategoryViewModel(forumCategories, "ForumCategoryTable");
+        List<ForumThread> forumThreads = await _forumDbContext.ForumThread.ToListAsync();
+        var forumCategoriesListViewModel = new ForumCategoryViewModel(forumCategories, forumThreads,"ForumCategoryTable");
         return View(forumCategoriesListViewModel);
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ForumThread>
+﻿@model Forum2.ViewModels.ForumListViewModel
 
 <div class="container">
     <table class="table table-striped">
@@ -10,16 +10,38 @@
             @* <th>OP Account ID</th> *@
             @* <th>OP Name</th> *@
         </tr>
-        @foreach (var forumThread in Model)
+        @* @foreach (var forumThread in Model) *@
+        @* { *@
+        @*     <tr> *@
+        @*         <td>@forumThread.ForumCategoryId</td> *@
+        @*         <td>@forumThread.ForumCategory?.ForumCategoryName/</td> *@
+        @*         <td>@forumThread.ForumThreadId</td> *@
+        @*         <td>@forumThread.ForumThreadTitle</td> *@
+        @*         $1$ <td>@forumThread.AccountId</td> #1# *@
+        @*         $1$ <td>@forumThread.Account.AccountName</td> #1# *@
+        @*     </tr> *@
+        @* } *@
+        
+        @foreach (var forumThread in Model.ForumThreads)
         {
-            <tr>
+            <tr>@{ var categoryId = @forumThread.ForumCategoryId;}
                 <td>@forumThread.ForumCategoryId</td>
-                <td>@forumThread.ForumCategory?.ForumCategoryName</td>
+                <td>
+                    @foreach (var forumCategory in Model.ForumCategories)
+                    {
+                        if (categoryId == forumCategory.ForumCategoryId)
+                        {
+                            @forumCategory.ForumCategoryName
+                        }
+                    }
+                </td>
                 <td>@forumThread.ForumThreadId</td>
                 <td>@forumThread.ForumThreadTitle</td>
                 @* <td>@forumThread.AccountId</td> *@
                 @* <td>@forumThread.Account.AccountName</td> *@
             </tr>
         }
+        
+        
     </table>
 </div>
