@@ -2,24 +2,30 @@
 using Forum2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Forum2.DAL;
 
 namespace Forum2.Controllers;
 
 public class ForumThreadController : Controller
 {
-    private readonly ForumDbContext _forumDbContext;
-    private readonly AccountDbContext _accountDbContext;
+    private readonly IAccountRepository _accountRepository;
+    private readonly IAccountRoleRepository _accountRoleRepository;
+    private readonly IForumCategoryRepository _forumCategoryRepository;
+    private readonly IForumThreadRepository _forumThreadRepository;
+    
 
-    public ForumThreadController(ForumDbContext forumDbContext, AccountDbContext accountDbContext)
+    public ForumThreadController(IAccountRepository accountRepository, IAccountRoleRepository accountRoleRepository, IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository)
     {
-        _forumDbContext = forumDbContext;
-        _accountDbContext = accountDbContext;
+        _forumCategoryRepository = forumCategoryRepository;
+        _forumThreadRepository = forumThreadRepository;
+        _accountRoleRepository = accountRoleRepository;
+        _accountRepository = accountRepository;
     }
     public async Task<IActionResult> ForumThreadTable()
     {
-        List<ForumThread> forumThreads = await _forumDbContext.ForumThread.ToListAsync();
-        List<ForumCategory> forumCategories = await _forumDbContext.ForumCategory.ToListAsync();
-        List<Account> accounts = await _accountDbContext.Accounts.ToListAsync();
+        var forumThreads = await _forumThreadRepository.GetAll();
+        var forumCategories = await _forumCategoryRepository.GetAll();
+        var accounts = await _accountRepository.GetAll();
         var forumListViewModel = new ForumListViewModel(forumCategories,forumThreads,accounts);
         return View(forumListViewModel);
     }

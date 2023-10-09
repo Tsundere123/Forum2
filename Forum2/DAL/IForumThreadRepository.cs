@@ -1,6 +1,12 @@
-﻿namespace Forum2.DAL;
+﻿using Forum2.Models;
 
-public class IForumThreadRepository
+namespace Forum2.DAL;
+
+public interface IForumThreadRepository
 {
-    
+    Task<IEnumerable<ForumThread>> GetAll();
+    Task<ForumThread?> GetForumThreadById(int id);
+    Task CreateNewForumThread(ForumThread forumThread);
+    Task UpdateForumThread(ForumThread forumThread);
+    Task<bool> DeleteForumThread(int id);
 }
