@@ -13,11 +13,7 @@ public class AccountController : Controller
     {
         _accountDbContext = accountDbContext;
     }
-
-    public List<Account> AccountConsole()
-    {
-        return _accountDbContext.Accounts.ToList();
-    }
+    
     public async Task<IActionResult> Table()
     {
         List<Account> accounts = await _accountDbContext.Accounts.ToListAsync();
