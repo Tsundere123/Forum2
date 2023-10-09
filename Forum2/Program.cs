@@ -1,3 +1,4 @@
+using Forum2.DAL;
 using Microsoft.EntityFrameworkCore;
 using Forum2.Models;
 
@@ -22,6 +23,8 @@ builder.Services.AddDbContext<ForumDbContext>(options =>
     options.UseSqlite(
         builder.Configuration["ConnectionStrings:ForumDbContextConnection"]);
 });
+
+builder.Services.AddScoped<Forum2.DAL.IAccountRepository, AccountRepository>();
 
 var app = builder.Build();
 
