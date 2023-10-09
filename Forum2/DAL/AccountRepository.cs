@@ -19,7 +19,7 @@ public class AccountRepository : IAccountRepository
 
     public async Task<Account?> GetAccountById(int id)
     {
-        return await _db.Accounts.FindAsync();
+        return await _db.Accounts.FindAsync(id);
     }
 
     public async Task Create(Account account)
