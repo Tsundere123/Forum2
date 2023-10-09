@@ -25,6 +25,7 @@ builder.Services.AddDbContext<ForumDbContext>(options =>
 });
 
 builder.Services.AddScoped<Forum2.DAL.IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<Forum2.DAL.IAccountRoleRepository, AccountRoleRepository>();
 
 var app = builder.Build();
 

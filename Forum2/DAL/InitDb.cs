@@ -11,14 +11,14 @@ public class InitDb
 
         if (!context.AccountRoles.Any())
         {
-            var accountRoles = new List<AccountRoles>()
+            var accountRoles = new List<AccountRole>()
             {
-                new AccountRoles
+                new AccountRole
                 {
                   RoleName  = "Administrator",
                   RoleDescription = "Administrates the forum"
                 },
-                new AccountRoles
+                new AccountRole
                 {
                     RoleName = "Moderator",
                     RoleDescription = "Moderates the forum"
