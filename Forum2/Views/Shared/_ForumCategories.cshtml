@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ForumCategory>
+﻿@model Forum2.ViewModels.ForumCategoryViewModel
 
 <div class="container">
     <table class="table table-striped">
@@ -7,7 +7,7 @@
             <th>Category Name</th>
             <th>Category Description</th>
         </tr>
-        @foreach (var forumThread in Model)
+        @foreach (var forumThread in Model.ForumCategories)
         {
             <tr>
                 <td>@forumThread.ForumCategoryId</td>
