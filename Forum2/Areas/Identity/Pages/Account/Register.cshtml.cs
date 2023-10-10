@@ -11,6 +11,7 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using Forum2.Models;
+using Humanizer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -103,6 +104,11 @@ namespace Forum2.Areas.Identity.Pages.Account
             [DataType(DataType.Text)]
             [Display(Name = "Display Name")]
             public string DisplayName { get; set; }
+            
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Avatar URL")]
+            public string AvatarUrl { get; set; }
         }
 
 
@@ -120,6 +126,7 @@ namespace Forum2.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
                 user.DisplayName = Input.DisplayName;
+                user.AvatarUrl = Input.AvatarUrl;
                 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
