@@ -28,7 +28,7 @@
         }
     </table>
     <div>
-        <h2>Currenttly logged in user</h2>
+        <h2>Currently logged in user</h2>
         @UserManager.GetUserAsync(User).Result.DisplayName
         <img src="@UserManager.GetUserAsync(User).Result.AvatarUrl" width="100px" height="100px">
         
