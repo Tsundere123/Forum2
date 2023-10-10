@@ -1,9 +1,14 @@
 using Forum2.DAL;
 using Microsoft.EntityFrameworkCore;
 using Forum2.Models;
+using Microsoft.AspNetCore.Identity;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetConnectionString("AccountDbContextConnection") ??
+                       throw new InvalidOperationException("Connection string 'AccountDbContextConnection' not found");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -29,6 +34,10 @@ builder.Services.AddScoped<Forum2.DAL.IAccountRoleRepository, AccountRoleReposit
 builder.Services.AddScoped<Forum2.DAL.IForumCategoryRepository, ForumCategoryRepository>();
 builder.Services.AddScoped<Forum2.DAL.IForumThreadRepository, ForumThreadRepository>();
 
+builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<AccountDbContext>();
+builder.Services.AddRazorPages();
+builder.Services.AddSession();
+
 var app = builder.Build();
 
 // app.MapDefaultControllerRoute();
@@ -38,6 +47,8 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
     InitDb.Seed(app);
 }
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -52,8 +63,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+
+
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
