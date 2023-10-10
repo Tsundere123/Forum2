@@ -1,10 +1,11 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Forum2.Models;
 
-public class AccountDbContext : DbContext
+public class AccountDbContext : IdentityDbContext
 {
     public AccountDbContext(DbContextOptions<AccountDbContext> options) : base(options)
     {

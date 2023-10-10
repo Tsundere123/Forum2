@@ -6,7 +6,7 @@ public class InitDb
     {
         using var serviceScope = app.ApplicationServices.CreateScope();
         AccountDbContext context = serviceScope.ServiceProvider.GetRequiredService<AccountDbContext>();
-        context.Database.EnsureDeleted();
+        // context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
 
         if (!context.AccountRoles.Any())

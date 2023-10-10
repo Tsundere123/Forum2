@@ -165,3 +165,11 @@ C:\Users\Strangers123\RiderProjects\Forum2\Forum2\obj\Debug\net6.0\refint\Forum2
 C:\Users\Strangers123\RiderProjects\Forum2\Forum2\obj\Debug\net6.0\Forum2.pdb
 C:\Users\Strangers123\RiderProjects\Forum2\Forum2\obj\Debug\net6.0\Forum2.genruntimeconfig.cache
 C:\Users\Strangers123\RiderProjects\Forum2\Forum2\obj\Debug\net6.0\ref\Forum2.dll
+C:\Users\Strangers123\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\Strangers123\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Strangers123\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Strangers123\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.UI.dll
+C:\Users\Strangers123\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Microsoft.Extensions.FileProviders.Embedded.dll
+C:\Users\Strangers123\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\Strangers123\RiderProjects\Forum2\Forum2\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\Strangers123\RiderProjects\Forum2\Forum2\obj\Debug\net6.0\Forum2.MvcApplicationPartsAssemblyInfo.cs
