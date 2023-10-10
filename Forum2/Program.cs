@@ -1,3 +1,4 @@
+using Forum2.DAL;
 using Microsoft.EntityFrameworkCore;
 using Forum2.Models;
 
@@ -17,6 +18,16 @@ builder.Services.AddDbContext<AccountDbContext>(options =>
     options.UseSqlite(
         builder.Configuration["ConnectionStrings:AccountDbContextConnection"]);
 });
+builder.Services.AddDbContext<ForumDbContext>(options =>
+{
+    options.UseSqlite(
+        builder.Configuration["ConnectionStrings:ForumDbContextConnection"]);
+});
+
+builder.Services.AddScoped<Forum2.DAL.IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<Forum2.DAL.IAccountRoleRepository, AccountRoleRepository>();
+builder.Services.AddScoped<Forum2.DAL.IForumCategoryRepository, ForumCategoryRepository>();
+builder.Services.AddScoped<Forum2.DAL.IForumThreadRepository, ForumThreadRepository>();
 
 var app = builder.Build();
 
@@ -46,5 +57,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
 
 app.Run();

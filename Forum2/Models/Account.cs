@@ -15,5 +15,5 @@ public class Account
     public int? RoleId { get; set; }
     //Navigation Property
     // public virtual ICollection<AccountRoles>? AccountRolesList { get; set; }
-    public virtual AccountRoles? AccountRoles { get; set; }
+    public virtual AccountRole? AccountRoles { get; set; }
 }

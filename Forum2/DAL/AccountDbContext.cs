@@ -8,10 +8,10 @@ public class AccountDbContext : DbContext
 {
     public AccountDbContext(DbContextOptions<AccountDbContext> options) : base(options)
     {
-        Database.EnsureCreated();
+        // Database.EnsureCreated();
     }
     public DbSet<Account> Accounts { get; set; }
-    public DbSet<AccountRoles> AccountRoles { get; set; }
+    public DbSet<AccountRole> AccountRoles { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -2,7 +2,7 @@
 
 namespace Forum2.Models;
 
-public class AccountRoles
+public class AccountRole
 {
     [Key]
     public int RoleId { get; set; }
