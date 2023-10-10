@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Account>
+﻿@model IEnumerable<ApplicationUser>
 
 <div class="container">
     <table class='table table-striped'>
@@ -6,19 +6,19 @@
         @foreach (var account in Model)
         {
             <tr>
-                <td>@account.AccountId</td>
+                <td>@account.Id</td>
                 <td>                            
                     <a asp-controller="Account"
                        asp-action="Details"
-                       asp-route-accountId="@account.AccountId">@account.AccountName</a>
+                       asp-route-accountId="@account.Id">@account.DisplayName</a>
                 </td>
-                <td>@account.AccountPassword</td>
-                <td>@account.RoleId
-                    @account.AccountRoles?.RoleName</td>
-                <td><img src="@account.AccountAvatar" width="100px" height="100px"></td>
+                <td>@account.PasswordHash</td>
+                @* <td>@account.RoleId *@
+                @*     @account.AccountRoles?.RoleName</td> *@
+                <td><img src="@account.AvatarUrl" width="100px" height="100px"></td>
                 <td>
-                    <a asp-controller="Account" asp-action="UpdateSelectedAccount" asp-route-accountId="@account.AccountId">Update</a>
-                    <a asp-controller="Account" asp-action="DeleteSelectedAccount" asp-route-accountId="@account.AccountId">Delete</a>
+                    <a asp-controller="Account" asp-action="UpdateSelectedAccount" asp-route-accountId="@account.Id">Update</a>
+                    <a asp-controller="Account" asp-action="DeleteSelectedAccount" asp-route-accountId="@account.Id">Delete</a>
                 </td>
             </tr>
         }

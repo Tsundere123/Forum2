@@ -10,10 +10,10 @@ namespace Forum2.ViewModels
         public IEnumerable<ForumThread> ForumThreads;
         public IEnumerable<ForumCategory> ForumCategories;
 
-        public IEnumerable<Account> Accounts;
+        public IEnumerable<ApplicationUser> Accounts;
         // public string? CurrentViewName;
 
-        public ForumListViewModel(IEnumerable<ForumCategory> forumCategories,IEnumerable<ForumThread> forumThreads, IEnumerable<Account> accounts)
+        public ForumListViewModel(IEnumerable<ForumCategory> forumCategories,IEnumerable<ForumThread> forumThreads, IEnumerable<ApplicationUser> accounts)
         {
             ForumCategories = forumCategories;
             ForumThreads = forumThreads;

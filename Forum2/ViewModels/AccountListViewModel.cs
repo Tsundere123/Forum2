@@ -6,10 +6,10 @@ namespace Forum2.ViewModels
 {
     public class AccountListViewModel
     {
-        public IEnumerable<Account> Accounts;
+        public IEnumerable<ApplicationUser> Accounts;
         public string? CurrentViewName;
 
-        public AccountListViewModel(IEnumerable<Account> accounts, string? currentViewName)
+        public AccountListViewModel(IEnumerable<ApplicationUser> accounts, string? currentViewName)
         {
             Accounts = accounts;
             CurrentViewName = currentViewName;
