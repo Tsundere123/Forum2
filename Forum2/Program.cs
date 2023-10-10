@@ -34,7 +34,7 @@ builder.Services.AddScoped<Forum2.DAL.IAccountRoleRepository, AccountRoleReposit
 builder.Services.AddScoped<Forum2.DAL.IForumCategoryRepository, ForumCategoryRepository>();
 builder.Services.AddScoped<Forum2.DAL.IForumThreadRepository, ForumThreadRepository>();
 
-builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<AccountDbContext>();
+builder.Services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<AccountDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
