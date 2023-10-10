@@ -25,14 +25,15 @@ public class AccountController : Controller
     }
     public async Task<IActionResult> Grid()
     {
-        var accounts = await _accountRepository.GetAll();
+        var accounts = await _userManager.Users.ToListAsync();
         var accountListviewModel = new AccountListViewModel(accounts, "Grid");
         return View(accountListviewModel);
     }
 
-    public async Task<IActionResult> Details(int accountId)
+    public async Task<IActionResult> Details(string? accountId)
     {
-        var account = await _accountRepository.GetAccountById(accountId);
+        var account = await _userManager.FindByIdAsync(accountId);
+        // var account = await _accountRepository.GetAccountById(accountId);
         if (account == null) return BadRequest("Account not found");
         return View(account);
     }
@@ -88,6 +89,11 @@ public class AccountController : Controller
         await _accountRepository.Delete(accountId);
         return RedirectToAction(nameof(Table));
     }
+    private Task<ApplicationUser> GetCurrentUserAsync()
+    {
+        return _userManager.GetUserAsync(HttpContext.User);
+    }
+    
     // public IActionResult Table()
     // {
     //     var accounts = GetAccounts();

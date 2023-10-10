@@ -1,14 +1,14 @@
-﻿@model Account
+﻿@model ApplicationUser
 
 <h3 class="my-5">
-    @Model.AccountName
+    @Model.DisplayName
 </h3>
 
 <div class="row gx-5">
-    <img alt="@Model.AccountName" src="@Model.AccountAvatar" class="img-fluid col-5" />
+    <img alt="@Model.DisplayName" src="@Model.AvatarUrl" class="img-fluid col-5" />
     <div class="col-7">
-        <h5>Password: @Model.AccountPassword</h5>
-        <h3 class="pull-right">Account ID: @Model.AccountId</h3>
+        <h5>Password: @Model.PasswordHash</h5>
+        <h3 class="pull-right">Account ID: @Model.Id</h3>
         <p><a href="/Account/Table">Back to Table View</a></p>
         <p><a href="/Account/Grid">Back to Grid View</a></p>
     </div>

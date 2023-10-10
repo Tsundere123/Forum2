@@ -1,4 +1,8 @@
-﻿@model IEnumerable<ApplicationUser>
+﻿@using Forum2.DAL
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<ApplicationUser>
+
+@inject UserManager<ApplicationUser> UserManager
 
 <div class="container">
     <table class='table table-striped'>
@@ -23,6 +27,12 @@
             </tr>
         }
     </table>
+    <div>
+        <h2>Currenttly logged in user</h2>
+        @UserManager.GetUserAsync(User).Result.DisplayName
+        <img src="@UserManager.GetUserAsync(User).Result.AvatarUrl" width="100px" height="100px">
+        
+    </div>
     <p>
         <a class="btn btn-secondary"
            asp-controller="Account"
