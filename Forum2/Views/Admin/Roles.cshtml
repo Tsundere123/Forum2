@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject RoleManager<ApplicationRole> RoleManager
+
+@model ApplicationRole
+
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<h1 class="display-4">Roles</h1>
+
+
+
+<div class="d-flex justify-content-between align-items-end mb-2">
+    <div><span class="text-danger">*</span> Role is fixed and cannot be renamed or deleted.</div>
+    <div><button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newRole">Add Role</button></div>
+</div>
+<table class="table table-striped">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Color
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+    @foreach (var role in RoleManager.Roles)
+    {
+        <tr>
+            <td>
+                @role.Name
+                @if(role.IsFixed) { <span class="text-danger">*</span> }
+            </td>
+            <td style="background:@role.Color;color: #ffffff;">@role.Color</td>
+            <td>
+                edit/delete
+            </td>
+        </tr>
+    }
+</table>
+
+<div class="modal fade" id="newRole" tabindex="-1" aria-labelledby="newRoleLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="Admin" asp-action="CreateNewRole">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New Role</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label asp-for="Name"></label><span class="text-danger">*</span>
+                        <input asp-for="Name" class="form-control" required="required">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Color"></label>
+                        <input asp-for="Color" class="form-control">
+                        <span asp-validation-for="Color" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
