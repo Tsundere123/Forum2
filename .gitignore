@@ -4,6 +4,10 @@
 
 /Forum2/obj/
 
+# Tmp db files
+*.db-shm
+*.db-wal
+
 # Logs
 Logs/
 
