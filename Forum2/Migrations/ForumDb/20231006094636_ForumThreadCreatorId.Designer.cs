@@ -56,8 +56,7 @@ namespace Forum2.Migrations.ForumDb
 
                     b.HasKey("ForumThreadId");
 
-                    b.HasIndex("ForumCategoryId")
-                        .IsUnique();
+                    b.HasIndex("ForumCategoryId");
 
                     b.ToTable("ForumThread");
                 });

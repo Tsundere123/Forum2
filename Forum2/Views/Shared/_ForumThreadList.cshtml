@@ -7,20 +7,8 @@
             <th>Category Name</th>
             <th>Thread ID</th>
             <th>Thread title</th>
-            @* <th>OP Account ID</th> *@
             <th>OP Name</th>
         </tr>
-        @* @foreach (var forumThread in Model) *@
-        @* { *@
-        @*     <tr> *@
-        @*         <td>@forumThread.ForumCategoryId</td> *@
-        @*         <td>@forumThread.ForumCategory?.ForumCategoryName/</td> *@
-        @*         <td>@forumThread.ForumThreadId</td> *@
-        @*         <td>@forumThread.ForumThreadTitle</td> *@
-        @*         $1$ <td>@forumThread.AccountId</td> #1# *@
-        @*         $1$ <td>@forumThread.Account.AccountName</td> #1# *@
-        @*     </tr> *@
-        @* } *@
         
         @foreach (var forumThread in Model.ForumThreads)
         {
@@ -37,13 +25,13 @@
                 </td>
                 <td>@forumThread.ForumThreadId</td>
                 <td>@forumThread.ForumThreadTitle</td>
-                @* <td>@foreach (var account in Model.Accounts) *@
-                @*     { *@
-                @*         if (forumThread.ForumThreadCreatorId == account.Id) *@
-                @*         { *@
-                @*             @account.DisplayName *@
-                @*         } *@
-                @*     }</td> *@
+                <td>@foreach (var account in Model.Accounts)
+                    {
+                        if (forumThread.ForumThreadCreatorId == account.Id)
+                        {
+                            @account.DisplayName
+                        }
+                    }</td>
                 @* <td>@forumThread.Account.AccountName</td> *@
             </tr>
         }

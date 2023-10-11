@@ -16,7 +16,7 @@ public class ForumThread
     // [ForeignKey("AccountId")]
     // public int AccountId { get; set; }
     
-    public int ForumThreadCreatorId { get; set; }
+    public string ForumThreadCreatorId { get; set; }
     
     // //Navigation Property
     // public virtual Account? Account { get; set; }
