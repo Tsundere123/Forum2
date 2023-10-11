@@ -22,6 +22,20 @@ public class ForumThreadRepository : IForumThreadRepository
         return await _db.ForumThread.FindAsync(id);
     }
 
+    public async Task<IEnumerable<ForumThread>> GetForumThreadsByCategoryId(int id)
+    {
+        var threadList = await _db.ForumThread.ToListAsync();
+        List<ForumThread> returnList = new List<ForumThread>();
+        foreach(var forumThread in threadList)
+        {
+            if (forumThread.ForumCategoryId == id)
+            {
+                returnList.Add(forumThread);
+            }
+        }
+        return returnList;
+    }
+
     public async Task CreateNewForumThread(ForumThread forumThread)
     {
         _db.ForumThread.Add(forumThread);

@@ -29,4 +29,12 @@ public class ForumThreadController : Controller
         var forumListViewModel = new ForumListViewModel(forumCategories,forumThreads,accounts);
         return View(forumListViewModel);
     }
+    public async Task<IActionResult> ForumThreadOfCategoryTable(int id)
+    {
+        var forumThreads = await _forumThreadRepository.GetForumThreadsByCategoryId(id);
+        var forumCategories = await _forumCategoryRepository.GetAll();
+        var accounts = await _accountRepository.GetAll();
+        var forumListViewModel = new ForumListViewModel(forumCategories,forumThreads,accounts);
+        return View(forumListViewModel);
+    }
 }
