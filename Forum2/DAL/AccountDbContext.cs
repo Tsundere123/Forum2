@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Forum2.Models;
 
-public class AccountDbContext : IdentityDbContext<ApplicationUser>
+public class AccountDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
 {
     public AccountDbContext(DbContextOptions<AccountDbContext> options) : base(options)
     {
