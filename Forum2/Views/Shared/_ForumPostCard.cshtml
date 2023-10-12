@@ -2,6 +2,12 @@
 @using Microsoft.AspNetCore.Identity
 
 @model ForumPost
+
+@inject UserManager<ApplicationUser> UserManager
+
+
 <h1>This is a new post</h1>
 <div>@Model.ForumPostContent</div>
 <div>Creator ID: @Model.ForumPostCreatorId</div>
+
+Name of post creator: @UserManager.FindByIdAsync(@Model.ForumPostCreatorId).Result.DisplayName
