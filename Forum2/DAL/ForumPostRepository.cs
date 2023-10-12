@@ -35,7 +35,6 @@ public class ForumPostRepository : IForumPostRepository
                 returnList.Add(forumPost);
             }
         }
-
         return returnList;
     }
 

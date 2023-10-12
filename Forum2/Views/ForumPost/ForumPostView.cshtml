@@ -1,7 +1,9 @@
 ﻿@model ForumPostViewModel
 
-<h1>Post</h1>
-@foreach(var post in Model.ForumThreads)
+<h1>Post @Model.</h1>
+@foreach(var post in Model.ForumPosts)
     {
-        <partial name="_ForumPostCard" model="Model"/>
+        @* @post.ForumPostContent *@
+        <p></p>
+        <partial name="_ForumPostCard" model="post"/>
     }
