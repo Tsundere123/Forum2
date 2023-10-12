@@ -12,6 +12,7 @@ public class ForumDbContext : DbContext
     }
     public DbSet<ForumCategory> ForumCategory { get; set; }
     public DbSet<ForumThread> ForumThread { get; set; }
+    public DbSet<ForumPost> ForumPost { get; set; }
 
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
