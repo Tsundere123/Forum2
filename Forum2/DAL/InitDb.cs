@@ -85,7 +85,7 @@ public class InitDb
                 NormalizedEmail = "ADMIN@TEST.COM",
                 UserName = "admin@test.com",
                 NormalizedUserName = "ADMIN@TEST.COM",
-                AvatarUrl = "https://art.pixilart.com/32cca92ae455838.png",
+                AvatarUrl = "https://www.ikea.com/no/no/images/products/blahaj-toyleke-hai__0710175_pe727378_s5.jpg?f=s",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
@@ -96,7 +96,7 @@ public class InitDb
                 NormalizedEmail = "MOD@TEST.COM",
                 UserName = "mod@test.com",
                 NormalizedUserName = "MOD@TEST.COM",
-                AvatarUrl = "https://art.pixilart.com/32cca92ae455838.png",
+                AvatarUrl = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/6e3a4157-8314-48a1-8b90-b03e1643ddee/d8qezl2-3f8544dc-4bb9-4a2f-95e8-77dffd19924a.png/v1/fill/w_750,h_750/kancolle_zuikaku_render_by_ryn_renders_d8qezl2-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzUwIiwicGF0aCI6IlwvZlwvNmUzYTQxNTctODMxNC00OGExLThiOTAtYjAzZTE2NDNkZGVlXC9kOHFlemwyLTNmODU0NGRjLTRiYjktNGEyZi05NWU4LTc3ZGZmZDE5OTI0YS5wbmciLCJ3aWR0aCI6Ijw9NzUwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.B6O1JlYtBqq7K527gy3XW7xPaHYSVQXbqljdJfU-G7I",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
