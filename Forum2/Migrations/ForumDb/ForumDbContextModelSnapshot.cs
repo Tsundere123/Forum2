@@ -32,7 +32,7 @@ namespace Forum2.Migrations.ForumDb
 
                     b.HasKey("ForumCategoryId");
 
-                    b.ToTable("ForumCategory");
+                    b.ToTable("ForumCategory", (string)null);
                 });
 
             modelBuilder.Entity("Forum2.Models.ForumThread", b =>
@@ -44,8 +44,9 @@ namespace Forum2.Migrations.ForumDb
                     b.Property<int>("ForumCategoryId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ForumThreadCreatorId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ForumThreadCreatorId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ForumThreadTitle")
                         .IsRequired()
@@ -55,7 +56,7 @@ namespace Forum2.Migrations.ForumDb
 
                     b.HasIndex("ForumCategoryId");
 
-                    b.ToTable("ForumThread");
+                    b.ToTable("ForumThread", (string)null);
                 });
 
             modelBuilder.Entity("Forum2.Models.ForumThread", b =>

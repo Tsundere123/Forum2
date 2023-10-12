@@ -1,0 +1,26 @@
+﻿@using Forum2.DAL
+@using Microsoft.AspNetCore.Identity
+
+@model Forum2.ViewModels.ForumPostViewModel
+
+<div class="col">
+    <div>
+        <img src="@Model" class="card-img-top" alt="@Model">
+        <div>
+            <div class="d-flex justify-content-between mt-2">
+                <h5 class="text-start">
+                            
+                    <a asp-controller="Account"
+                       asp-action="Details"
+                       asp-route-accountId="@Model.">@Model.</a>
+                </h5>
+                <h5 class="text-nowrap">
+                    Password: @Model.
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Model
