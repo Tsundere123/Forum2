@@ -11,3 +11,4 @@
 <div>Creator ID: @Model.ForumPostCreatorId</div>
 
 Name of post creator: @UserManager.FindByIdAsync(@Model.ForumPostCreatorId).Result.DisplayName
+Avatar: <img src="@UserManager.FindByIdAsync(@Model.ForumPostCreatorId).Result.AvatarUrl" width="100px" height="100px">
