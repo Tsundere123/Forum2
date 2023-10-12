@@ -10,7 +10,7 @@ public class ForumPost
 
     [Required]
     [ForeignKey("ForumThreadId")]
-    public string ForumThreadId { get; set; } = string.Empty;
+    public int ForumThreadId { get; set; } = default!;
     
     [Required]
     [ForeignKey("Id")]
