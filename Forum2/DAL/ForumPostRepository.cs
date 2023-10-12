@@ -19,7 +19,7 @@ public class ForumPostRepository : IForumPostRepository
         return await _db.ForumPost.ToListAsync();
     }
 
-    public async Task<ForumPost> GetForumPostById(int id)
+    public async Task<ForumPost?> GetForumPostById(int id)
     {
         return await _db.ForumPost.FindAsync(id);
     }

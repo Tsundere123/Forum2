@@ -6,9 +6,16 @@
 @inject UserManager<ApplicationUser> UserManager
 
 
-<h1>This is a new post</h1>
-<div>@Model.ForumPostContent</div>
-<div>Creator ID: @Model.ForumPostCreatorId</div>
 
-Name of post creator: @UserManager.FindByIdAsync(@Model.ForumPostCreatorId).Result.DisplayName
-Avatar: <img src="@UserManager.FindByIdAsync(@Model.ForumPostCreatorId).Result.AvatarUrl" width="100px" height="100px">
+<div class="container">
+    <div class="row">
+        <div class="col-2">
+            <div class="col-sm">@UserManager.FindByIdAsync(@Model.ForumPostCreatorId).Result.DisplayName</div>
+            <div class="col-sm"><img src="@UserManager.FindByIdAsync(@Model.ForumPostCreatorId).Result.AvatarUrl" width="100px" height="100px"></div>
+        </div>
+        <div class="col-10">
+            @Model.ForumPostContent
+        </div>
+    </div>
+</div>
+

@@ -9,14 +9,14 @@ public class ForumPostViewModel
 {
     public IEnumerable<ApplicationUser> Accounts;
     public IEnumerable<ForumCategory> ForumCategories;
-    public IEnumerable<ForumThread> ForumThreads;
+    public ForumThread CurrentForumThread;
     public IEnumerable<ForumPost> ForumPosts;
 
-    public ForumPostViewModel(IEnumerable<ForumCategory> forumCategories, IEnumerable<ForumThread> forumThreads,IEnumerable<ForumPost> forumPosts,
+    public ForumPostViewModel(IEnumerable<ForumCategory> forumCategories, ForumThread currentForumThread,IEnumerable<ForumPost> forumPosts,
         IEnumerable<ApplicationUser> applicationUsers)
     {
         ForumCategories = forumCategories;
-        ForumThreads = forumThreads;
+        CurrentForumThread = currentForumThread;
         ForumPosts = forumPosts;
         Accounts = applicationUsers;
     }

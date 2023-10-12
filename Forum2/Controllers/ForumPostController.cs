@@ -26,9 +26,9 @@ public class ForumPostController : Controller
     {
         var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(threadId);
         var forumCategories = await _forumCategoryRepository.GetAll();
-        var forumThreads = await _forumThreadRepository.GetAll();
+        var currentForumThread = await _forumThreadRepository.GetForumThreadById(threadId);
         var accounts = await _accountRepository.GetAll();
-        var forumPostViewModel = new ForumPostViewModel(forumCategories, forumThreads, forumPosts, accounts);
+        var forumPostViewModel = new ForumPostViewModel(forumCategories, currentForumThread, forumPosts, accounts);
         
         return View(forumPostViewModel);
     }
