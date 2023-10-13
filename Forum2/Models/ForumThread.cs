@@ -11,12 +11,12 @@ public class ForumThread
     public string ForumThreadTitle { get; set; } = string.Empty;
     [Required]
     [ForeignKey("ForumCategoryId")]
-    public int ForumCategoryId { get; set; }
+    public int ForumCategoryId { get; set; } = default!;
     // [Required]
     // [ForeignKey("AccountId")]
     // public int AccountId { get; set; }
-    
-    public string ForumThreadCreatorId { get; set; }
+
+    public string ForumThreadCreatorId { get; set; } = string.Empty;
     
     // //Navigation Property
     // public virtual Account? Account { get; set; }

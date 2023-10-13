@@ -2,6 +2,7 @@
 using Forum2.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum2.Migrations.ForumDb
 {
     [DbContext(typeof(ForumDbContext))]
-    partial class ForumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231012094206_ForumPosts")]
+    partial class ForumPosts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -32,7 +35,30 @@ namespace Forum2.Migrations.ForumDb
 
                     b.HasKey("ForumCategoryId");
 
-                    b.ToTable("ForumCategory", (string)null);
+                    b.ToTable("ForumCategory");
+                });
+
+            modelBuilder.Entity("Forum2.Models.ForumPost", b =>
+                {
+                    b.Property<int>("ForumPostId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ForumPostContent")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ForumPostCreatorId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ForumThreadId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ForumPostId");
+
+                    b.ToTable("ForumPost");
                 });
 
             modelBuilder.Entity("Forum2.Models.ForumThread", b =>
@@ -56,7 +82,7 @@ namespace Forum2.Migrations.ForumDb
 
                     b.HasIndex("ForumCategoryId");
 
-                    b.ToTable("ForumThread", (string)null);
+                    b.ToTable("ForumThread");
                 });
 
             modelBuilder.Entity("Forum2.Models.ForumThread", b =>

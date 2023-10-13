@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNetCore.Server.Kestrel.Core
+@model ForumPostViewModel
+
+<h1>Current thread: @Model.CurrentForumThread.ForumThreadTitle</h1>
+
+@{ var i = 0;}
+@foreach(var post in Model.ForumPosts)
+    {
+        i++;
+        <h2>This is post nr @i</h2>
+        <partial name="_ForumPostCard" model="post"/>
+    }
