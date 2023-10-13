@@ -28,10 +28,18 @@ public class AdminController : Controller
         return View();
     }
     
-    [HttpPost]
-    public async Task<IActionResult> CreateNewRole(ApplicationRole role)
+    [HttpGet]
+    [Route("Admin/Roles/New")]
+    public IActionResult NewRole()
     {
-        if (!ModelState.IsValid) return View(nameof(Roles), role);
+        return View();
+    }
+    
+    [HttpPost]
+    [Route("/Admin/Roles/New")]
+    public async Task<IActionResult> NewRole(ApplicationRole role)
+    {
+        if (!ModelState.IsValid) return View(role);
         
         try
         {
@@ -50,23 +58,78 @@ public class AdminController : Controller
             throw;
         }
 
-        return View(nameof(Roles), role);
+        return View(role);
     }
-
+    
+    [HttpGet]
+    [Route("/Admin/Roles/Edit/{id}")]
+    public async Task<IActionResult> EditRole(string id)
+    {
+        var role = await _roleManager.FindByIdAsync(id);
+        return View(role);
+    }
+    
     [HttpPost]
+    [Route("/Admin/Roles/Edit/{id}")]
+    public async Task<IActionResult> EditRole(string id, ApplicationRole role)
+    {
+        if (!ModelState.IsValid) return View(role);
+        
+        try
+        {
+            var roleToUpdate = await _roleManager.FindByIdAsync(id);
+            if (!roleToUpdate.IsFixed)
+            {
+                roleToUpdate.Name = role.Name;
+                roleToUpdate.NormalizedName = role.Name.ToUpper();
+            }
+            roleToUpdate.Color = role.Color;
+
+            var result = await _roleManager.UpdateAsync(roleToUpdate);
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(Roles));
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+        return View(role);
+    }
+    
+    [HttpGet]
+    [Route("/Admin/Roles/Delete/{id}")]
     public async Task<IActionResult> DeleteRole(string id)
     {
         var role = await _roleManager.FindByIdAsync(id);
-
-        // if role is fixed, do not delete
-        if (role.IsFixed) return RedirectToAction(nameof(Roles));
-        
-        var result = await _roleManager.DeleteAsync(role);
-        if (result.Succeeded)
+        return View(role);
+    }
+    
+    [HttpPost]
+    [Route("/Admin/Roles/Delete/{id}")]
+    public async Task<IActionResult> DeleteRole(string id, ApplicationRole role)
+    {
+        try
         {
-            return RedirectToAction(nameof(Roles));
-        }
+            var roleToDelete = await _roleManager.FindByIdAsync(id);
+            if (!roleToDelete.IsFixed)
+            {
+                var result = await _roleManager.DeleteAsync(roleToDelete);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction(nameof(Roles));
+                }
+            }
 
-        return BadRequest();
+            return BadRequest();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }
