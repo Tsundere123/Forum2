@@ -15,13 +15,14 @@ public class AdminController : Controller
         _roleManager = roleManager;
     }
     
-    // GET
+    // Dashboard
     [HttpGet]
     public IActionResult Index()
     {
         return View();
     }
     
+    // Roles
     [HttpGet]
     public IActionResult Roles()
     {
