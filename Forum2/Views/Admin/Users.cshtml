@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Users";
+}
+
+@using Microsoft.IdentityModel.Tokens
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<ApplicationUser>
+@inject UserManager<ApplicationUser> UserManager
+@inject RoleManager<ApplicationRole> RoleManager
+
+<h1>Admin Panel</h1>
+
+<div>
+    <h2>Users</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <partial name="_AdminNavListPartial" />
+        </div>
+        <div class="col-md-9">
+            <form asp-controller="Admin" asp-action="Users">
+                <div class="input-group">
+                    <label class="input-group-text" for="username">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Username" name="username"/>
+                    <label class="input-group-text" for="role">Role</label>
+                    <select class="form-select" id="role" name="role">
+                        <option value="">All</option>
+                        @foreach (var role in RoleManager.Roles)
+                        {
+                            <option value="@role.Name">@role.Name</option>
+                        }
+                    </select>
+                    <button class="btn btn-secondary" type="submit">Search</button>
+                </div>
+            </form>
+            @if (!Model.IsNullOrEmpty())
+            {
+                <hr />
+                <table class="table table-striped">
+                    <tr>
+                        <th>
+                            Username
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            Roles
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>
+                                @user.DisplayName
+                            </td>
+                            <td>
+                                @user.Email
+                            </td>
+                            <td>
+                                @string.Join(", ", UserManager.GetRolesAsync(user).Result)
+                            </td>
+                            <td>
+                                <a asp-controller="Admin" asp-action="EditUser" asp-route-id="@user.Id">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+    </div>
+</div>

@@ -2,6 +2,19 @@
     var currentRoute = ViewContext.RouteData.Values["Action"]?.ToString();
 }
 <ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @(currentRoute is "Index" ? "active" : "")" id="dashboard" asp-controller="Admin" asp-action="Index">Dashboard</a></li>
-    <li class="nav-item"><a class="nav-link @(currentRoute is "Roles" or "NewRole" or "EditRole" or "DeleteRole" ? "active" : "")" id="roles" asp-controller="Admin" asp-action="Roles">Roles</a></li>
+    <li class="nav-item">
+        <a class="nav-link @(currentRoute is "Index" ? "active" : "")" id="dashboard" asp-controller="Admin" asp-action="Index">
+            Dashboard
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentRoute is "Roles" or "NewRole" or "EditRole" or "DeleteRole" ? "active" : "")" id="roles" asp-controller="Admin" asp-action="Roles">
+            Roles
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentRoute is "Users" or "EditUser" ? "active" : "")" asp-controller="Admin" asp-action="Users">
+            Users
+        </a>
+    </li>
 </ul>

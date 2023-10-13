@@ -1,7 +1,10 @@
 ﻿using Forum2.Models;
+using Forum2.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 
 namespace Forum2.Controllers;
 
@@ -9,10 +12,12 @@ namespace Forum2.Controllers;
 public class AdminController : Controller
 {
     private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     
-    public AdminController(RoleManager<ApplicationRole> roleManager)
+    public AdminController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
     {
         _roleManager = roleManager;
+        _userManager = userManager;
     }
     
     // Dashboard
@@ -132,5 +137,37 @@ public class AdminController : Controller
             Console.WriteLine(e);
             throw;
         }
+    }
+    
+    // Users
+    [HttpGet]
+    public IActionResult Users()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Users(string username, string role)
+    {
+        var users = await _userManager.Users.ToListAsync();
+        if (!string.IsNullOrEmpty(username))
+        {
+            users = users.Where(u => u.DisplayName.ToUpper().Contains(username.ToUpper())).ToList();
+        }
+        
+        if (!string.IsNullOrEmpty(role) && role != "All")
+        {
+            var usersWithRole = await _userManager.GetUsersInRoleAsync(role);
+            users = users.Where(u => usersWithRole.Contains(u)).ToList();
+        }
+        
+        return View(users);
+    }
+    
+    [HttpGet]
+    [Route("/Admin/Users/Edit/{id}")]
+    public async Task<IActionResult> EditUser(string id)
+    {
+        return View();
     }
 }
