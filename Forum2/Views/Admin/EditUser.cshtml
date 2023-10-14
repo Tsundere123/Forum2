@@ -28,13 +28,12 @@
                 </div>
                 <h3 class="mt-2">Roles</h3>
                 <div class="form-group">
-                    @foreach (var role in Model.Roles)
-                    {
-                        <div>
-                            <input class="form-check-label" type="checkbox" name="UserRoles" id="@role.Name" value="@role.Name" checked="@(Model.UserRoles.Contains(role.Name))"/>
-                            <label class="form-check-label" for="@role.Name">@role.Name</label>
-                        </div>
-                    }
+                    <select class="form-select" name="UserRoles" multiple>
+                        @foreach(var role in Model.Roles)
+                        {
+                            <option value="@role.Name" selected="@(Model.UserRoles.Contains(role.Name))">@role.Name</option>
+                        }
+                    </select>
                 </div>
                 <div class="mt-2">
                     <button type="submit" class="btn btn-success">Edit</button>
