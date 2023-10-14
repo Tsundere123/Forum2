@@ -4,49 +4,50 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NuGet.Protocol;
 
 namespace Forum2.Controllers;
 
-[Authorize( Roles = "Administrator" )]
+[Authorize(Roles = "Administrator")]
 public class AdminController : Controller
 {
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
-    
+
     public AdminController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
     {
         _roleManager = roleManager;
         _userManager = userManager;
     }
-    
+
     // Dashboard
     [HttpGet]
     public IActionResult Index()
     {
         return View();
     }
-    
+
     // Roles
     [HttpGet]
     public IActionResult Roles()
     {
         return View();
     }
-    
+
     [HttpGet]
     [Route("Admin/Roles/New")]
     public IActionResult NewRole()
     {
         return View();
     }
-    
+
     [HttpPost]
     [Route("/Admin/Roles/New")]
     public async Task<IActionResult> NewRole(ApplicationRole role)
     {
         if (!ModelState.IsValid) return View(role);
-        
+
         try
         {
             role.Id = Guid.NewGuid().ToString();
@@ -66,7 +67,7 @@ public class AdminController : Controller
 
         return View(role);
     }
-    
+
     [HttpGet]
     [Route("/Admin/Roles/Edit/{id}")]
     public async Task<IActionResult> EditRole(string id)
@@ -74,13 +75,13 @@ public class AdminController : Controller
         var role = await _roleManager.FindByIdAsync(id);
         return View(role);
     }
-    
+
     [HttpPost]
     [Route("/Admin/Roles/Edit/{id}")]
     public async Task<IActionResult> EditRole(string id, ApplicationRole role)
     {
         if (!ModelState.IsValid) return View(role);
-        
+
         try
         {
             var roleToUpdate = await _roleManager.FindByIdAsync(id);
@@ -89,6 +90,7 @@ public class AdminController : Controller
                 roleToUpdate.Name = role.Name;
                 roleToUpdate.NormalizedName = role.Name.ToUpper();
             }
+
             roleToUpdate.Color = role.Color;
 
             var result = await _roleManager.UpdateAsync(roleToUpdate);
@@ -105,7 +107,7 @@ public class AdminController : Controller
 
         return View(role);
     }
-    
+
     [HttpGet]
     [Route("/Admin/Roles/Delete/{id}")]
     public async Task<IActionResult> DeleteRole(string id)
@@ -113,7 +115,7 @@ public class AdminController : Controller
         var role = await _roleManager.FindByIdAsync(id);
         return View(role);
     }
-    
+
     [HttpPost]
     [Route("/Admin/Roles/Delete/{id}")]
     public async Task<IActionResult> DeleteRole(string id, ApplicationRole role)
@@ -138,7 +140,7 @@ public class AdminController : Controller
             throw;
         }
     }
-    
+
     // Users
     [HttpGet]
     public IActionResult Users()
@@ -154,20 +156,71 @@ public class AdminController : Controller
         {
             users = users.Where(u => u.DisplayName.ToUpper().Contains(username.ToUpper())).ToList();
         }
-        
+
         if (!string.IsNullOrEmpty(role) && role != "All")
         {
             var usersWithRole = await _userManager.GetUsersInRoleAsync(role);
             users = users.Where(u => usersWithRole.Contains(u)).ToList();
         }
-        
+
         return View(users);
     }
-    
+
     [HttpGet]
     [Route("/Admin/Users/Edit/{id}")]
     public async Task<IActionResult> EditUser(string id)
     {
-        return View();
+        var user = await _userManager.FindByIdAsync(id);
+        var roles = await _roleManager.Roles.ToListAsync();
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var viewModel = new EditUserViewModel
+        {
+            User = user,
+            Roles = roles,
+            UserRoles = userRoles
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route("/Admin/Users/Edit/{id}")]
+    public async Task<IActionResult> EditUser(string id, EditUserViewModel viewModel)
+    {
+        if (!ModelState.IsValid) return View(viewModel);
+
+        try
+        {
+            // User
+            var user = await _userManager.FindByIdAsync(id);
+            
+            if (viewModel.User != null)
+            {
+                user.DisplayName = viewModel.User.DisplayName;
+                user.AvatarUrl = viewModel.User.AvatarUrl;
+            }
+
+            var resultUser = await _userManager.UpdateAsync(user);
+            if (!resultUser.Succeeded) return View(viewModel);
+
+            // Roles
+            var userRoles = await _userManager.GetRolesAsync(user);
+            // Prevent a null reference exception if the user is assigned 0 roles
+            viewModel.UserRoles ??= new List<string>();
+            
+            var rolesToRemove = userRoles.Except(viewModel.UserRoles).ToList();
+            var rolesToAdd = viewModel.UserRoles.Except(userRoles).ToList();
+            
+            var resultRemoveRoles = await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+            var resultAddRoles = await _userManager.AddToRolesAsync(user, rolesToAdd);
+            
+            if (!resultRemoveRoles.Succeeded || !resultAddRoles.Succeeded) return View(viewModel);
+
+            return RedirectToAction(nameof(Users));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

@@ -2,6 +2,8 @@
     ViewData["Title"] = "Edit User";
 }
 
+@model EditUserViewModel
+
 <h1>Admin Panel</h1>
 
 <div>
@@ -12,7 +14,33 @@
             <partial name="_AdminNavListPartial" />
         </div>
         <div class="col-md-9">
-           edit user
+            <form asp-controller="Admin" asp-action="EditUser">
+                <h3>User Details</h3>
+                <div class="form-group">
+                    <label asp-for="User.DisplayName"></label><span class="text-danger">*</span>
+                    <input asp-for="User.DisplayName" class="form-control" required="required"/>
+                    <span asp-validation-for="User.DisplayName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.AvatarUrl"></label><span class="text-danger">*</span>
+                    <input asp-for="User.AvatarUrl" class="form-control" required="required"/>
+                    <span asp-validation-for="User.AvatarUrl" class="text-danger"></span>
+                </div>
+                <h3 class="mt-2">Roles</h3>
+                <div class="form-group">
+                    @foreach (var role in Model.Roles)
+                    {
+                        <div>
+                            <input class="form-check-label" type="checkbox" name="UserRoles" id="@role.Name" value="@role.Name" checked="@(Model.UserRoles.Contains(role.Name))"/>
+                            <label class="form-check-label" for="@role.Name">@role.Name</label>
+                        </div>
+                    }
+                </div>
+                <div class="mt-2">
+                    <button type="submit" class="btn btn-success">Edit</button>
+                    <a asp-controller="Admin" asp-action="Users" class="btn btn-danger">Back</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
