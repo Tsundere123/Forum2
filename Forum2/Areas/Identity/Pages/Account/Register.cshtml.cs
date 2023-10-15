@@ -124,6 +124,14 @@ namespace Forum2.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                // Check if DisplayName is already taken
+                var displayNameTaken = _userManager.Users.Any(u => u.DisplayName == Input.DisplayName);
+                if (displayNameTaken)
+                {
+                    ModelState.AddModelError(string.Empty, "The name is already in use.");
+                    return Page();
+                }
+                
                 var user = CreateUser();
                 user.DisplayName = Input.DisplayName;
                 user.AvatarUrl = Input.AvatarUrl;
