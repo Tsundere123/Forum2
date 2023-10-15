@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = @Model.User.DisplayName;
+}
+
+@model ProfileViewModel
+
+<div>
+    <div class="row">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center">
+                        <img class="img-thumbnail rounded" height="128" width="128" src="@Model.User.AvatarUrl" alt="@Model.User.DisplayName"/>
+                        <div>
+                            <span class="fw-bold">@Model.User.DisplayName</span>
+                        </div>
+                        @if (Model.Roles != null)
+                        {
+                            @foreach (var role in Model.Roles)
+                            {
+                                <div class="badge" style="background: @role.Color;">@role.Name</div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            Something else
+        </div>
+    </div>
+</div>
