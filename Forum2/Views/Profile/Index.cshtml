@@ -12,7 +12,7 @@
                     <div class="text-center">
                         <img class="img-thumbnail rounded" height="128" width="128" src="@Model.User.AvatarUrl" alt="@Model.User.DisplayName"/>
                         <div>
-                            <span class="fw-bold">@Model.User.DisplayName</span>
+                            <h1 class="fw-bold fs-6">@Model.User.DisplayName</h1>
                         </div>
                         @if (Model.Roles != null)
                         {
@@ -26,7 +26,39 @@
             </div>
         </div>
         <div class="col-md-9">
-            Something else
+            <h2>Latest Activity</h2>
+            @if (Model.Threads == null && Model.Posts == null)
+            {
+                <p>@Model.User.DisplayName has no activity</p>
+            }
+            else
+            {
+                @if (Model.Threads != null)
+                {
+                    <h3>Threads</h3>
+                    <ul>
+                        @foreach(var thread in Model.Threads)
+                        {
+                            <li>
+                                <a>@thread.ForumThreadTitle</a>
+                                <span class="badge bg-secondary">@thread.ForumPosts?.Count.ToString()</span>
+                            </li>
+                        }
+                    </ul>
+                }
+                if (Model.Posts != null)
+                {
+                    <h3>Posts</h3>
+                    <ul>
+                        @foreach (var post in Model.Posts)
+                        {
+                            <li>
+                                <a>@post.ForumThread?.ForumThreadTitle</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
         </div>
     </div>
 </div>

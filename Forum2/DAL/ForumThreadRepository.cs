@@ -35,6 +35,20 @@ public class ForumThreadRepository : IForumThreadRepository
         }
         return returnList;
     }
+    
+    public async Task<IEnumerable<ForumThread>> GetForumThreadsByAccountId(string accountId)
+    {
+        var threadList = await _db.ForumThread.ToListAsync();
+        List<ForumThread> returnList = new List<ForumThread>();
+        foreach(var forumThread in threadList)
+        {
+            if (forumThread.ForumThreadCreatorId == accountId)
+            {
+                returnList.Add(forumThread);
+            }
+        }
+        return returnList;
+    }
 
     public async Task CreateNewForumThread(ForumThread forumThread)
     {

@@ -19,5 +19,6 @@ public class ForumPost
     [Required]
     public string ForumPostContent { get; set; } = string.Empty;
     
-    
+    // Navigation Property
+    public virtual ForumThread? ForumThread { get; set; }
 }
