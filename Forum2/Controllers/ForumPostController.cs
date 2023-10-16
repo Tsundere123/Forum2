@@ -34,12 +34,21 @@ public class ForumPostController : Controller
         
         return View(forumPostViewModel);
     }
-
-    public async Task<IActionResult> CreateNewForumPost(ForumPost forumPost)
+    [HttpGet]
+    public IActionResult CreateNewForumPost(int threadId)
+    {
+        // var thread = _forumThreadRepository.GetForumThreadById(threadId);
+        // var posts = _forumPostRepository.
+        // var viewModel = new ForumPostCreationViewModel(thread,);
+        // viewModel.ForumThread.ForumThreadId = threadId;
+        return View();
+    }
+    public async Task<IActionResult> CreateNewForumPost(int threadId,ForumPost forumPost)
     {
         ForumPost addPost = new ForumPost();
         addPost.ForumPostContent = forumPost.ForumPostContent;
-        addPost.ForumThreadId = forumPost.ForumThreadId;
+        // addPost.ForumThreadId = forumPost.ForumThreadId;
+        addPost.ForumThreadId = threadId;
         addPost.ForumPostCreationTimeUnix = DateTime.UtcNow;
         addPost.ForumPostCreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
         await _forumPostRepository.CreateNewForumPost(addPost);
