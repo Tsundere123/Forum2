@@ -8,15 +8,15 @@ public class ForumThreadCreationViewModel
 {
     public IEnumerable<ApplicationUser> Accounts;
     public ForumCategory ForumCategory;
-    public ForumThread CurrentForumThread;
+    public ForumThread ForumThread;
     public ForumPost ForumPost;
 
-    public ForumThreadCreationViewModel(ForumCategory forumCategory, ForumThread currentForumThread,
+    public ForumThreadCreationViewModel(ForumCategory forumCategory, ForumThread forumThread,
         ForumPost forumPosts,
         IEnumerable<ApplicationUser> applicationUsers)
     {
         ForumCategory = forumCategory;
-        CurrentForumThread = currentForumThread;
+        ForumThread = forumThread;
         ForumPost = forumPosts;
         Accounts = applicationUsers;
     }

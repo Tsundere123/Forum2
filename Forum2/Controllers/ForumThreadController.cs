@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Forum2.DAL;
 using Microsoft.AspNetCore.Identity;
+using Forum2.Controllers;
 
 
 namespace Forum2.Controllers;
@@ -51,6 +52,7 @@ public class ForumThreadController : Controller
     {
         return View();
     }
+    [HttpPost]
     public async Task<IActionResult> CreateNewForumThread(ForumThread forumThread, ForumPost forumPost)
     {
         
@@ -63,9 +65,7 @@ public class ForumThreadController : Controller
         await _forumThreadRepository.CreateNewForumThread(addThread);
         int threadId = addThread.ForumThreadId;
         
-        Console.WriteLine(threadId);
         CreateNewForumPost(threadId, forumPost);
-        
         return View(nameof(ForumThreadTable));
     }
 
