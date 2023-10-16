@@ -23,4 +23,7 @@ public class ForumThread
     
     // //Navigation Property
     public virtual ForumCategory? ForumCategory { get; set; }
+    
+    //Navigation Property
+    public virtual List<ForumPost>? ForumPosts { get; set; }
 }

@@ -37,6 +37,20 @@ public class ForumPostRepository : IForumPostRepository
         }
         return returnList;
     }
+    
+    public async Task<IEnumerable<ForumPost>> GetAllForumPostsByAccountId(string accountId)
+    {
+        var postList = await _db.ForumPost.ToListAsync();
+        List<ForumPost> returnList = new List<ForumPost>();
+        foreach (var forumPost in postList)
+        {
+            if (forumPost.ForumPostCreatorId == accountId)
+            {
+                returnList.Add(forumPost);
+            }
+        }
+        return returnList;
+    }
 
     public async Task CreateForumPost(ForumPost forumPost)
     {
