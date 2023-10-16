@@ -66,7 +66,7 @@ public class ForumThreadController : Controller
         int threadId = addThread.ForumThreadId;
         
         CreateNewForumPost(threadId, forumPost);
-        return View(nameof(ForumThreadTable));
+        return RedirectToAction("ForumPostView", "ForumPost", new { id = threadId });
     }
 
     public async void CreateNewForumPost(int threadId,ForumPost forumPost)
