@@ -1,4 +1,4 @@
-﻿@model Forum2.ViewModels.ForumListViewModel
+﻿@model Forum2.ViewModels.ForumThreadOfCategoryViewModel
 
 @* DEPRECATED *@
 
@@ -16,15 +16,7 @@
         {
             <tr>@{ var categoryId = @forumThread.ForumCategoryId;}
                 <td>@forumThread.ForumCategoryId</td>
-                <td>
-                    @foreach (var forumCategory in Model.ForumCategories)
-                    {
-                        if (categoryId == forumCategory.ForumCategoryId)
-                        {
-                            @forumCategory.ForumCategoryName
-                        }
-                    }
-                </td>
+                <td>@Model.ForumCategory.ForumCategoryName</td>
                 <td>@forumThread.ForumThreadId</td>
                 <td><a asp-controller="ForumPost"
                        asp-action="ForumPostView"

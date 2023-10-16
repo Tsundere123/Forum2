@@ -1,5 +1,8 @@
-﻿@model ForumListViewModel
+﻿@using Microsoft.EntityFrameworkCore
+@* @model ForumListViewModel *@
+@model ForumThreadOfCategoryViewModel
 
-<h1>Forum Categories</h1>
+<h1>@Model.ForumCategory.ForumCategoryName</h1>
 
-<partial name="_ForumThreadList" model="Model" />
+
+<partial name="_ForumThreadListOfCategory" model="Model" />

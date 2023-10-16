@@ -1,6 +1,7 @@
 ﻿using Forum2.DAL;
 using Forum2.Models;
 using Forum2.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum2.Controllers;
@@ -12,9 +13,10 @@ public class ForumPostController : Controller
     private readonly IForumCategoryRepository _forumCategoryRepository;
     private readonly IForumThreadRepository _forumThreadRepository;
     private readonly IForumPostRepository _forumPostRepository;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public ForumPostController(IAccountRepository accountRepository, IAccountRoleRepository accountRoleRepository,
-        IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository,IForumPostRepository forumPostRepository)
+        IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository,IForumPostRepository forumPostRepository, UserManager<ApplicationUser> userManager)
     {
         _forumCategoryRepository = forumCategoryRepository;
         _forumThreadRepository = forumThreadRepository;
@@ -31,5 +33,16 @@ public class ForumPostController : Controller
         var forumPostViewModel = new ForumPostViewModel(forumCategories, currentForumThread, forumPosts, accounts);
         
         return View(forumPostViewModel);
+    }
+
+    public async Task<IActionResult> CreateNewForumPost(ForumPost forumPost)
+    {
+        ForumPost addPost = new ForumPost();
+        addPost.ForumPostContent = forumPost.ForumPostContent;
+        addPost.ForumThreadId = forumPost.ForumThreadId;
+        addPost.ForumPostCreationTimeUnix = DateTime.UtcNow;
+        addPost.ForumPostCreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
+        await _forumPostRepository.CreateNewForumPost(addPost);
+        return View(nameof(ForumPostView));
     }
 }

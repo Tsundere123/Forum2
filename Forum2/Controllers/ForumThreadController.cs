@@ -1,8 +1,11 @@
-﻿using Forum2.Models;
+﻿using System.Net;
+using Forum2.Models;
 using Forum2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Forum2.DAL;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace Forum2.Controllers;
 
@@ -12,14 +15,19 @@ public class ForumThreadController : Controller
     private readonly IAccountRoleRepository _accountRoleRepository;
     private readonly IForumCategoryRepository _forumCategoryRepository;
     private readonly IForumThreadRepository _forumThreadRepository;
-    
+    private readonly IForumPostRepository _forumPostRepository;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ForumThreadController(IAccountRepository accountRepository, IAccountRoleRepository accountRoleRepository, IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository)
+    public ForumThreadController(IAccountRepository accountRepository, IAccountRoleRepository accountRoleRepository, 
+        IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository,
+        IForumPostRepository forumPostRepository, UserManager<ApplicationUser> userManager)
     {
         _forumCategoryRepository = forumCategoryRepository;
         _forumThreadRepository = forumThreadRepository;
         _accountRoleRepository = accountRoleRepository;
         _accountRepository = accountRepository;
+        _userManager = userManager;
+        _forumPostRepository = forumPostRepository;
     }
     public async Task<IActionResult> ForumThreadTable()
     {
@@ -32,9 +40,45 @@ public class ForumThreadController : Controller
     public async Task<IActionResult> ForumThreadOfCategoryTable(int id)
     {
         var forumThreads = await _forumThreadRepository.GetForumThreadsByCategoryId(id);
-        var forumCategories = await _forumCategoryRepository.GetAll();
+        var forumCategory = await _forumCategoryRepository.GetForumCategoryById(id);
         var accounts = await _accountRepository.GetAll();
-        var forumListViewModel = new ForumListViewModel(forumCategories,forumThreads,accounts);
-        return View(forumListViewModel);
+        var forumThreadOfCategoryViewModel = new ForumThreadOfCategoryViewModel(forumCategory,forumThreads,accounts);
+        return View(forumThreadOfCategoryViewModel);
     }
+
+    [HttpGet]
+    public IActionResult CreateNewForumThread()
+    {
+        return View();
+    }
+    public async Task<IActionResult> CreateNewForumThread(ForumThread forumThread, ForumPost forumPost)
+    {
+        
+        ForumThread addThread = new ForumThread();
+        addThread.ForumThreadTitle = forumThread.ForumThreadTitle;
+        addThread.ForumThreadCreationTimeUnix = DateTime.UtcNow;
+        addThread.ForumThreadCreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
+        addThread.ForumCategoryId = 1;
+        
+        await _forumThreadRepository.CreateNewForumThread(addThread);
+        int threadId = addThread.ForumThreadId;
+        
+        Console.WriteLine(threadId);
+        CreateNewForumPost(threadId, forumPost);
+        
+        return View(nameof(ForumThreadTable));
+    }
+
+    public async void CreateNewForumPost(int threadId,ForumPost forumPost)
+    {
+        ForumPost addPost = new ForumPost();
+        addPost.ForumPostCreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
+        addPost.ForumPostCreationTimeUnix = DateTime.UtcNow;
+        addPost.ForumThreadId = threadId;
+        addPost.ForumPostContent = forumPost.ForumPostContent;
+        await _forumPostRepository.CreateNewForumPost(addPost);
+        return;
+    }
+    
+    
 }

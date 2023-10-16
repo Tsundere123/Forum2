@@ -9,7 +9,7 @@ public interface IForumPostRepository
     Task<IEnumerable<ForumPost>> GetAllForumPostsByThreadId(int threadId);
     Task<IEnumerable<ForumPost>> GetAllForumPostsByAccountId(string accountId);
     
-    Task CreateForumPost(ForumPost forumPost);
+    Task CreateNewForumPost(ForumPost forumPost);
     Task UpdateForumPost(ForumPost forumPost);
     Task<bool> DeleteForumPost(ForumPost forumPost);
     
