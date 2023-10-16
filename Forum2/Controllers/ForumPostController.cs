@@ -27,10 +27,10 @@ public class ForumPostController : Controller
     public async Task<IActionResult> ForumPostView(int threadId)
     {
         var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(threadId);
-        var forumCategories = await _forumCategoryRepository.GetAll();
+        var forumCategory = await _forumCategoryRepository.GetForumCategoryById(_forumThreadRepository.GetForumThreadById(threadId).Result.ForumCategoryId);
         var currentForumThread = await _forumThreadRepository.GetForumThreadById(threadId);
         var accounts = await _accountRepository.GetAll();
-        var forumPostViewModel = new ForumPostViewModel(forumCategories, currentForumThread, forumPosts, accounts);
+        var forumPostViewModel = new ForumPostViewModel(forumCategory, currentForumThread, forumPosts, accounts);
         
         return View(forumPostViewModel);
     }
