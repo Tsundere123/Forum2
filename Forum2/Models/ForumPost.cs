@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Forum2.Models;
@@ -19,6 +20,8 @@ public class ForumPost
     [Required]
     public string ForumPostContent { get; set; } = string.Empty;
     
+    [Required]
+    public DateTime ForumPostCreationTimeUnix { get; set; } = DateTime.MinValue;
     // Navigation Property
     public virtual ForumThread? ForumThread { get; set; }
 }
