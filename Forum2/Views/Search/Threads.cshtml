@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Search";
+}
+
+@using Microsoft.AspNetCore.Identity
+@using NuGet.Protocol
+@model SearchResultViewModel
+@inject UserManager<ApplicationUser> UserManager
+
+<h1>Search Threads</h1>
+<div>
+    <form class="d-flex" asp-controller="Search" asp-action="Threads" method="get">
+        <input type="text" class="form-control me-2" id="query" name="query" placeholder="Search" value="@Model.Query" required="required">
+        <button type="submit" class="btn btn-outline-success">Search</button>
+    </form>
+    <a class="btn btn-sm btn-outline-primary d-block mt-2" asp-controller="Search" asp-action="Index" asp-route-query="@Model.Query">General Search</a>
+</div>
+
+@if (Model.Query != null)
+{
+    <hr class="my-4" />
+    @if (Model.Threads == null || !Model.Threads.Any())
+    {
+        <p>No threads matching the search query.</p>
+    }
+    else
+    {
+        <ul class="list-group">
+            @foreach (var thread in Model.Threads)
+            {
+                var user = UserManager.FindByIdAsync(thread.ForumThreadCreatorId).Result;
+                <li class="list-group-item">
+                    <div class="d-flex">
+                        <img src="@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
+                        <div>
+                            <div class="d-block">
+                                <a href="#">@thread.ForumThreadTitle</a>
+                            </div>
+                            <div class="d-block" style="font-size: 14px;">
+                                in @thread.ForumCategory.ToJson() <!-- TODO: this should display category name, but just returns null -->
+                            </div>
+                            <div class="d-block" style="font-size: 12px;">
+                                <span class="me-1">
+                                    <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
+                                </span>
+                                <span class="text-muted">
+                                    Date Here <!-- TODO -->
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+}
