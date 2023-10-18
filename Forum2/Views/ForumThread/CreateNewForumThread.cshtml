@@ -1,22 +1,18 @@
 ﻿@model ForumThreadCreationViewModel
 
 
-<h2>Create new account</h2>
+<h2>Create new thread</h2>
+<h3>This is category: @Model.ForumCategory.ForumCategoryId @Model.ForumCategory.ForumCategoryName</h3>
 <form asp-controller="ForumThread" asp-action="CreateNewForumThread">
     <fieldset> 
         <legend>Forum Thread</legend> 
         <div>
-            
+            <input type="hidden" asp-for="ForumCategory.ForumCategoryId">
         </div>
         <div class="form-group">
             <label asp-for="ForumThread.ForumThreadTitle"></label><span class="text-danger">*</span>
             <input asp-for="ForumThread.ForumThreadTitle" class="form-control">
             <span asp-validation-for="ForumThread.ForumThreadTitle" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="ForumThread.ForumCategoryId"></label><span class="text-danger">*</span>
-            <input asp-for="ForumThread.ForumCategoryId" class="form-control">
-            <span asp-validation-for="ForumThread.ForumCategoryId" class="text-danger"></span>
         </div>
     </fieldset> 
     <fieldset>

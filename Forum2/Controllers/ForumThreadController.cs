@@ -48,25 +48,28 @@ public class ForumThreadController : Controller
     }
 
     [HttpGet]
-    public IActionResult CreateNewForumThread()
+    public async Task<IActionResult> CreateNewForumThread(int categoryId)
     {
-        return View();
+        var forumCategory = await _forumCategoryRepository.GetForumCategoryById(categoryId);
+        var accounts = await _accountRepository.GetAll();
+        var forumThread = new ForumThread();
+        var viewModel = new ForumThreadCreationViewModel(forumCategory, forumThread, null, accounts);
+        return View(viewModel);
     }
     [HttpPost]
-    public async Task<IActionResult> CreateNewForumThread(ForumThread forumThread, ForumPost forumPost)
+    public async Task<IActionResult> CreateNewForumThread(ForumCategory forumCategory,ForumThread forumThread, ForumPost forumPost)
     {
-        
         ForumThread addThread = new ForumThread();
         addThread.ForumThreadTitle = forumThread.ForumThreadTitle;
         addThread.ForumThreadCreationTimeUnix = DateTime.UtcNow;
         addThread.ForumThreadCreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
-        addThread.ForumCategoryId = 1;
+        addThread.ForumCategoryId = forumCategory.ForumCategoryId;
         
         await _forumThreadRepository.CreateNewForumThread(addThread);
         int threadId = addThread.ForumThreadId;
         
         CreateNewForumPost(threadId, forumPost);
-        return RedirectToAction("ForumPostView", "ForumPost", new { threadId = threadId });
+        return RedirectToAction("ForumPostView", "ForumPost", new {threadId });
     }
 
     public async void CreateNewForumPost(int threadId,ForumPost forumPost)

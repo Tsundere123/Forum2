@@ -4,6 +4,6 @@
 
 <h1>@Model.ForumCategory.ForumCategoryName</h1>
 
-<a asp-controller="ForumThread" asp-action="CreateNewForumThread">CREATE</a>
+<a asp-controller="ForumThread" asp-action="CreateNewForumThread" asp-route-categoryId="@Model.ForumCategory.ForumCategoryId">CREATE</a>
 
 <partial name="_ForumThreadListOfCategory" model="Model" />
