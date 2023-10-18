@@ -16,7 +16,12 @@ public class ForumThreadRepository : IForumThreadRepository
     {
         return await _db.ForumThread.ToListAsync();
     }
-
+    
+    public async Task<IEnumerable<ForumThread>> GetAllWithCategory()
+    {
+        return await _db.ForumThread.Include(t => t.ForumCategory).ToListAsync();
+    }
+    
     public async Task<ForumThread?> GetForumThreadById(int id)
     {
         return await _db.ForumThread.FindAsync(id);
