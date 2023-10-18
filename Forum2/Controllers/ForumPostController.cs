@@ -25,6 +25,7 @@ public class ForumPostController : Controller
         _forumPostRepository = forumPostRepository;
         _userManager = userManager;
     }
+    [HttpGet]
     public async Task<IActionResult> ForumPostView(int threadId)
     {
         var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(threadId);
@@ -60,17 +61,8 @@ public class ForumPostController : Controller
         addPost.ForumPostCreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
         await _forumPostRepository.CreateNewForumPost(addPost);
 
-        ViewData["threadId"] = forumPost.ForumThreadId;
-
-        var forumThread = await _forumThreadRepository.GetForumThreadById(addPost.ForumThreadId);
-        var forumCategoryId = forumThread.ForumCategoryId;
-        var forumCategory = await _forumCategoryRepository.GetForumCategoryById(forumCategoryId);
-        var applicationUsers = _userManager;
-        var forumPosts =
-            await _forumPostRepository.GetAllForumPostsByThreadId(addPost.ForumThreadId = forumPost.ForumThreadId);
-        
-        var viewModel = new ForumPostViewModel(forumCategory, forumThread, forumPosts, null);
-        
-        return View(nameof(ForumPostView),viewModel);
+        var threadId = forumPost.ForumThreadId;
+        return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
+        // return View(nameof(ForumPostView),viewModel);
     }
 }
