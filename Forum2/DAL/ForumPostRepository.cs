@@ -52,7 +52,7 @@ public class ForumPostRepository : IForumPostRepository
         return returnList;
     }
 
-    public async Task CreateForumPost(ForumPost forumPost)
+    public async Task CreateNewForumPost(ForumPost forumPost)
     {
         _db.ForumPost.Add(forumPost);
         await _db.SaveChangesAsync();

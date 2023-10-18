@@ -4,20 +4,21 @@ using Forum2.Models;
 
 namespace Forum2.ViewModels;
 
-
-public class ForumPostViewModel
+public class ForumThreadCreationViewModel
 {
     public IEnumerable<ApplicationUser> Accounts;
     public ForumCategory ForumCategory;
-    public ForumThread CurrentForumThread;
-    public IEnumerable<ForumPost> ForumPosts;
+    public ForumThread ForumThread;
+    public ForumPost ForumPost;
 
-    public ForumPostViewModel(ForumCategory forumCategory, ForumThread currentForumThread,IEnumerable<ForumPost> forumPosts,
+    public ForumThreadCreationViewModel(ForumCategory forumCategory, ForumThread forumThread,
+        ForumPost forumPost,
         IEnumerable<ApplicationUser> applicationUsers)
     {
         ForumCategory = forumCategory;
-        CurrentForumThread = currentForumThread;
-        ForumPosts = forumPosts;
+        ForumThread = forumThread;
+        ForumPost = forumPost;
         Accounts = applicationUsers;
     }
+
 }
