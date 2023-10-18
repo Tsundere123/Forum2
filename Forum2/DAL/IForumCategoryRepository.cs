@@ -8,4 +8,5 @@ public interface IForumCategoryRepository
     Task<ForumCategory?> GetForumCategoryById(int id);
     Task CreateForumCategory(ForumCategory forumCategory);
     Task UpdateForumCategory(ForumCategory forumCategory);
+    Task DeleteForumCategory(ForumCategory forumCategory);
 }

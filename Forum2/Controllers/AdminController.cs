@@ -1,11 +1,10 @@
-﻿using Forum2.Models;
+﻿using Forum2.DAL;
+using Forum2.Models;
 using Forum2.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using NuGet.Protocol;
 
 namespace Forum2.Controllers;
 
@@ -14,11 +13,17 @@ public class AdminController : Controller
 {
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IForumCategoryRepository _forumCategoryRepository;
 
-    public AdminController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
+    public AdminController(
+        RoleManager<ApplicationRole> roleManager, 
+        UserManager<ApplicationUser> userManager, 
+        IForumCategoryRepository forumCategoryRepository
+        )
     {
         _roleManager = roleManager;
         _userManager = userManager;
+        _forumCategoryRepository = forumCategoryRepository;
     }
 
     // Dashboard
@@ -216,6 +221,91 @@ public class AdminController : Controller
             if (!resultRemoveRoles.Succeeded || !resultAddRoles.Succeeded) return View(viewModel);
 
             return RedirectToAction(nameof(Users));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    // Categories
+    [HttpGet]
+    public async Task<IActionResult> Categories()
+    {
+        var categories = await _forumCategoryRepository.GetAll();
+        return View(categories);
+    }
+    
+    [HttpGet]
+    [Route("/Admin/Categories/New")]
+    public IActionResult NewCategory()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [Route("/Admin/Categories/New")]
+    public async Task<IActionResult> NewCategory(ForumCategory category)
+    {
+        if (!ModelState.IsValid) return View(category);
+
+        try
+        {
+            await _forumCategoryRepository.CreateForumCategory(category);
+            return RedirectToAction(nameof(Categories));
+        } 
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    [HttpGet]
+    [Route("/Admin/Categories/Edit/{id}")]
+    public async Task<IActionResult> EditCategory(int id)
+    {
+        var category = await _forumCategoryRepository.GetForumCategoryById(id);
+        return View(category);
+    }
+
+    [HttpPost]
+    [Route("/Admin/Categories/Edit/{id}")]
+    public async Task<IActionResult> EditCategory(int id, ForumCategory category)
+    {
+        if (!ModelState.IsValid) return View(category);
+
+        try
+        {
+            category.ForumCategoryId = id;
+            await _forumCategoryRepository.UpdateForumCategory(category);
+            return RedirectToAction(nameof(Categories));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    [HttpGet]
+    [Route("/Admin/Categories/Delete/{id}")]
+    public async Task<IActionResult> DeleteCategory(int id)
+    {
+        var category = await _forumCategoryRepository.GetForumCategoryById(id);
+        return View(category);
+    }
+
+    [HttpPost]
+    [Route("/Admin/Categories/Delete/{id}")]
+    public async Task<IActionResult> DeleteCategory(int id, ForumCategory category)
+    {
+        try
+        {
+            var categoryToDelete = await _forumCategoryRepository.GetForumCategoryById(id);
+            await _forumCategoryRepository.DeleteForumCategory(categoryToDelete);
+            return RedirectToAction(nameof(Categories));
         }
         catch (Exception e)
         {

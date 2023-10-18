@@ -34,4 +34,10 @@ public class ForumCategoryRepository : IForumCategoryRepository
         _db.ForumCategory.Update(forumCategory);
         await _db.SaveChangesAsync();
     }
+
+    public async Task DeleteForumCategory(ForumCategory forumCategory)
+    {
+        _db.ForumCategory.Remove(forumCategory);
+        await _db.SaveChangesAsync();
+    }
 }
