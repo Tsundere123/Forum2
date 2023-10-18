@@ -30,9 +30,11 @@ public class SearchController : Controller
         var users = _userManager.Users.ToList();
         
         viewModel.Query = query;
-        viewModel.Threads = threads.Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).ToList();
-        viewModel.Posts = posts.Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).ToList();
-        viewModel.Users = users.Where(u => u.DisplayName.ToUpper().Contains(query.ToUpper())).ToList();
+
+        var limit = 10;
+        viewModel.Threads = threads.Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).Take(limit).ToList();
+        viewModel.Posts = posts.Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).Take(limit).ToList();
+        viewModel.Users = users.Where(u => u.DisplayName.ToUpper().Contains(query.ToUpper())).Take(limit).ToList();
 
         return View(viewModel);
     }
