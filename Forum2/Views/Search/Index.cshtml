@@ -3,7 +3,6 @@
 }
 
 @using Microsoft.AspNetCore.Identity
-@using NuGet.Protocol
 @model SearchResultViewModel
 @inject RoleManager<ApplicationRole> RoleManager
 @inject UserManager<ApplicationUser> UserManager
@@ -41,7 +40,7 @@
                                         <a href="#">@thread.ForumThreadTitle</a>
                                     </div>
                                     <div class="d-block" style="font-size: 14px;">
-                                        in @thread.ForumCategory.ToJson() <!-- TODO: this should display category name, but just returns null -->
+                                        in @thread.ForumCategory.ForumCategoryName
                                     </div>
                                     <div class="d-block" style="font-size: 12px;">
                                         <span class="me-1">
@@ -76,7 +75,7 @@
                                 <img src="@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
                                 <div>
                                     <div class="d-block">
-                                        <a href="#">@post.ForumThread.ForumThreadTitle</a> <!-- TODO -->
+                                        <a href="#">@post.ForumThread.ForumThreadTitle</a>
                                     </div>
                                     <div class="d-block" style="font-size: 14px;">
                                         @if (post.ForumPostContent.Length >= 20)
