@@ -23,6 +23,7 @@ public class ForumPostController : Controller
         _accountRoleRepository = accountRoleRepository;
         _accountRepository = accountRepository;
         _forumPostRepository = forumPostRepository;
+        _userManager = userManager;
     }
     public async Task<IActionResult> ForumPostView(int threadId)
     {
@@ -35,23 +36,41 @@ public class ForumPostController : Controller
         return View(forumPostViewModel);
     }
     [HttpGet]
-    public IActionResult CreateNewForumPost(int threadId)
+    public async Task<IActionResult> CreateNewForumPost(int threadId)
     {
         // var thread = _forumThreadRepository.GetForumThreadById(threadId);
         // var posts = _forumPostRepository.
         // var viewModel = new ForumPostCreationViewModel(thread,);
         // viewModel.ForumThread.ForumThreadId = threadId;
-        return View();
+
+        var forumThread = await _forumThreadRepository.GetForumThreadById(threadId);
+        var accounts = await _accountRepository.GetAll();
+        var forumPost = new ForumPost();
+        forumPost.ForumThreadId = forumThread.ForumThreadId;
+        var viewModel = new ForumPostCreationViewModel(forumThread, forumPost, accounts);
+        return View(viewModel);
     }
-    public async Task<IActionResult> CreateNewForumPost(int threadId,ForumPost forumPost)
+    public async Task<IActionResult> CreateNewForumPost(ForumPost forumPost)
     {
         ForumPost addPost = new ForumPost();
         addPost.ForumPostContent = forumPost.ForumPostContent;
         // addPost.ForumThreadId = forumPost.ForumThreadId;
-        addPost.ForumThreadId = threadId;
+        addPost.ForumThreadId = forumPost.ForumThreadId;
         addPost.ForumPostCreationTimeUnix = DateTime.UtcNow;
         addPost.ForumPostCreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
         await _forumPostRepository.CreateNewForumPost(addPost);
-        return View(nameof(ForumPostView));
+
+        ViewData["threadId"] = forumPost.ForumThreadId;
+
+        var forumThread = await _forumThreadRepository.GetForumThreadById(addPost.ForumThreadId);
+        var forumCategoryId = forumThread.ForumCategoryId;
+        var forumCategory = await _forumCategoryRepository.GetForumCategoryById(forumCategoryId);
+        var applicationUsers = _userManager;
+        var forumPosts =
+            await _forumPostRepository.GetAllForumPostsByThreadId(addPost.ForumThreadId = forumPost.ForumThreadId);
+        
+        var viewModel = new ForumPostViewModel(forumCategory, forumThread, forumPosts, null);
+        
+        return View(nameof(ForumPostView),viewModel);
     }
 }

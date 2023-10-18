@@ -2,9 +2,10 @@
 
 
 <h2>Create new post</h2>
+<h3>This is thread: @Model.ForumThread.ForumThreadId @Model.ForumThread.ForumThreadTitle</h3>
 <form asp-controller="ForumPost" asp-action="CreateNewForumPost">
     <legend>Forum Post</legend> 
-        <input type="hidden" asp-for="ForumThread.ForumThreadId">
+        <input type="hidden" asp-for="ForumPost.ForumThreadId">
     <div class="form-group">
         <label asp-for="ForumPost.ForumPostContent"></label>
         <input asp-for="ForumPost.ForumPostContent" class="form-control">
