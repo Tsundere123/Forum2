@@ -3,6 +3,7 @@ using Forum2.Models;
 using Forum2.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol;
 
 namespace Forum2.Controllers;
 
@@ -24,16 +25,18 @@ public class SearchController : Controller
     {
         var viewModel = new SearchResultViewModel();
         if (query == null) return View(viewModel);
-        
-        var threads = await _threadRepository.GetAll();
-        var posts = await _postRepository.GetAll();
+
+        var threads = await _threadRepository.GetAllWithCategory();
+        var posts = await _postRepository.GetAllWithThread();
         var users = _userManager.Users.ToList();
         
         viewModel.Query = query;
-        viewModel.Threads = threads.Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).ToList();
-        viewModel.Posts = posts.Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).ToList();
-        viewModel.Users = users.Where(u => u.DisplayName.ToUpper().Contains(query.ToUpper())).ToList();
 
+        int limit = 10;
+        viewModel.Threads = threads.Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).Take(limit).ToList();
+        viewModel.Posts = posts.Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).Take(limit).ToList();
+        viewModel.Users = users.Where(u => u.DisplayName.ToUpper().Contains(query.ToUpper())).Take(limit).ToList();
+        
         return View(viewModel);
     }
     
@@ -43,8 +46,8 @@ public class SearchController : Controller
     {
         var viewModel = new SearchResultViewModel();
         if (query == null) return View(viewModel);
-        
-        var threads = await _threadRepository.GetAll();
+
+        var threads = await _threadRepository.GetAllWithCategory();
         
         viewModel.Query = query;
         viewModel.Threads = threads.Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).ToList();
@@ -58,8 +61,8 @@ public class SearchController : Controller
     {
         var viewModel = new SearchResultViewModel();
         if (query == null) return View(viewModel);
-        
-        var posts = await _postRepository.GetAll();
+
+        var posts = await _postRepository.GetAllWithThread();
         
         viewModel.Query = query;
         viewModel.Posts = posts.Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).ToList();
