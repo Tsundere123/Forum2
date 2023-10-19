@@ -90,7 +90,7 @@ public class SearchController : Controller
     
     [HttpGet]
     [Route("/Search/Users")]
-    public async Task<IActionResult> Users(string? query, int? page)
+    public IActionResult Users(string? query, int? page)
     {
         var viewModel = new SearchResultViewModel();
         if (query == null) return View(viewModel);
