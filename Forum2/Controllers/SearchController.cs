@@ -41,45 +41,73 @@ public class SearchController : Controller
     
     [HttpGet]
     [Route("/Search/Threads")]
-    public async Task<IActionResult> Threads(string? query)
+    public async Task<IActionResult> Threads(string? query, int? page)
     {
         var viewModel = new SearchResultViewModel();
         if (query == null) return View(viewModel);
         
         var threads = await _threadRepository.GetAll();
+        var threadsRelevant = threads.Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).ToList();
+        
+        var threadsCount = threadsRelevant.Count;
+        var threadsPerPage = 10;
+        var totalPages = (int) Math.Ceiling((double) threadsCount / threadsPerPage);
+        var currentPage = page ?? 1;
+        var threadsToShow = threadsRelevant.Skip((currentPage - 1) * threadsPerPage).Take(threadsPerPage).ToList();
+        
         
         viewModel.Query = query;
-        viewModel.Threads = threads.Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).ToList();
+        viewModel.Threads = threadsToShow;
+        viewModel.CurrentPage = currentPage;
+        viewModel.TotalPages = totalPages;
 
         return View(viewModel);
     }
     
     [HttpGet]
     [Route("/Search/Posts")]
-    public async Task<IActionResult> Posts(string? query)
+    public async Task<IActionResult> Posts(string? query, int? page)
     {
         var viewModel = new SearchResultViewModel();
         if (query == null) return View(viewModel);
         
         var posts = await _postRepository.GetAll();
+        var postsRelevant = posts.Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).ToList();
+
+        var postsCount = postsRelevant.Count;
+        var postsPerPage = 10;
+        var totalPages = (int) Math.Ceiling((double) postsCount / postsPerPage);
+        var currentPage = page ?? 1;
+        var postsToShow = postsRelevant.Skip((currentPage - 1) * postsPerPage).Take(postsPerPage).ToList();
         
         viewModel.Query = query;
-        viewModel.Posts = posts.Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).ToList();
+        viewModel.Posts = postsToShow;
+        viewModel.CurrentPage = currentPage;
+        viewModel.TotalPages = totalPages;
 
         return View(viewModel);
     }
     
     [HttpGet]
     [Route("/Search/Users")]
-    public async Task<IActionResult> Users(string? query)
+    public async Task<IActionResult> Users(string? query, int? page)
     {
         var viewModel = new SearchResultViewModel();
         if (query == null) return View(viewModel);
         
         var users = _userManager.Users.ToList();
+        var usersRelevant = users.Where(u => u.DisplayName.ToUpper().Contains(query.ToUpper())).ToList();
+        
+        var userCount = usersRelevant.Count;
+        var usersPerPage = 10;
+        var totalPages = (int) Math.Ceiling((double) userCount / usersPerPage);
+        var currentPage = page ?? 1;
+        var usersToShow = usersRelevant.Skip((currentPage - 1) * usersPerPage).Take(usersPerPage).ToList();
         
         viewModel.Query = query;
-        viewModel.Users = users.Where(u => u.DisplayName.ToUpper().Contains(query.ToUpper())).ToList();
+        viewModel.Users = usersToShow;
+        viewModel.CurrentPage = currentPage;
+        viewModel.TotalPages = totalPages;
 
         return View(viewModel);
     }
