@@ -80,8 +80,8 @@ public class ForumThreadController : Controller
         addPost.ForumThreadId = threadId;
         addPost.ForumPostContent = forumPost.ForumPostContent;
         await _forumPostRepository.CreateNewForumPost(addPost);
-        return;
     }
-    
+
+
     
 }

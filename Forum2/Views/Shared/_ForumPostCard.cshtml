@@ -16,6 +16,9 @@
         <div class="col-10">
             @Model.ForumPostContent
         </div>
+        <div>
+            <a asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
+        </div>
     </div>
 </div>
 

@@ -1,11 +1,12 @@
 ﻿using Forum2.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Forum2.DAL;
 
 public interface IForumPostRepository
 {
     Task<IEnumerable<ForumPost>> GetAll();
-    Task<ForumPost> GetForumPostById(int id);
+    Task<ForumPost?> GetForumPostById(int id);
     Task<IEnumerable<ForumPost>> GetAllForumPostsByThreadId(int threadId);
     Task<IEnumerable<ForumPost>> GetAllForumPostsByAccountId(string accountId);
     

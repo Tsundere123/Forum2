@@ -65,4 +65,23 @@ public class ForumPostController : Controller
         return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
         // return View(nameof(ForumPostView),viewModel);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> UpdateForumPostContent(int forumPostId)
+    {
+        var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
+        if (forumPost == null) return NotFound();
+        return View(forumPost);
+    }
+    [HttpPost]
+    public async Task<IActionResult> UpdateForumPostContent(ForumPost forumPost)
+    {
+        if (ModelState.IsValid)
+        {
+            await _forumPostRepository.UpdateForumPost(forumPost);
+            var threadId = forumPost.ForumThreadId;
+            return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
+        }
+        return View(forumPost);
+    }
 }
