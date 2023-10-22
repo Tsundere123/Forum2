@@ -39,11 +39,6 @@ public class ForumPostController : Controller
     [HttpGet]
     public async Task<IActionResult> CreateNewForumPost(int threadId)
     {
-        // var thread = _forumThreadRepository.GetForumThreadById(threadId);
-        // var posts = _forumPostRepository.
-        // var viewModel = new ForumPostCreationViewModel(thread,);
-        // viewModel.ForumThread.ForumThreadId = threadId;
-
         var forumThread = await _forumThreadRepository.GetForumThreadById(threadId);
         var accounts = await _accountRepository.GetAll();
         var forumPost = new ForumPost();
@@ -55,15 +50,14 @@ public class ForumPostController : Controller
     {
         ForumPost addPost = new ForumPost();
         addPost.ForumPostContent = forumPost.ForumPostContent;
-        // addPost.ForumThreadId = forumPost.ForumThreadId;
         addPost.ForumThreadId = forumPost.ForumThreadId;
         addPost.ForumPostCreationTimeUnix = DateTime.UtcNow;
         addPost.ForumPostCreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
         await _forumPostRepository.CreateNewForumPost(addPost);
 
+        //Needed for RedirectToAction
         var threadId = forumPost.ForumThreadId;
         return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
-        // return View(nameof(ForumPostView),viewModel);
     }
 
     [HttpGet]
@@ -79,6 +73,7 @@ public class ForumPostController : Controller
         if (ModelState.IsValid)
         {
             await _forumPostRepository.UpdateForumPost(forumPost);
+            //Needed for RedirectToAction
             var threadId = forumPost.ForumThreadId;
             return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
         }
@@ -92,11 +87,11 @@ public class ForumPostController : Controller
         if (forumPost == null) return NotFound();
         return View(forumPost);
     }
-    
 
     [HttpPost]
     public async Task<IActionResult> PermaDeleteSelectedForumPostConfirmed(int forumPostId)
     {
+        //Needed for RedirectToAction
         var threadId = _forumPostRepository.GetForumPostById(forumPostId).Result.ForumThreadId;
         await _forumPostRepository.DeleteForumPost(forumPostId);
         return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
@@ -106,6 +101,7 @@ public class ForumPostController : Controller
     public async Task<IActionResult> SoftDeleteSelectedForumPostContent(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
+        //Needed for RedirectToAction
         var threadId = forumPost.ForumThreadId;
         if (forumPost == null) return NotFound();
         forumPost.ForumPostContent = "This post has been deleted";
