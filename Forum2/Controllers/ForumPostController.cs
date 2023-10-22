@@ -86,7 +86,7 @@ public class ForumPostController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> PermaDeleteSelectedForumPost(int forumPostId)
+    public async Task<IActionResult> DeleteSelectedForumPost(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
         if (forumPost == null) return NotFound();
@@ -102,13 +102,14 @@ public class ForumPostController : Controller
         return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
     }
     
-    [HttpGet]
-    public async Task<IActionResult> DeleteSelectedForumPostContent(int forumPostId)
+    [HttpPost]
+    public async Task<IActionResult> SoftDeleteSelectedForumPostContent(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
+        var threadId = forumPost.ForumThreadId;
         if (forumPost == null) return NotFound();
         forumPost.ForumPostContent = "This post has been deleted";
         await UpdateForumPostContent(forumPost);
-        return RedirectToAction("ForumPostView", "ForumPost",new {forumPost.ForumThreadId});
+        return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
     }
 }
