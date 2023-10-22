@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Search";
+}
+
+@using Microsoft.AspNetCore.Identity
+@model SearchResultViewModel
+@inject UserManager<ApplicationUser> UserManager
+@inject RoleManager<ApplicationRole> RoleManager
+
+<h1>Search Users</h1>
+
+<div>
+    <form class="d-flex" asp-controller="Search" asp-action="Users" method="get">
+        <input type="text" class="form-control me-2" id="query" name="query" placeholder="Search" value="@Model.Query" required="required">
+        <button type="submit" class="btn btn-outline-success">Search</button>
+    </form>
+    <a class="btn btn-sm btn-outline-primary d-block mt-2" asp-controller="Search" asp-action="Index" asp-route-query="@Model.Query">General Search</a>
+</div>
+
+@if (Model.Query != null)
+{
+    <hr class="my-4" />
+    @if (Model.Users == null || !Model.Users.Any())
+    {
+        <p>No user matching the search query.</p>
+    }
+    else
+    {
+        <ul class="list-group">
+            @foreach (var user in Model.Users)
+            {
+                <li class="list-group-item">
+                    <div class="d-flex">
+                        <img src="@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
+                        <div>
+                            <div class="d-block">
+                                <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
+                            </div>
+                            @if (UserManager.GetRolesAsync(user).Result.Count > 0)
+                            {
+                                var role = RoleManager.FindByNameAsync(UserManager.GetRolesAsync(user).Result.FirstOrDefault()).Result;
+                                <div class="d-block">
+                                    <div class="badge" style="background: @role.Color;">
+                                        @role.Name
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage != 1)
+                {
+                    <li class="page-item">
+                        <a asp-controller="Search" asp-action="Users" asp-route-query="@Model.Query" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">Previous</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link">Previous</a>
+                    </li>
+                }
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <li class="page-item active"><a class="page-link">@i.ToString()</a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a asp-controller="Search" asp-action="Users" asp-route-query="@Model.Query" asp-route-page="@i" class="page-link">@i.ToString()</a>
+                        </li>
+                    }
+                }
+                @if (Model.CurrentPage != Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a asp-controller="Search" asp-action="Users" asp-route-query="@Model.Query" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">Next</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link">Next</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+}
+

@@ -18,6 +18,11 @@ public class ForumPostRepository : IForumPostRepository
     {
         return await _db.ForumPost.ToListAsync();
     }
+    
+    public async Task<IEnumerable<ForumPost>> GetAllWithThread()
+    {
+        return await _db.ForumPost.Include(p => p.ForumThread).ToListAsync();
+    }
 
     public async Task<ForumPost?> GetForumPostById(int id)
     {

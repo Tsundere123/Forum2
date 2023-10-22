@@ -14,6 +14,11 @@ public class ForumDbContext : DbContext
     public DbSet<ForumThread> ForumThread { get; set; }
     public DbSet<ForumPost> ForumPost { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLazyLoadingProxies();
+    }
+
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     // {
