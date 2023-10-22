@@ -12,6 +12,6 @@ public interface IForumPostRepository
     
     Task CreateNewForumPost(ForumPost forumPost);
     Task UpdateForumPost(ForumPost forumPost);
-    Task<bool> DeleteForumPost(ForumPost forumPost);
+    Task<bool> DeleteForumPost(int forumPostId);
     
 }

@@ -84,4 +84,31 @@ public class ForumPostController : Controller
         }
         return View(forumPost);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> PermaDeleteSelectedForumPost(int forumPostId)
+    {
+        var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
+        if (forumPost == null) return NotFound();
+        return View(forumPost);
+    }
+    
+
+    [HttpPost]
+    public async Task<IActionResult> PermaDeleteSelectedForumPostConfirmed(int forumPostId)
+    {
+        var threadId = _forumPostRepository.GetForumPostById(forumPostId).Result.ForumThreadId;
+        await _forumPostRepository.DeleteForumPost(forumPostId);
+        return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> DeleteSelectedForumPostContent(int forumPostId)
+    {
+        var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
+        if (forumPost == null) return NotFound();
+        forumPost.ForumPostContent = "This post has been deleted";
+        await UpdateForumPostContent(forumPost);
+        return RedirectToAction("ForumPostView", "ForumPost",new {forumPost.ForumThreadId});
+    }
 }

@@ -64,10 +64,10 @@ public class ForumPostRepository : IForumPostRepository
         await _db.SaveChangesAsync();
     }
 
-    public async Task<bool> DeleteForumPost(ForumPost forumPost)
+    public async Task<bool> DeleteForumPost(int forumPostId)
     {
-        var forumThread = await _db.ForumPost.FindAsync(forumPost);
-        if (forumPost == null)
+        var forumPost = await _db.ForumPost.FindAsync(forumPostId);
+        if (forumPostId == null)
         {
             return false;
         }

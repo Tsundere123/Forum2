@@ -1,0 +1,25 @@
+﻿@model ForumPost
+
+<h2>Permanently delete this forum post?</h2>
+
+<dl class="row">
+    <dt class="col-sm-2">Post Id</dt>
+    <dd class="col-sm-10">@Model.ForumPostId</dd>
+        
+    <dt class="col-sm-2">Thread Name</dt>
+    <dd class="col-sm-10">@Model.ForumThreadId</dd>
+        
+    <dt class="col-sm-2">Poster ID</dt>
+    <dd class="col-sm-10">@Model.ForumPostCreatorId</dd>
+        
+    <dt class="col-sm-2">Posted at</dt>
+    <dd class="col-sm-10">@Model.ForumPostCreationTimeUnix</dd>
+    
+    <dt class="col-sm-2">Content</dt>
+    <dd class="col-sm-10">@Model.ForumPostContent</dd>
+    
+    <form asp-controller="ForumPost" asp-action="PermaDeleteSelectedForumPostConfirmed" asp-route-forumPostId="@Model.ForumPostId" method="post">
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-controller="ForumPost" asp-action="ForumPostView" class="btn btn-secondary">Cancel</a>
+    </form>
+</dl>
