@@ -80,6 +80,7 @@ public class InitDb
         {
             var admin = new ApplicationUser
             {
+                Id = "9c46cebe-38d8-471c-ab0a-a1df156965d8",
                 DisplayName = "Administrator",
                 Email = "admin@test.com",
                 NormalizedEmail = "ADMIN@TEST.COM",
@@ -91,6 +92,7 @@ public class InitDb
 
             var mod = new ApplicationUser
             {
+                Id = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
                 DisplayName = "Moderator",
                 Email = "mod@test.com",
                 NormalizedEmail = "MOD@TEST.COM",
@@ -102,6 +104,7 @@ public class InitDb
 
             var regular = new ApplicationUser
             {
+                Id = "1f03d161-afc3-4507-9d6e-cdb55417b4ca",
                 DisplayName = "User",
                 Email = "user@test.com",
                 NormalizedEmail = "USER@TEST.COM",
