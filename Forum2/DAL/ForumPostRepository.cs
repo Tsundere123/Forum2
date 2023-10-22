@@ -72,7 +72,7 @@ public class ForumPostRepository : IForumPostRepository
     public async Task<bool> DeleteForumPost(int forumPostId)
     {
         var forumPost = await _db.ForumPost.FindAsync(forumPostId);
-        if (forumPostId == null)
+        if (forumPost == null)
         {
             return false;
         }
