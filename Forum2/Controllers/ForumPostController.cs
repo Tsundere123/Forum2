@@ -28,13 +28,14 @@ public class ForumPostController : Controller
         _userManager = userManager;
     }
     [HttpGet]
-    public async Task<IActionResult> ForumPostView(int threadId)
+    [Route("/ForumPost/{forumThreadId}")]
+    public async Task<IActionResult> ForumPostView(int forumThreadId)
     {
-        var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(threadId);
-        var forumCategory = await _forumCategoryRepository.GetForumCategoryById(_forumThreadRepository.GetForumThreadById(threadId).Result.ForumCategoryId);
+        var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId);
+        var forumCategory = await _forumCategoryRepository.GetForumCategoryById(_forumThreadRepository.GetForumThreadById(forumThreadId).Result.ForumCategoryId);
         
         
-        var currentForumThread = await _forumThreadRepository.GetForumThreadById(threadId);
+        var currentForumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
         if (currentForumThread.ForumThreadIsSoftDeleted)
         {
             if (!HttpContext.User.IsInRole("Moderator") && !HttpContext.User.IsInRole("Administrator"))
@@ -50,9 +51,10 @@ public class ForumPostController : Controller
     }
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> CreateNewForumPost(int threadId)
+    [Route("/ForumPost/Create/{forumThreadId}")]
+    public async Task<IActionResult> CreateNewForumPost(int forumThreadId)
     {
-        var forumThread = await _forumThreadRepository.GetForumThreadById(threadId);
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
         var accounts = await _accountRepository.GetAll();
         var forumPost = new ForumPost();
         forumPost.ForumThreadId = forumThread.ForumThreadId;
@@ -71,12 +73,13 @@ public class ForumPostController : Controller
         await _forumPostRepository.CreateNewForumPost(addPost);
 
         //Needed for RedirectToAction
-        var threadId = forumPost.ForumThreadId;
-        return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
+        var forumThreadId = forumPost.ForumThreadId;
+        return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
     }
 
     [Authorize]
     [HttpGet]
+    [Route("/ForumPost/Update/{forumPostId}")]
     public async Task<IActionResult> UpdateForumPostContent(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
@@ -91,7 +94,8 @@ public class ForumPostController : Controller
     }
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> UpdateForumPostContent(ForumPost forumPost)
+    [Route("/ForumPost/Update/{forumPostId}")]
+    public async Task<IActionResult> UpdateForumPostContent(int forumPostId, ForumPost forumPost)
     {
         if (_userManager.GetUserAsync(User).Result.Id == forumPost.ForumPostCreatorId
             || HttpContext.User.IsInRole("Moderator") 
@@ -101,8 +105,8 @@ public class ForumPostController : Controller
             {
                 await _forumPostRepository.UpdateForumPost(forumPost);
                 //Needed for RedirectToAction
-                var threadId = forumPost.ForumThreadId;
-                return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
+                var forumThreadId = forumPost.ForumThreadId;
+                return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
             }
             return View(forumPost);
         }
@@ -110,6 +114,7 @@ public class ForumPostController : Controller
     }
     [Authorize]
     [HttpGet]
+    [Route("/ForumPost/Delete/{forumPostId}")]
     public async Task<IActionResult> DeleteSelectedForumPost(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
@@ -129,9 +134,9 @@ public class ForumPostController : Controller
     public async Task<IActionResult> PermaDeleteSelectedForumPostConfirmed(int forumPostId)
     {
         //Needed for RedirectToAction
-        var threadId = _forumPostRepository.GetForumPostById(forumPostId).Result.ForumThreadId;
+        var forumThreadId = _forumPostRepository.GetForumPostById(forumPostId).Result.ForumThreadId;
         await _forumPostRepository.DeleteForumPost(forumPostId);
-        return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
+        return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
     }
     
     [Authorize]
@@ -144,11 +149,11 @@ public class ForumPostController : Controller
             || HttpContext.User.IsInRole("Administrator"))
         {
             //Needed for RedirectToAction
-            var threadId = forumPost.ForumThreadId;
+            var forumThreadId = forumPost.ForumThreadId;
             if (forumPost == null) return NotFound();
             forumPost.ForumPostContent = "This post has been deleted";
-            await UpdateForumPostContent(forumPost);
-            return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
+            await UpdateForumPostContent(forumPostId,forumPost);
+            return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
         }
         return Forbid();
     }
