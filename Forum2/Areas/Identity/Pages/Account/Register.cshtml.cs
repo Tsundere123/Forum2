@@ -79,7 +79,7 @@ namespace Forum2.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
-            [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,})+)$", ErrorMessage = "Email is invalid.")]
+            [RegularExpression(@"^([\w\.\-\+]+)@([\w\-]+)((\.(\w){2,})+)$", ErrorMessage = "Email is invalid.")]
             public string Email { get; set; }
 
             /// <summary>
