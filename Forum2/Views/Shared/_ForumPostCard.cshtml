@@ -5,8 +5,6 @@
 
 @inject UserManager<ApplicationUser> UserManager
 
-
-
 <div class="container">
     <div class="row">
         <div class="col-2">
@@ -17,10 +15,11 @@
             @Model.ForumPostContent
         </div>
         <div>
-            <a asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
-        </div>
-        <div>
-            <a asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
+            @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
+                {
+                    <a asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
+                    <a asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
+                }
         </div>
     </div>
 </div>
