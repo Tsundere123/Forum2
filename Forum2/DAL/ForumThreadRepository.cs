@@ -6,77 +6,146 @@ namespace Forum2.DAL;
 public class ForumThreadRepository : IForumThreadRepository
 {
     private readonly ForumDbContext _db;
+    private readonly ILogger<ForumThreadRepository> _logger;
 
-    public ForumThreadRepository(ForumDbContext db)
+    public ForumThreadRepository(ForumDbContext db, ILogger<ForumThreadRepository> logger)
     {
         _db = db;
+        _logger = logger;
     }
 
-    public async Task<IEnumerable<ForumThread>> GetAll()
+    public async Task<IEnumerable<ForumThread>?> GetAll()
     {
-        return await _db.ForumThread.ToListAsync();
+        try
+        {
+            return await _db.ForumThread.ToListAsync();
+        } 
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumThreadRepository] ForumThread GetAll failed, error message: {E}", e.Message);
+            return null;
+        }
     }
     
-    public async Task<IEnumerable<ForumThread>> GetAllWithCategory()
+    public async Task<IEnumerable<ForumThread>?> GetAllWithCategory()
     {
-        return await _db.ForumThread.Include(t => t.ForumCategory).ToListAsync();
+        try
+        {
+            return await _db.ForumThread.Include(t => t.ForumCategory).ToListAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumThreadRepository] ForumThread GetAllWithCategory failed, error message: {E}", e.Message);
+            return null;
+        }
     }
     
     public async Task<ForumThread?> GetForumThreadById(int id)
     {
-        return await _db.ForumThread.FindAsync(id);
+        try
+        {
+            return await _db.ForumThread.FindAsync(id);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumThreadRepository] ForumThread GetForumThreadById failed, error message: {E}", e.Message);
+            return null;
+        }
     }
 
-    public async Task<IEnumerable<ForumThread>> GetForumThreadsByCategoryId(int id)
+    public async Task<IEnumerable<ForumThread>?> GetForumThreadsByCategoryId(int id)
     {
-        var threadList = await _db.ForumThread.ToListAsync();
-        List<ForumThread> returnList = new List<ForumThread>();
-        foreach(var forumThread in threadList)
+        try
         {
-            if (forumThread.ForumCategoryId == id)
+            var threadList = await _db.ForumThread.ToListAsync();
+            List<ForumThread> returnList = new List<ForumThread>();
+            foreach(var forumThread in threadList)
             {
-                returnList.Add(forumThread);
+                if (forumThread.ForumCategoryId == id)
+                {
+                    returnList.Add(forumThread);
+                }
             }
+            return returnList;
         }
-        return returnList;
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumThreadRepository] ForumThread GetForumThreadsByCategoryId failed, error message: {E}", e.Message);
+            return null;
+        }
     }
     
-    public async Task<IEnumerable<ForumThread>> GetForumThreadsByAccountId(string accountId)
+    public async Task<IEnumerable<ForumThread>?> GetForumThreadsByAccountId(string accountId)
     {
-        var threadList = await _db.ForumThread.ToListAsync();
-        List<ForumThread> returnList = new List<ForumThread>();
-        foreach(var forumThread in threadList)
+        try
         {
-            if (forumThread.ForumThreadCreatorId == accountId)
+            var threadList = await _db.ForumThread.ToListAsync();
+            List<ForumThread> returnList = new List<ForumThread>();
+            foreach(var forumThread in threadList)
             {
-                returnList.Add(forumThread);
+                if (forumThread.ForumThreadCreatorId == accountId)
+                {
+                    returnList.Add(forumThread);
+                }
             }
+            return returnList;
         }
-        return returnList;
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumThreadRepository] ForumThread GetForumThreadsByAccountId failed, error message: {E}", e.Message);
+            return null;
+        }
     }
 
-    public async Task CreateNewForumThread(ForumThread forumThread)
+    public async Task<bool> CreateNewForumThread(ForumThread forumThread)
     {
-        _db.ForumThread.Add(forumThread);
-        await _db.SaveChangesAsync();
+        try
+        {
+            _db.ForumThread.Add(forumThread);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumThreadRepository] ForumThread CreateNewForumThread failed, error message: {E}", e.Message);
+            return false;
+        }
     }
     
-    public async Task UpdateForumThread(ForumThread forumThread)
+    public async Task<bool> UpdateForumThread(ForumThread forumThread)
     {
-        _db.ForumThread.Update(forumThread);
-        await _db.SaveChangesAsync();
+        try
+        {
+            _db.ForumThread.Update(forumThread);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumThreadRepository] ForumThread UpdateForumThread failed, error message: {E}", e.Message);
+            return false;
+        }
     }
     
     public async Task<bool> DeleteForumThread(int id)
     {
-        var forumThread = await _db.ForumThread.FindAsync(id);
-        if (forumThread == null)
+        try
         {
+            var forumThread = await _db.ForumThread.FindAsync(id);
+            if (forumThread == null)
+            {
+                _logger.LogError("[ForumThreadRepository] ForumThread DeleteForumThread failed, forumThread with id {ID} not found", id);
+                return false;
+            }
+
+            _db.ForumThread.Remove(forumThread);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumThreadRepository] ForumThread DeleteForumThread failed, error message: {E}", e.Message);
             return false;
         }
-
-        _db.ForumThread.Remove(forumThread);
-        await _db.SaveChangesAsync();
-        return true;
     }
 }
