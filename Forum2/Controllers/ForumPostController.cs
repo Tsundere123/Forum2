@@ -55,6 +55,7 @@ public class ForumPostController : Controller
         var forumPost = new ForumPost();
         forumPost.ForumThreadId = forumThread.ForumThreadId;
         var viewModel = new ForumPostCreationViewModel(forumThread, forumPost, accounts);
+        return PartialView(viewModel);
         return View(viewModel);
     }
     [Authorize]
