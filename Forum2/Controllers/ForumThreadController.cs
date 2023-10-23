@@ -113,6 +113,8 @@ public class ForumThreadController : Controller
         {
             if (ModelState.IsValid)
             {
+                forumThread.ForumThreadLastEditedTime = DateTime.Now;
+                forumThread.ForumThreadLastEditedBy = _userManager.GetUserAsync(User).Result.Id;
                 await _forumThreadRepository.UpdateForumThread(forumThread);
                 //Needed for RedirectToAction
                 var forumCategoryId = forumThread.ForumCategoryId;

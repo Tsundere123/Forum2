@@ -23,9 +23,14 @@ public class ForumThread
     [Required]
     [DefaultValue(typeof(DateTime), "DateTime.UtcNow")]
     public DateTime ForumThreadCreationTimeUnix { get; set; } = DateTime.MinValue;
+    
+    public DateTime ForumThreadLastEditedTime { get; set; } = DateTime.MinValue;
+
+    public string ForumThreadLastEditedBy { get; set; } = string.Empty;
 
     [Required] 
     public bool ForumThreadIsSoftDeleted { get; set; } = false;
+    
     
     // //Navigation Property
     // public virtual Account? Account { get; set; }

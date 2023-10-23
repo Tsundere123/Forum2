@@ -10,6 +10,7 @@
             <th>Thread ID</th>
             <th>Thread title</th>
             <th>OP Name</th>
+            <th>Last edited</th>
             <th>Actions</th>
         </tr>
         
@@ -31,7 +32,15 @@
                             {
                                 @account.DisplayName
                             }
-                        }</td>
+                        }
+                    </td>
+                    <td>
+                        @if (forumThread.ForumThreadLastEditedTime > forumThread.ForumThreadCreationTimeUnix)
+                        {
+                                <p>Last edited by: @UserManager.FindByIdAsync(forumThread.ForumThreadLastEditedBy).Result.DisplayName</p>
+                                <p>At: @forumThread.ForumThreadLastEditedTime</p>
+                        }
+                    </td>
                     <td>
                         @if (UserManager.GetUserAsync(User).Result != null)
                         {

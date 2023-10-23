@@ -23,7 +23,15 @@
                     <a asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
                 }
             }
-
+        </div>
+        <div>
+            @if (Model.ForumPostLastEditedTime > Model.ForumPostCreationTimeUnix)
+            {
+                <div>
+                    <p>Last edited by: @UserManager.FindByIdAsync(Model.ForumPostLastEditedBy).Result.DisplayName</p>
+                    <p>At: @Model.ForumPostLastEditedTime</p>
+                </div>
+            }
         </div>
     </div>
 </div>
