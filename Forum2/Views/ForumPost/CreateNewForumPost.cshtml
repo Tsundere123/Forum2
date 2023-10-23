@@ -3,7 +3,7 @@
 
 <h2>Create new post</h2>
 <h3>This is thread: @Model.ForumThread.ForumThreadId @Model.ForumThread.ForumThreadTitle</h3>
-<form asp-controller="ForumPost" asp-action="CreateNewForumPost">
+<form asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-forumThreadId="@Model.ForumThread.ForumThreadId">
     <legend>Forum Post</legend> 
         <input type="hidden" asp-for="ForumPost.ForumThreadId">
     <div class="form-group">

@@ -11,10 +11,6 @@ public class AccountDbContext : IdentityDbContext<ApplicationUser, ApplicationRo
     {
         // Database.EnsureCreated();
     }
-    public DbSet<Account> Accounts { get; set; }
-    public DbSet<AccountRole> AccountRoles { get; set; }
-
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseLazyLoadingProxies();

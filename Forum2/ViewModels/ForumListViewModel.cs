@@ -9,7 +9,6 @@ namespace Forum2.ViewModels
     {
         public IEnumerable<ForumThread> ForumThreads;
         public IEnumerable<ForumCategory> ForumCategories;
-
         public IEnumerable<ApplicationUser> Accounts;
         // public string? CurrentViewName;
 

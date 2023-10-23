@@ -30,8 +30,6 @@ builder.Services.AddDbContext<ForumDbContext>(options =>
         builder.Configuration["ConnectionStrings:ForumDbContextConnection"]);
 });
 
-builder.Services.AddScoped<Forum2.DAL.IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<Forum2.DAL.IAccountRoleRepository, AccountRoleRepository>();
 builder.Services.AddScoped<Forum2.DAL.IForumCategoryRepository, ForumCategoryRepository>();
 builder.Services.AddScoped<Forum2.DAL.IForumThreadRepository, ForumThreadRepository>();
 builder.Services.AddScoped<Forum2.DAL.IForumPostRepository, ForumPostRepository>();
