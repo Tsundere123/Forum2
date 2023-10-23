@@ -23,7 +23,7 @@
                     <td>@forumThread.ForumThreadId</td>
                     <td><a asp-controller="ForumPost"
                            asp-action="ForumPostView"
-                           asp-route-threadId="@forumThread.ForumThreadId">@forumThread.ForumThreadTitle</a>
+                           asp-route-forumThreadId="@forumThread.ForumThreadId">@forumThread.ForumThreadTitle</a>
                     </td>
                     <td>@foreach (var account in Model.Accounts)
                         {

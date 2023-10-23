@@ -4,7 +4,7 @@
 <h1>Current thread: @Model.CurrentForumThread.ForumThreadTitle</h1>
 
 
-<a asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-threadId="@Model.CurrentForumThread.ForumThreadId">CREATE</a>
+<a asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">CREATE</a>
 
 @{ var i = 0;}
 @foreach(var post in Model.ForumPosts)

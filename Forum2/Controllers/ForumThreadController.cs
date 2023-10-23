@@ -41,6 +41,7 @@ public class ForumThreadController : Controller
         return View(forumListViewModel);
     }
     [HttpGet]
+    [Route("/Category/{forumCategoryId}")]
     public async Task<IActionResult> ForumThreadOfCategoryTable(int forumCategoryId)
     {
         var forumThreads = await _forumThreadRepository.GetForumThreadsByCategoryId(forumCategoryId);
@@ -52,6 +53,7 @@ public class ForumThreadController : Controller
 
     [Authorize]
     [HttpGet]
+    [Route("/Category/{categoryId}/NewThread")]
     public async Task<IActionResult> CreateNewForumThread(int categoryId)
     {
         var forumCategory = await _forumCategoryRepository.GetForumCategoryById(categoryId);
@@ -63,6 +65,7 @@ public class ForumThreadController : Controller
     
     [Authorize]
     [HttpPost]
+    [Route("/Category/{categoryId}/NewThread")]
     public async Task<IActionResult> CreateNewForumThread(ForumCategory forumCategory,ForumThread forumThread, ForumPost forumPost)
     {
         ForumThread addThread = new ForumThread();
@@ -89,6 +92,7 @@ public class ForumThreadController : Controller
     }
     [Authorize]
     [HttpGet]
+    [Route("ForumThread/Update/{forumThreadId}")]
     public async Task<IActionResult> UpdateForumThreadTitle(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
@@ -105,6 +109,7 @@ public class ForumThreadController : Controller
 
     [Authorize]
     [HttpPost]
+    [Route("ForumThread/Update/{forumThreadId}")]
     public async Task<IActionResult> UpdateForumThreadTitle(ForumThread forumThread)
     {
         if (_userManager.GetUserAsync(User).Result.Id == forumThread.ForumThreadCreatorId
@@ -115,8 +120,8 @@ public class ForumThreadController : Controller
             {
                 await _forumThreadRepository.UpdateForumThread(forumThread);
                 //Needed for RedirectToAction
-                var categoryId = forumThread.ForumCategoryId;
-                return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread", new { categoryId });
+                var forumCategoryId = forumThread.ForumCategoryId;
+                return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread", new { forumCategoryId });
             }
             return View(forumThread);
         }
@@ -125,6 +130,7 @@ public class ForumThreadController : Controller
     
     [Authorize]
     [HttpGet]
+    [Route("ForumThread/Delete/{forumThreadId}")]
     public async Task<IActionResult> DeleteSelectedForumThread(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
