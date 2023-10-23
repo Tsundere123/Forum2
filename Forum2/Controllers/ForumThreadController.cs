@@ -13,21 +13,16 @@ namespace Forum2.Controllers;
 
 public class ForumThreadController : Controller
 {
-    private readonly IAccountRepository _accountRepository;
-    private readonly IAccountRoleRepository _accountRoleRepository;
     private readonly IForumCategoryRepository _forumCategoryRepository;
     private readonly IForumThreadRepository _forumThreadRepository;
     private readonly IForumPostRepository _forumPostRepository;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public ForumThreadController(IAccountRepository accountRepository, IAccountRoleRepository accountRoleRepository, 
-        IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository,
+    public ForumThreadController(IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository,
         IForumPostRepository forumPostRepository, UserManager<ApplicationUser> userManager)
     {
         _forumCategoryRepository = forumCategoryRepository;
         _forumThreadRepository = forumThreadRepository;
-        _accountRoleRepository = accountRoleRepository;
-        _accountRepository = accountRepository;
         _userManager = userManager;
         _forumPostRepository = forumPostRepository;
     }
@@ -36,7 +31,7 @@ public class ForumThreadController : Controller
     {
         var forumThreads = await _forumThreadRepository.GetAll();
         var forumCategories = await _forumCategoryRepository.GetAll();
-        var accounts = await _accountRepository.GetAll();
+        var accounts = await _userManager.Users.ToListAsync();
         var forumListViewModel = new ForumListViewModel(forumCategories,forumThreads,accounts);
         return View(forumListViewModel);
     }
@@ -46,7 +41,7 @@ public class ForumThreadController : Controller
     {
         var forumThreads = await _forumThreadRepository.GetForumThreadsByCategoryId(forumCategoryId);
         var forumCategory = await _forumCategoryRepository.GetForumCategoryById(forumCategoryId);
-        var accounts = await _accountRepository.GetAll();
+        var accounts = await _userManager.Users.ToListAsync();
         var forumThreadOfCategoryViewModel = new ForumThreadOfCategoryViewModel(forumCategory,forumThreads,accounts);
         return View(forumThreadOfCategoryViewModel);
     }
@@ -57,7 +52,7 @@ public class ForumThreadController : Controller
     public async Task<IActionResult> CreateNewForumThread(int categoryId)
     {
         var forumCategory = await _forumCategoryRepository.GetForumCategoryById(categoryId);
-        var accounts = await _accountRepository.GetAll();
+        var accounts = await _userManager.Users.ToListAsync();
         var forumThread = new ForumThread();
         var viewModel = new ForumThreadCreationViewModel(forumCategory, forumThread, null, accounts);
         return View(viewModel);
@@ -75,9 +70,9 @@ public class ForumThreadController : Controller
         addThread.ForumCategoryId = forumCategory.ForumCategoryId;
         
         await _forumThreadRepository.CreateNewForumThread(addThread);
-        int threadId = addThread.ForumThreadId;
-        CreateNewForumPost(threadId, forumPost);
-        return RedirectToAction("ForumPostView", "ForumPost", new {threadId });
+        int forumThreadId = addThread.ForumThreadId;
+        CreateNewForumPost(forumThreadId, forumPost);
+        return RedirectToAction("ForumPostView", "ForumPost", new {forumThreadId});
     }
     [Authorize]
     [HttpPost]

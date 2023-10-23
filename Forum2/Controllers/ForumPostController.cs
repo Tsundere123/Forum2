@@ -5,25 +5,21 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Forum2.Controllers;
 
 public class ForumPostController : Controller
 {
-    private readonly IAccountRepository _accountRepository;
-    private readonly IAccountRoleRepository _accountRoleRepository;
     private readonly IForumCategoryRepository _forumCategoryRepository;
     private readonly IForumThreadRepository _forumThreadRepository;
     private readonly IForumPostRepository _forumPostRepository;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public ForumPostController(IAccountRepository accountRepository, IAccountRoleRepository accountRoleRepository,
-        IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository,IForumPostRepository forumPostRepository, UserManager<ApplicationUser> userManager)
+    public ForumPostController(IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository,IForumPostRepository forumPostRepository, UserManager<ApplicationUser> userManager)
     {
         _forumCategoryRepository = forumCategoryRepository;
         _forumThreadRepository = forumThreadRepository;
-        _accountRoleRepository = accountRoleRepository;
-        _accountRepository = accountRepository;
         _forumPostRepository = forumPostRepository;
         _userManager = userManager;
     }
@@ -44,7 +40,7 @@ public class ForumPostController : Controller
             }
         }
         
-        var accounts = await _accountRepository.GetAll();
+        var accounts = await _userManager.Users.ToListAsync();
         var forumPostViewModel = new ForumPostViewModel(forumCategory, currentForumThread, forumPosts, accounts);
         
         return View(forumPostViewModel);
@@ -55,7 +51,7 @@ public class ForumPostController : Controller
     public async Task<IActionResult> CreateNewForumPost(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
-        var accounts = await _accountRepository.GetAll();
+        var accounts = await _userManager.Users.ToListAsync();
         var forumPost = new ForumPost();
         forumPost.ForumThreadId = forumThread.ForumThreadId;
         var viewModel = new ForumPostCreationViewModel(forumThread, forumPost, accounts);
