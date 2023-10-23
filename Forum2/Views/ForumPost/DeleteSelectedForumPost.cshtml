@@ -29,5 +29,5 @@
     <form asp-controller="ForumPost" asp-action="SoftDeleteSelectedForumPostContent" asp-route-forumPostId="@Model.ForumPostId" method="post">
         <button type="submit" class="btn btn-danger">Soft Delete</button>
     </form>
-    <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-threadId="@Model.ForumThreadId" class="btn btn-secondary">Cancel</a>
+    <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThreadId" class="btn btn-secondary">Cancel</a>
 </dl>
