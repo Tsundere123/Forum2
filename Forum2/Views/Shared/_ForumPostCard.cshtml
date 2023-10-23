@@ -1,6 +1,6 @@
 ﻿@using Forum2.DAL
 @using Microsoft.AspNetCore.Identity
-
+@inject SignInManager<ApplicationUser> SignInManager
 @model ForumPost
 
 @inject UserManager<ApplicationUser> UserManager
@@ -15,11 +15,15 @@
             @Model.ForumPostContent
         </div>
         <div>
-            @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
+            @if (SignInManager.IsSignedIn(User))
+            {
+                @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
                 {
                     <a asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
                     <a asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
                 }
+            }
+
         </div>
     </div>
 </div>
