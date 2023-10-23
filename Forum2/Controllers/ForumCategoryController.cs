@@ -8,17 +8,13 @@ namespace Forum2.Controllers;
 
 public class ForumCategoryController : Controller
 {
-    private readonly IAccountRepository _accountRepository;
-    private readonly IAccountRoleRepository _accountRoleRepository;
     private readonly IForumCategoryRepository _forumCategoryRepository;
     private readonly IForumThreadRepository _forumThreadRepository;
     
-    public ForumCategoryController(IAccountRepository accountRepository, IAccountRoleRepository accountRoleRepository, IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository)
+    public ForumCategoryController(IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository)
     {
         _forumCategoryRepository = forumCategoryRepository;
         _forumThreadRepository = forumThreadRepository;
-        _accountRoleRepository = accountRoleRepository;
-        _accountRepository = accountRepository;
     }
     [Route("/Category")]
     public async Task<IActionResult> ForumCategoryTable()

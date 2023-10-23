@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum2.Migrations.ForumDb
 {
     [DbContext(typeof(ForumDbContext))]
-    [Migration("20231023084234_SoftDeleteThread")]
-    partial class SoftDeleteThread
+    [Migration("20231023120938_resetForumDb")]
+    partial class resetForumDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

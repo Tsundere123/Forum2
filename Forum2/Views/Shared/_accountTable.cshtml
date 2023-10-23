@@ -10,7 +10,6 @@
             <th>Name</th>
             <th>Role</th>
             <th>Avatar</th>
-            <th>Actions</th>
         </tr>
         
         @foreach (var account in Model)
@@ -27,10 +26,6 @@
                 </td>
                 <td>
                     <img src="@account.AvatarUrl" width="100px" height="100px">
-                </td>
-                <td>
-                    <a asp-controller="Account" asp-action="UpdateSelectedAccount" asp-route-accountId="@account.Id">Update</a>
-                    <a asp-controller="Account" asp-action="DeleteSelectedAccount" asp-route-accountId="@account.Id">Delete</a>
                 </td>
             </tr>
         }
@@ -49,9 +44,4 @@
 
         
     </div>
-    <p>
-        <a class="btn btn-secondary"
-           asp-controller="Account"
-           asp-action="CreateNewAccount">Create new account</a>
-    </p>
 </div>

@@ -26,17 +26,16 @@
 
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
-      <Folder Include="Migrations\ForumDb\" />
+      <Content Update="Views\Shared\_ForumThreadListOfCategorycshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
     </ItemGroup>
 
 
 
     <ItemGroup>
-      <Content Update="Views\Shared\_ForumThreadListOfCategorycshtml">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
+      <_ContentIncludedByDefault Remove="Views\AccountRole\Table.cshtml" />
     </ItemGroup>
 
 </Project>

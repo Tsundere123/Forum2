@@ -21,52 +21,6 @@ namespace Forum2.Migrations
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true);
 
-            modelBuilder.Entity("Forum2.Models.Account", b =>
-                {
-                    b.Property<int>("AccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AccountAvatar")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AccountName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AccountPassword")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("AccountId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Accounts");
-                });
-
-            modelBuilder.Entity("Forum2.Models.AccountRole", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("RoleDescription")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("RoleId");
-
-                    b.ToTable("AccountRoles");
-                });
-
             modelBuilder.Entity("Forum2.Models.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
@@ -280,15 +234,6 @@ namespace Forum2.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Forum2.Models.Account", b =>
-                {
-                    b.HasOne("Forum2.Models.AccountRole", "AccountRoles")
-                        .WithMany("Accounts")
-                        .HasForeignKey("RoleId");
-
-                    b.Navigation("AccountRoles");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Forum2.Models.ApplicationRole", null)
@@ -338,11 +283,6 @@ namespace Forum2.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Forum2.Models.AccountRole", b =>
-                {
-                    b.Navigation("Accounts");
                 });
 #pragma warning restore 612, 618
         }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Forum2.Migrations.ForumDb
 {
     /// <inheritdoc />
-    public partial class ForumPostThreadCreationTime : Migration
+    public partial class resetForumDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,7 +34,8 @@ namespace Forum2.Migrations.ForumDb
                     ForumThreadTitle = table.Column<string>(type: "TEXT", nullable: false),
                     ForumCategoryId = table.Column<int>(type: "INTEGER", nullable: false),
                     ForumThreadCreatorId = table.Column<string>(type: "TEXT", nullable: false),
-                    ForumThreadCreationTimeUnix = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    ForumThreadCreationTimeUnix = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ForumThreadIsSoftDeleted = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
