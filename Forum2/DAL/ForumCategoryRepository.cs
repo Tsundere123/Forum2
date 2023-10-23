@@ -7,37 +7,82 @@ namespace Forum2.DAL;
 public class ForumCategoryRepository : IForumCategoryRepository
 {
     private readonly ForumDbContext _db;
+    private readonly ILogger<ForumCategoryRepository> _logger;
 
-    public ForumCategoryRepository(ForumDbContext db)
+    public ForumCategoryRepository(ForumDbContext db, ILogger<ForumCategoryRepository> logger)
     {
         _db = db;
+        _logger = logger;
     }
 
-    public async Task<IEnumerable<ForumCategory>> GetAll()
+    public async Task<IEnumerable<ForumCategory>?> GetAll()
     {
-        return await _db.ForumCategory.ToListAsync();
+        try
+        {
+            return await _db.ForumCategory.ToListAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumCategoryRepository] ForumCategory GetAll failed, error message: {E}", e.Message);
+            return null;
+        }
     }
     
     public async Task<ForumCategory?> GetForumCategoryById(int id)
     {
-        return await _db.ForumCategory.FindAsync(id);
+        try
+        {
+            return await _db.ForumCategory.FindAsync(id);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumCategoryRepository] ForumCategory GetForumCategoryById failed, error message: {E}", e.Message);
+            return null;
+        }
     }
 
-    public async Task CreateForumCategory(ForumCategory forumCategory)
+    public async Task<bool> CreateForumCategory(ForumCategory forumCategory)
     {
-        _db.ForumCategory.Add(forumCategory);
-        await _db.SaveChangesAsync();
+        try
+        {
+            _db.ForumCategory.Add(forumCategory);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumCategoryRepository] ForumCategory CreateForumCategory failed, error message: {E}", e.Message);
+            return false;
+        }
     }
 
-    public async Task UpdateForumCategory(ForumCategory forumCategory)
+    public async Task<bool> UpdateForumCategory(ForumCategory forumCategory)
     {
-        _db.ForumCategory.Update(forumCategory);
-        await _db.SaveChangesAsync();
+        try
+        {
+            _db.ForumCategory.Update(forumCategory);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumCategoryRepository] ForumCategory UpdateForumCategory failed, error message: {E}", e.Message);
+            return false;
+        }
     }
 
-    public async Task DeleteForumCategory(ForumCategory forumCategory)
+    public async Task<bool> DeleteForumCategory(ForumCategory forumCategory)
     {
-        _db.ForumCategory.Remove(forumCategory);
-        await _db.SaveChangesAsync();
+        try
+        {
+            _db.ForumCategory.Remove(forumCategory);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumCategoryRepository] ForumCategory DeleteForumCategory failed, error message: {E}", e.Message);
+            return false;
+        }
     }
 }
