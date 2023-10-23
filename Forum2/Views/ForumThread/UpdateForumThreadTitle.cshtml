@@ -11,4 +11,5 @@
         <span asp-validation-for="ForumThreadTitle" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-secondary">Save Changes</button>
+        <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.ForumCategory.ForumCategoryId" class="btn btn-secondary">Cancel</a>
 </form>
