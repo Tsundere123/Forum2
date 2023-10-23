@@ -102,7 +102,9 @@ namespace Forum2.Areas.Identity.Pages.Account
             
             [Required]
             [DataType(DataType.Text)]
-            [Display(Name = "Display Name")]
+            [Display(Name = "Username")]
+            [RegularExpression(@"^[a-zA-Z0-9_-]*$", ErrorMessage = "Only alphanumeric characters, hyphen, and underscores are allowed.")]
+            [StringLength(32, MinimumLength = 1)]
             public string DisplayName { get; set; }
             
             [Required]

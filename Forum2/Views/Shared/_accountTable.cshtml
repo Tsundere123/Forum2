@@ -25,7 +25,11 @@
                     
                 </td>
                 <td>
-                    <img src="@account.AvatarUrl" width="100px" height="100px">
+                    <a asp-controller="Account"
+                       asp-action="Details"
+                       asp-route-accountId="@account.Id">
+                        <img src="@account.AvatarUrl" width="100px" height="100px" alt="@account.DisplayName">
+                    </a>
                 </td>
             </tr>
         }

@@ -6,7 +6,6 @@ namespace Forum2.Models;
 public class ApplicationUser : IdentityUser
 {
     [Required]
-    [MinLength(2)]
     public string DisplayName { get; set; } = string.Empty;
     
     [Required]
