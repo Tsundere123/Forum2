@@ -6,20 +6,28 @@
 
 <div class="container">
     <table class='table table-striped'>
-        <tr><th>Id</th><th>Name</th><th>Password</th><th>Role</th><th>Avatar</th><th>Actions</th></tr>
+        <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Avatar</th>
+            <th>Actions</th>
+        </tr>
+        
         @foreach (var account in Model)
         {
             <tr>
-                <td>@account.Id</td>
                 <td>                            
                     <a asp-controller="Account"
                        asp-action="Details"
                        asp-route-accountId="@account.Id">@account.DisplayName</a>
                 </td>
-                <td>@account.PasswordHash</td>
-                @* <td>@account.RoleId *@
-                @*     @account.AccountRoles?.RoleName</td> *@
-                <td><img src="@account.AvatarUrl" width="100px" height="100px"></td>
+                <td>
+                    @string.Join(", ", UserManager.GetRolesAsync(account).Result)
+                    
+                </td>
+                <td>
+                    <img src="@account.AvatarUrl" width="100px" height="100px">
+                </td>
                 <td>
                     <a asp-controller="Account" asp-action="UpdateSelectedAccount" asp-route-accountId="@account.Id">Update</a>
                     <a asp-controller="Account" asp-action="DeleteSelectedAccount" asp-route-accountId="@account.Id">Delete</a>
