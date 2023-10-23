@@ -18,9 +18,14 @@
     <dt class="col-sm-2">Content</dt>
     <dd class="col-sm-10">@Model.ForumPostContent</dd>
     
-    <form asp-controller="ForumPost" asp-action="PermaDeleteSelectedForumPostConfirmed" asp-route-forumPostId="@Model.ForumPostId" method="post">
-        <button type="submit" class="btn btn-danger">Permanently Delete</button>
-    </form>
+    @* Hard delete only visible to Admins and Mods *@
+    @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
+        {
+            <form asp-controller="ForumPost" asp-action="PermaDeleteSelectedForumPostConfirmed" asp-route-forumPostId="@Model.ForumPostId" method="post">
+                <button type="submit" class="btn btn-danger">Permanently Delete</button>
+            </form>
+        }
+
     <form asp-controller="ForumPost" asp-action="SoftDeleteSelectedForumPostContent" asp-route-forumPostId="@Model.ForumPostId" method="post">
         <button type="submit" class="btn btn-danger">Soft Delete</button>
     </form>
