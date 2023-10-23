@@ -1,6 +1,8 @@
 ﻿using Forum2.DAL;
 using Forum2.Models;
 using Forum2.ViewModels;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,6 +48,7 @@ public class ForumPostController : Controller
         
         return View(forumPostViewModel);
     }
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> CreateNewForumPost(int threadId)
     {
@@ -56,6 +59,8 @@ public class ForumPostController : Controller
         var viewModel = new ForumPostCreationViewModel(forumThread, forumPost, accounts);
         return View(viewModel);
     }
+    [Authorize]
+    [HttpPost]
     public async Task<IActionResult> CreateNewForumPost(ForumPost forumPost)
     {
         ForumPost addPost = new ForumPost();
@@ -70,34 +75,56 @@ public class ForumPostController : Controller
         return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> UpdateForumPostContent(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
-        if (forumPost == null) return NotFound();
-        return View(forumPost);
+        if (_userManager.GetUserAsync(User).Result.Id == forumPost.ForumPostCreatorId
+            || HttpContext.User.IsInRole("Moderator") 
+            || HttpContext.User.IsInRole("Administrator"))
+        {
+            if (forumPost == null) return NotFound();
+            return View(forumPost);
+        }
+        return Forbid();
     }
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> UpdateForumPostContent(ForumPost forumPost)
     {
-        if (ModelState.IsValid)
+        if (_userManager.GetUserAsync(User).Result.Id == forumPost.ForumPostCreatorId
+            || HttpContext.User.IsInRole("Moderator") 
+            || HttpContext.User.IsInRole("Administrator"))
         {
-            await _forumPostRepository.UpdateForumPost(forumPost);
-            //Needed for RedirectToAction
-            var threadId = forumPost.ForumThreadId;
-            return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
+            if (ModelState.IsValid)
+            {
+                await _forumPostRepository.UpdateForumPost(forumPost);
+                //Needed for RedirectToAction
+                var threadId = forumPost.ForumThreadId;
+                return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
+            }
+            return View(forumPost);
         }
-        return View(forumPost);
+        return Forbid();
     }
-
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> DeleteSelectedForumPost(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
-        if (forumPost == null) return NotFound();
-        return View(forumPost);
-    }
+        if (_userManager.GetUserAsync(User).Result.Id == forumPost.ForumPostCreatorId
+            || HttpContext.User.IsInRole("Moderator")
+            || HttpContext.User.IsInRole("Administrator"))
+        {
+            if (forumPost == null) return NotFound();
+            return View(forumPost);
+        }
 
+        return Forbid();
+    }
+    
+    [Authorize(Roles = "Administrator,Moderator")]
     [HttpPost]
     public async Task<IActionResult> PermaDeleteSelectedForumPostConfirmed(int forumPostId)
     {
@@ -107,15 +134,22 @@ public class ForumPostController : Controller
         return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
     }
     
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> SoftDeleteSelectedForumPostContent(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
-        //Needed for RedirectToAction
-        var threadId = forumPost.ForumThreadId;
-        if (forumPost == null) return NotFound();
-        forumPost.ForumPostContent = "This post has been deleted";
-        await UpdateForumPostContent(forumPost);
-        return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
+        if (_userManager.GetUserAsync(User).Result.Id == forumPost.ForumPostCreatorId
+            || HttpContext.User.IsInRole("Moderator") 
+            || HttpContext.User.IsInRole("Administrator"))
+        {
+            //Needed for RedirectToAction
+            var threadId = forumPost.ForumThreadId;
+            if (forumPost == null) return NotFound();
+            forumPost.ForumPostContent = "This post has been deleted";
+            await UpdateForumPostContent(forumPost);
+            return RedirectToAction("ForumPostView", "ForumPost",new {threadId});
+        }
+        return Forbid();
     }
 }
