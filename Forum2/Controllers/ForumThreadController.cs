@@ -129,10 +129,12 @@ public class ForumThreadController : Controller
         var forumCategoryId = forumThread.ForumCategoryId;
         
         if (forumThread == null) return NotFound();
-        
-        forumThread.ForumThreadTitle = "This thread has been deleted";
+
+        forumThread.ForumThreadIsSoftDeleted = true;
         await UpdateForumThreadTitle(forumThread);
         return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
+        
+        
     }
     
 }
