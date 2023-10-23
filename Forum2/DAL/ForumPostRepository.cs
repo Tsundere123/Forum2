@@ -7,78 +7,146 @@ namespace Forum2.DAL;
 public class ForumPostRepository : IForumPostRepository
 {
     private readonly ForumDbContext _db;
+    private readonly ILogger<ForumPostRepository> _logger;
 
-    public ForumPostRepository(ForumDbContext db)
+    public ForumPostRepository(ForumDbContext db, ILogger<ForumPostRepository> logger)
     {
         _db = db;
+        _logger = logger;
     }
         
     
-    public async Task<IEnumerable<ForumPost>> GetAll()
+    public async Task<IEnumerable<ForumPost>?> GetAll()
     {
-        return await _db.ForumPost.ToListAsync();
+        try
+        {
+            return await _db.ForumPost.ToListAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumPostRepository] ForumPost GetAll failed, error message: {E}", e.Message);
+            return null;
+        }
     }
     
-    public async Task<IEnumerable<ForumPost>> GetAllWithThread()
+    public async Task<IEnumerable<ForumPost>?> GetAllWithThread()
     {
-        return await _db.ForumPost.Include(p => p.ForumThread).ToListAsync();
+        try
+        {
+            return await _db.ForumPost.Include(p => p.ForumThread).ToListAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumPostRepository] ForumPost GetAllWithThread failed, error message: {E}", e.Message);
+            return null;
+        }
     }
 
     public async Task<ForumPost?> GetForumPostById(int id)
     {
-        return await _db.ForumPost.FindAsync(id);
+        try
+        {
+            return await _db.ForumPost.FindAsync(id);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumPostRepository] ForumPost GetForumPostById failed, error message: {E}", e.Message);
+            return null;
+        }
     }
 
-    public async Task<IEnumerable<ForumPost>> GetAllForumPostsByThreadId(int threadId)
+    public async Task<IEnumerable<ForumPost>?> GetAllForumPostsByThreadId(int threadId)
     {
-        var postList = await _db.ForumPost.ToListAsync();
-        List<ForumPost> returnList = new List<ForumPost>();
-        foreach (var forumPost in postList)
+        try
         {
-            if (forumPost.ForumThreadId == threadId)
+            var postList = await _db.ForumPost.ToListAsync();
+            List<ForumPost> returnList = new List<ForumPost>();
+            foreach (var forumPost in postList)
             {
-                returnList.Add(forumPost);
+                if (forumPost.ForumThreadId == threadId)
+                {
+                    returnList.Add(forumPost);
+                }
             }
+            return returnList;
         }
-        return returnList;
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumPostRepository] ForumPost GetAllForumPostsByThreadId failed, error message: {E}", e.Message);
+            return null;
+        }
     }
     
-    public async Task<IEnumerable<ForumPost>> GetAllForumPostsByAccountId(string accountId)
+    public async Task<IEnumerable<ForumPost>?> GetAllForumPostsByAccountId(string accountId)
     {
-        var postList = await _db.ForumPost.ToListAsync();
-        List<ForumPost> returnList = new List<ForumPost>();
-        foreach (var forumPost in postList)
-        {
-            if (forumPost.ForumPostCreatorId == accountId)
+        try {
+            var postList = await _db.ForumPost.ToListAsync();
+            List<ForumPost> returnList = new List<ForumPost>();
+            foreach (var forumPost in postList)
             {
-                returnList.Add(forumPost);
+                if (forumPost.ForumPostCreatorId == accountId)
+                {
+                    returnList.Add(forumPost);
+                }
             }
+            return returnList;
         }
-        return returnList;
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumPostRepository] ForumPost GetAllForumPostsByAccountId failed, error message: {E}", e.Message);
+            return null;
+        }
     }
 
-    public async Task CreateNewForumPost(ForumPost forumPost)
+    public async Task<bool> CreateNewForumPost(ForumPost forumPost)
     {
-        _db.ForumPost.Add(forumPost);
-        await _db.SaveChangesAsync();
+        try
+        {
+            _db.ForumPost.Add(forumPost);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumPostRepository] ForumPost CreateNewForumPost failed, error message: {E}", e.Message);
+            return false;
+        }
     }
 
-    public async Task UpdateForumPost(ForumPost forumPost)
+    public async Task<bool> UpdateForumPost(ForumPost forumPost)
     {
-        _db.ForumPost.Update(forumPost);
-        await _db.SaveChangesAsync();
+        try
+        {
+            _db.ForumPost.Update(forumPost);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumPostRepository] ForumPost UpdateForumPost failed, error message: {E}", e.Message);
+            return false;
+        }
     }
 
     public async Task<bool> DeleteForumPost(int forumPostId)
     {
-        var forumPost = await _db.ForumPost.FindAsync(forumPostId);
-        if (forumPost == null)
+        try
         {
+            var forumPost = await _db.ForumPost.FindAsync(forumPostId);
+            if (forumPost == null)
+            {
+                _logger.LogError("[ForumPostRepository] ForumPost DeleteForumPost failed, forumPost with id {ID} not found", forumPostId);
+                return false;
+            }
+
+            _db.ForumPost.Remove(forumPost);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[ForumPostRepository] ForumPost DeleteForumPost failed, error message: {E}", e.Message);
             return false;
         }
-
-        _db.ForumPost.Remove(forumPost);
-        await _db.SaveChangesAsync();
-        return true;
     }
 }

@@ -4,14 +4,14 @@ namespace Forum2.DAL;
 
 public interface IForumPostRepository
 {
-    Task<IEnumerable<ForumPost>> GetAll();
-    Task<IEnumerable<ForumPost>> GetAllWithThread();
+    Task<IEnumerable<ForumPost>?> GetAll();
+    Task<IEnumerable<ForumPost>?> GetAllWithThread();
     Task<ForumPost?> GetForumPostById(int id);
-    Task<IEnumerable<ForumPost>> GetAllForumPostsByThreadId(int threadId);
-    Task<IEnumerable<ForumPost>> GetAllForumPostsByAccountId(string accountId);
+    Task<IEnumerable<ForumPost>?> GetAllForumPostsByThreadId(int threadId);
+    Task<IEnumerable<ForumPost>?> GetAllForumPostsByAccountId(string accountId);
     
-    Task CreateNewForumPost(ForumPost forumPost);
-    Task UpdateForumPost(ForumPost forumPost);
+    Task<bool> CreateNewForumPost(ForumPost forumPost);
+    Task<bool> UpdateForumPost(ForumPost forumPost);
     Task<bool> DeleteForumPost(int forumPostId);
     
 }
