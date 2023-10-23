@@ -1,0 +1,28 @@
+﻿@model ApplicationUser
+@{
+    var currentRoute = ViewContext.RouteData.Values["Action"]?.ToString();
+}
+
+<style>
+    .nav-tabs > li > a{
+        margin-left: 1rem;
+    }
+</style>
+
+<ul class="nav nav-tabs mb-2">
+    <li class="nav-item">
+        <a class="nav-link @(currentRoute is "Index" ? "active" : "")" id="wall" asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.DisplayName">
+            Wall
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentRoute is "Threads" ? "active" : "")" id="threads" asp-controller="Profile" asp-action="Threads" asp-route-displayName="@Model.DisplayName">
+            Threads
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentRoute is "Posts" ? "active" : "")" id="posts" asp-controller="Profile" asp-action="Posts" asp-route-displayName="@Model.DisplayName">
+            Posts
+        </a>
+    </li>
+</ul>
