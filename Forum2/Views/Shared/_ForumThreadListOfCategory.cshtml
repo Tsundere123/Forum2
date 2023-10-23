@@ -10,6 +10,7 @@
             <th>Thread ID</th>
             <th>Thread title</th>
             <th>OP Name</th>
+            <th>Actions</th>
         </tr>
         
         @foreach (var forumThread in Model.ForumThreads)
@@ -30,6 +31,10 @@
                         }
                     }</td>
                 @* <td>@forumThread.Account.AccountName</td> *@
+                <td>
+                    <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@forumThread.ForumThreadId">EDIT</a>
+                    <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@forumThread.ForumThreadId">DELETE</a>
+                </td>
             </tr>
         }
         

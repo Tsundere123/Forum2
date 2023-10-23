@@ -38,10 +38,10 @@ public class ForumThreadController : Controller
         var forumListViewModel = new ForumListViewModel(forumCategories,forumThreads,accounts);
         return View(forumListViewModel);
     }
-    public async Task<IActionResult> ForumThreadOfCategoryTable(int id)
+    public async Task<IActionResult> ForumThreadOfCategoryTable(int forumCategoryId)
     {
-        var forumThreads = await _forumThreadRepository.GetForumThreadsByCategoryId(id);
-        var forumCategory = await _forumCategoryRepository.GetForumCategoryById(id);
+        var forumThreads = await _forumThreadRepository.GetForumThreadsByCategoryId(forumCategoryId);
+        var forumCategory = await _forumCategoryRepository.GetForumCategoryById(forumCategoryId);
         var accounts = await _accountRepository.GetAll();
         var forumThreadOfCategoryViewModel = new ForumThreadOfCategoryViewModel(forumCategory,forumThreads,accounts);
         return View(forumThreadOfCategoryViewModel);
@@ -81,7 +81,58 @@ public class ForumThreadController : Controller
         addPost.ForumPostContent = forumPost.ForumPostContent;
         await _forumPostRepository.CreateNewForumPost(addPost);
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> UpdateForumThreadTitle(int forumThreadId)
+    {
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        if (forumThread == null) return NotFound();
+        return View(forumThread);
+    }
 
+    [HttpPost]
+    public async Task<IActionResult> UpdateForumThreadTitle(ForumThread forumThread)
+    {
+        if (ModelState.IsValid)
+        {
+            await _forumThreadRepository.UpdateForumThread(forumThread);
+            //Needed for RedirectToAction
+            var categoryId = forumThread.ForumCategoryId;
+            return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread", new { categoryId });
+        }
 
+        return View(forumThread);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> DeleteSelectedForumThread(int forumThreadId)
+    {
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        if (forumThread == null) return NotFound();
+        return View(forumThread);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> PermaDeleteSelectedForumThreadConfirmed(int forumThreadId)
+    {
+        //Needed for RedirectToAction
+        var forumCategoryId = _forumThreadRepository.GetForumThreadById(forumThreadId).Result.ForumCategoryId;
+        await _forumThreadRepository.DeleteForumThread(forumThreadId);
+        return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SoftDeleteSelectedForumThreadConfirmed(int forumThreadId)
+    {
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        //Needed for RedirectToAction
+        var forumCategoryId = forumThread.ForumCategoryId;
+        
+        if (forumThread == null) return NotFound();
+        
+        forumThread.ForumThreadTitle = "This thread has been deleted";
+        await UpdateForumThreadTitle(forumThread);
+        return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
+    }
     
 }

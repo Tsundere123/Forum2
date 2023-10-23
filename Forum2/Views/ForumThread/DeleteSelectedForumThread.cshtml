@@ -1,0 +1,28 @@
+﻿@model ForumThread
+
+<h2>Delete forum thread "@Model.ForumThreadTitle</h2>
+
+<dl class="row">
+    <dt class="col-sm-2">Thread Id</dt>
+    <dd class="col-sm-10">@Model.ForumThreadId</dd>
+        
+    <dt class="col-sm-2">Thread Name</dt>
+    <dd class="col-sm-10">@Model.ForumThreadTitle</dd>
+        
+    <dt class="col-sm-2">Creator Id</dt>
+    <dd class="col-sm-10">@Model.ForumThreadCreatorId</dd>
+        
+    <dt class="col-sm-2">Category Id</dt>
+    <dd class="col-sm-10">@Model.ForumCategoryId</dd>
+        
+    <dt class="col-sm-2">Creation time</dt>
+    <dd class="col-sm-10">@Model.ForumThreadCreationTimeUnix</dd>
+    
+    <form asp-controller="ForumThread" asp-action="PermaDeleteSelectedForumThreadConfirmed" asp-route-forumThreadId="@Model.ForumThreadId" method="post">
+        <button type="submit" class="btn btn-danger">Perma Delete</button>
+    </form>
+    <form asp-controller="ForumThread" asp-action="SoftDeleteSelectedForumThreadConfirmed" asp-route-forumThreadId="@Model.ForumThreadId" method="post">
+        <button type="submit" class="btn btn-danger">Soft Delete</button>
+    </form>
+    <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.ForumCategoryId" class="btn btn-secondary">Cancel</a>
+</dl>
