@@ -59,7 +59,8 @@ public class ForumPostController : Controller
     }
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> CreateNewForumPost(ForumPost forumPost)
+    [Route("/ForumPost/Create/{forumThreadId}")]
+    public async Task<IActionResult> CreateNewForumPost(int forumThreadId, ForumPost forumPost)
     {
         ForumPost addPost = new ForumPost();
         addPost.ForumPostContent = forumPost.ForumPostContent;
@@ -69,7 +70,6 @@ public class ForumPostController : Controller
         await _forumPostRepository.CreateNewForumPost(addPost);
 
         //Needed for RedirectToAction
-        var forumThreadId = forumPost.ForumThreadId;
         return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
     }
 

@@ -26,13 +26,6 @@
 
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
-      <Folder Include="Migrations\ForumDb\" />
-    </ItemGroup>
-
-
-
-    <ItemGroup>
       <Content Update="Views\Shared\_ForumThreadListOfCategorycshtml">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
