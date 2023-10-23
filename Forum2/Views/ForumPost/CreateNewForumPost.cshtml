@@ -7,7 +7,7 @@
     <legend>Forum Post</legend> 
         <input type="hidden" asp-for="ForumPost.ForumThreadId">
     <div class="form-group">
-        <label asp-for="ForumPost.ForumPostContent"></label>
+        <label asp-for="ForumPost.ForumPostContent">Post content</label>
         <input asp-for="ForumPost.ForumPostContent" class="form-control">
         <span asp-validation-for="ForumPost.ForumPostContent" class="text-danger"></span>
     </div>
