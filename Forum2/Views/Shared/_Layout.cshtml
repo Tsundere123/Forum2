@@ -23,25 +23,27 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Table">Members</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Table">AccountsTable</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="ForumCategory" asp-action="ForumCategoryTable">Categories</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Grid">AccountsGrid</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="AccountRole" asp-action="Table">AccountRoleTable</a>
-                    </li>
-                    <li class="nav-item">
-                        @* <a class="nav-link text-dark" asp-area="" asp-controller="ForumThread" asp-action="ForumThreadTable">ForumThreadList</a> *@
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="ForumCategory" asp-action="ForumCategoryTable">ForumCategoryList</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-dark" href="#" id="devDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            TODO
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="devDropdown">
+                            <li><a class="dropdown-item" asp-area="" asp-controller="AccountRole" asp-action="Table">AccountRoleTable</a></li>
+                            <li><a class="dropdown-item" asp-area="" asp-controller="ForumThread" asp-action="ForumThreadTable">ForumThreadList</a></li>
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Grid">ForumThreadList</a></li>
+                        </ul>
                     </li>
                     <partial name="_AdminNavPartial"/>
                 </ul>
+                <form class="d-flex" asp-controller="Search" asp-action="Index" method="get">
+                    <input class="form-control form-control-sm me-2" type="text" id="query" name="query" placeholder="Search" required="required">
+                    <button class="btn btn-sm btn-outline-success" type="submit">Search</button>
+                </form>
                 <partial name="_LoginPartial"/>
             </div>
         </div>
