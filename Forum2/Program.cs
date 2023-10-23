@@ -2,7 +2,8 @@ using Forum2.DAL;
 using Microsoft.EntityFrameworkCore;
 using Forum2.Models;
 using Microsoft.AspNetCore.Identity;
-
+using Serilog;
+using Serilog.Events;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,18 @@ builder.Services.AddScoped<Forum2.DAL.IForumPostRepository, ForumPostRepository>
 builder.Services.AddDefaultIdentity<ApplicationUser>().AddRoles<ApplicationRole>().AddEntityFrameworkStores<AccountDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
+
+// Logger
+var loggerConfiguration = new LoggerConfiguration()
+    .MinimumLevel.Information().WriteTo
+    .File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+
+loggerConfiguration.Filter.ByExcluding(e =>
+    e.Properties.TryGetValue("SourceContext", out var value) && 
+    e.Level == LogEventLevel.Information &&
+    e.MessageTemplate.Text.Contains("Executed DbCommand"));
+
+builder.Logging.AddSerilog(loggerConfiguration.CreateLogger());
 
 var app = builder.Build();
 
