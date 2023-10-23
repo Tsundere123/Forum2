@@ -18,18 +18,20 @@
 <button id="createNewForumPostButton" data-ajax="true">Create new forum post</button>
 
 <script>
-    $(document).ready(function () {
-        $("#createNewForumPostButton").click(function () {
-            // Make an Ajax call to render the partial view.
-            $.ajax({
-                url: "/ForumPost/Create/@Model.CurrentForumThread.ForumThreadId",
-                success: function (html) {
-                    // Update the page with the HTML of the partial view.
-                    $("#createNewForumPost").html(html);
-                }
-            });
+function createNew()
+{
+    $("#createNewForumPostButton").click(function () {
+        // Make an Ajax call to render the partial view.
+        $.ajax({
+            url: "/ForumPost/Create/@Model.CurrentForumThread.ForumThreadId",
+            success: function (html) {
+                // Update the page with the HTML of the partial view.
+                $("#createNewForumPost").html(html);
+            }
         });
     });
+}
+$("createNewForumPostButton").click(createNew());
 </script>
 
 <script>
