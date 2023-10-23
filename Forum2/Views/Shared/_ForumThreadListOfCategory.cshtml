@@ -15,29 +15,31 @@
         
         @foreach (var forumThread in Model.ForumThreads)
         {
-            <tr>@{ var categoryId = @forumThread.ForumCategoryId;}
-                <td>@forumThread.ForumCategoryId</td>
-                <td>@Model.ForumCategory.ForumCategoryName</td>
-                <td>@forumThread.ForumThreadId</td>
-                <td><a asp-controller="ForumPost"
-                       asp-action="ForumPostView"
-                       asp-route-threadId="@forumThread.ForumThreadId">@forumThread.ForumThreadTitle</a>
-                </td>
-                <td>@foreach (var account in Model.Accounts)
-                    {
-                        if (forumThread.ForumThreadCreatorId == account.Id)
+            if (forumThread.ForumThreadIsSoftDeleted != true)
+            {
+                <tr>@{ var categoryId = @forumThread.ForumCategoryId;}
+                    <td>@forumThread.ForumCategoryId</td>
+                    <td>@Model.ForumCategory.ForumCategoryName</td>
+                    <td>@forumThread.ForumThreadId</td>
+                    <td><a asp-controller="ForumPost"
+                           asp-action="ForumPostView"
+                           asp-route-threadId="@forumThread.ForumThreadId">@forumThread.ForumThreadTitle</a>
+                    </td>
+                    <td>@foreach (var account in Model.Accounts)
                         {
-                            @account.DisplayName
-                        }
-                    }</td>
-                @* <td>@forumThread.Account.AccountName</td> *@
-                <td>
-                    <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@forumThread.ForumThreadId">EDIT</a>
-                    <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@forumThread.ForumThreadId">DELETE</a>
-                </td>
-            </tr>
+                            if (forumThread.ForumThreadCreatorId == account.Id)
+                            {
+                                @account.DisplayName
+                            }
+                        }</td>
+                    @* <td>@forumThread.Account.AccountName</td> *@
+                    <td>
+                        <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@forumThread.ForumThreadId">EDIT</a>
+                        <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@forumThread.ForumThreadId">DELETE</a>
+                    </td>
+                </tr>
+            }
+            
         }
-        
-        
     </table>
 </div>

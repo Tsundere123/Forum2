@@ -30,7 +30,17 @@ public class ForumPostController : Controller
     {
         var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(threadId);
         var forumCategory = await _forumCategoryRepository.GetForumCategoryById(_forumThreadRepository.GetForumThreadById(threadId).Result.ForumCategoryId);
+        
+        
         var currentForumThread = await _forumThreadRepository.GetForumThreadById(threadId);
+        if (currentForumThread.ForumThreadIsSoftDeleted)
+        {
+            if (!HttpContext.User.IsInRole("Moderator") && !HttpContext.User.IsInRole("Administrator"))
+            {
+                return NotFound();
+            }
+        }
+        
         var accounts = await _accountRepository.GetAll();
         var forumPostViewModel = new ForumPostViewModel(forumCategory, currentForumThread, forumPosts, accounts);
         
