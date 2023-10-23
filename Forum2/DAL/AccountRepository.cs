@@ -12,9 +12,9 @@ public class AccountRepository : IAccountRepository
         _db = db;
     }
 
-    public async Task<IEnumerable<Account>> GetAll()
+    public async Task<IEnumerable<ApplicationUser>> GetAll()
     {
-        return await _db.Accounts.ToListAsync();
+        return await _db.Users.ToListAsync();
     }
 
     public async Task<Account?> GetAccountById(int id)

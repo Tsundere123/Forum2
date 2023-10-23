@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "New Category";
+}
+
+@model ForumCategory
+
+<h1>Admin Panel</h1>
+
+<div>
+    <h2>Categories</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <partial name="_AdminNavListPartial" />
+        </div>
+        <div class="col-md-9">
+            <h3>New Category</h3>
+            <form asp-controller="Admin" asp-action="NewCategory">
+                <div class="form-group">
+                    <label asp-for="ForumCategoryName">Category Name</label><span class="text-danger">*</span>
+                    <input asp-for="ForumCategoryName" class="form-control" required="required">
+                    <span asp-validation-for="ForumCategoryName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ForumCategoryDescription">Category Description</label><span class="text-danger">*</span>
+                    <input asp-for="ForumCategoryDescription" class="form-control" required="required">
+                    <span asp-validation-for="ForumCategoryDescription" class="text-danger"></span>
+                </div>
+                <div class="mt-2">
+                    <button type="submit" class="btn btn-success">Add</button>
+                    <a asp-controller="Admin" asp-action="Categories" class="btn btn-danger">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

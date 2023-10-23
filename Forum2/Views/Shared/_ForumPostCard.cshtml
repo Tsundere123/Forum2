@@ -1,0 +1,30 @@
+﻿@using Forum2.DAL
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@model ForumPost
+
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="container">
+    <div class="row">
+        <div class="col-2">
+            <div class="col-sm">@UserManager.FindByIdAsync(@Model.ForumPostCreatorId).Result.DisplayName</div>
+            <div class="col-sm"><img src="@UserManager.FindByIdAsync(@Model.ForumPostCreatorId).Result.AvatarUrl" width="100px" height="100px"></div>
+        </div>
+        <div class="col-10">
+            @Model.ForumPostContent
+        </div>
+        <div>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
+                {
+                    <a asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
+                    <a asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+

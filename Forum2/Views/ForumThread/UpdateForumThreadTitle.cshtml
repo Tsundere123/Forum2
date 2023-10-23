@@ -1,0 +1,14 @@
+﻿@model ForumThread
+
+<form asp-controller="ForumThread" asp-action="UpdateForumThreadTitle">
+    <input type="hidden" asp-for="ForumThreadId">
+    <input type="hidden" asp-for="ForumThreadCreatorId">
+    <input type="hidden" asp-for="ForumThreadCreationTimeUnix">
+    <input type="hidden" asp-for="ForumCategoryId">
+    <div class="form-group">
+        <label asp-for="ForumThreadTitle">Thread title</label>
+        <input asp-for="ForumThreadTitle" class="form-control">
+        <span asp-validation-for="ForumThreadTitle" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-secondary">Save Changes</button>
+</form>

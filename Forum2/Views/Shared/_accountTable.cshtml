@@ -1,28 +1,54 @@
-﻿@model IEnumerable<Account>
+﻿@using Forum2.DAL
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<ApplicationUser>
+
+@inject UserManager<ApplicationUser> UserManager
 
 <div class="container">
     <table class='table table-striped'>
-        <tr><th>Id</th><th>Name</th><th>Password</th><th>Role</th><th>Avatar</th><th>Actions</th></tr>
+        <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Avatar</th>
+            <th>Actions</th>
+        </tr>
+        
         @foreach (var account in Model)
         {
             <tr>
-                <td>@account.AccountId</td>
                 <td>                            
                     <a asp-controller="Account"
                        asp-action="Details"
-                       asp-route-accountId="@account.AccountId">@account.AccountName</a>
+                       asp-route-accountId="@account.Id">@account.DisplayName</a>
                 </td>
-                <td>@account.AccountPassword</td>
-                <td>@account.RoleId
-                    @account.AccountRoles?.RoleName</td>
-                <td><img src="@account.AccountAvatar" width="100px" height="100px"></td>
                 <td>
-                    <a asp-controller="Account" asp-action="UpdateSelectedAccount" asp-route-accountId="@account.AccountId">Update</a>
-                    <a asp-controller="Account" asp-action="DeleteSelectedAccount" asp-route-accountId="@account.AccountId">Delete</a>
+                    @string.Join(", ", UserManager.GetRolesAsync(account).Result)
+                    
+                </td>
+                <td>
+                    <img src="@account.AvatarUrl" width="100px" height="100px">
+                </td>
+                <td>
+                    <a asp-controller="Account" asp-action="UpdateSelectedAccount" asp-route-accountId="@account.Id">Update</a>
+                    <a asp-controller="Account" asp-action="DeleteSelectedAccount" asp-route-accountId="@account.Id">Delete</a>
                 </td>
             </tr>
         }
     </table>
+    <div>
+        <h2>Currently logged in user</h2>
+        @if (UserManager.GetUserAsync(User).Result != null)
+        {
+            @UserManager.GetUserAsync(User).Result.DisplayName
+            <img src="@UserManager.GetUserAsync(User).Result.AvatarUrl" width="100px" height="100px">
+        }
+        else
+        {
+            <p>Not logged in</p>
+        }
+
+        
+    </div>
     <p>
         <a class="btn btn-secondary"
            asp-controller="Account"

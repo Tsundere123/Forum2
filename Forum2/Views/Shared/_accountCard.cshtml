@@ -1,18 +1,18 @@
-﻿@model Account
+﻿@model ApplicationUser
 
 <div class="col">
     <div>
-        <img src="@Model.AccountAvatar" class="card-img-top" alt="@Model.AccountName">
+        <a asp-controller="Account"
+           asp-action="Details"
+           asp-route-accountId="@Model.Id">
+            <img src="@Model.AvatarUrl" class="card-img-top" alt="@Model.DisplayName">
+        </a>
         <div>
             <div class="d-flex justify-content-between mt-2">
                 <h5 class="text-start">
-                            
                     <a asp-controller="Account"
                        asp-action="Details"
-                       asp-route-accountId="@Model.AccountId">@Model.AccountName</a>
-                </h5>
-                <h5 class="text-nowrap">
-                    Password: @Model.AccountPassword
+                       asp-route-accountId="@Model.Id">@Model.DisplayName</a>
                 </h5>
             </div>
         </div>

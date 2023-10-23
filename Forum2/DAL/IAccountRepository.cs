@@ -4,7 +4,7 @@ namespace Forum2.DAL;
 
 public interface IAccountRepository
 {
-    Task<IEnumerable<Account>> GetAll();
+    Task<IEnumerable<ApplicationUser>> GetAll();
     Task<Account?> GetAccountById(int id);
     Task Create(Account account);
     Task Update(Account account);

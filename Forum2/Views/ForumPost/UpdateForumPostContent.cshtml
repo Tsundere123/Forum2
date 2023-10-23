@@ -1,0 +1,16 @@
+﻿@model ForumPost
+
+<h2>Update forum post</h2>
+
+<form asp-controller="ForumPost" asp-action="UpdateForumPostContent">
+    <input type="hidden" asp-for="ForumPostId">
+    <input type="hidden" asp-for="ForumThreadId">
+    <input type="hidden" asp-for="ForumPostCreatorId">
+    <input type="hidden" asp-for="ForumPostCreationTimeUnix">
+    <div class="form-group">
+        <label asp-for="ForumPostContent">Post content</label>
+        <input asp-for="ForumPostContent" class="form-control">
+        <span asp-validation-for="ForumPostContent" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-secondary">Save Changes</button>
+</form>

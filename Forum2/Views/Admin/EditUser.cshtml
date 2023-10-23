@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Edit User";
+}
+
+@model EditUserViewModel
+
+<h1>Admin Panel</h1>
+
+<div>
+    <h2>Edit User </h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <partial name="_AdminNavListPartial" />
+        </div>
+        <div class="col-md-9">
+            <form asp-controller="Admin" asp-action="EditUser">
+                <h3>User Details</h3>
+                <div class="form-group">
+                    <label asp-for="User.DisplayName">User name</label><span class="text-danger">*</span>
+                    <input asp-for="User.DisplayName" class="form-control" required="required"/>
+                    <span asp-validation-for="User.DisplayName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.AvatarUrl">Avatar URL</label><span class="text-danger">*</span>
+                    <input asp-for="User.AvatarUrl" class="form-control" required="required"/>
+                    <span asp-validation-for="User.AvatarUrl" class="text-danger"></span>
+                </div>
+                <h3 class="mt-2">Roles</h3>
+                <div class="form-group">
+                    <select class="form-select" name="UserRoles" multiple>
+                        @foreach(var role in Model.Roles)
+                        {
+                            <option value="@role.Name" selected="@(Model.UserRoles.Contains(role.Name))">@role.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="mt-2">
+                    <button type="submit" class="btn btn-success">Edit</button>
+                    <a asp-controller="Admin" asp-action="Users" class="btn btn-danger">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model Forum2.ViewModels.ForumThreadOfCategoryViewModel
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="container">
+    <table class="table table-striped">
+        <tr>
+            <th>Category ID</th>
+            <th>Category Name</th>
+            <th>Thread ID</th>
+            <th>Thread title</th>
+            <th>OP Name</th>
+            <th>Actions</th>
+        </tr>
+        
+        @foreach (var forumThread in Model.ForumThreads)
+        {
+            if (forumThread.ForumThreadIsSoftDeleted != true)
+            {
+                <tr>@{ var categoryId = @forumThread.ForumCategoryId;}
+                    <td>@forumThread.ForumCategoryId</td>
+                    <td>@Model.ForumCategory.ForumCategoryName</td>
+                    <td>@forumThread.ForumThreadId</td>
+                    <td><a asp-controller="ForumPost"
+                           asp-action="ForumPostView"
+                           asp-route-forumThreadId="@forumThread.ForumThreadId">@forumThread.ForumThreadTitle</a>
+                    </td>
+                    <td>@foreach (var account in Model.Accounts)
+                        {
+                            if (forumThread.ForumThreadCreatorId == account.Id)
+                            {
+                                @account.DisplayName
+                            }
+                        }</td>
+                    <td>
+                        @if (UserManager.GetUserAsync(User).Result != null)
+                        {
+                            @if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == forumThread.ForumThreadCreatorId))
+                            {
+                                <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@forumThread.ForumThreadId">DELETE</a>
+                                <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@forumThread.ForumThreadId">EDIT</a>
+                            } 
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>

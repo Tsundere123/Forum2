@@ -20,7 +20,7 @@ public class ForumCategoryController : Controller
         _accountRoleRepository = accountRoleRepository;
         _accountRepository = accountRepository;
     }
-    
+    [Route("/Category")]
     public async Task<IActionResult> ForumCategoryTable()
     {
         var forumCategories = await _forumCategoryRepository.GetAll();

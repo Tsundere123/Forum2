@@ -1,0 +1,9 @@
+﻿@using Microsoft.EntityFrameworkCore
+@* @model ForumListViewModel *@
+@model ForumThreadOfCategoryViewModel
+
+<h1>@Model.ForumCategory.ForumCategoryName</h1>
+
+<a asp-controller="ForumThread" asp-action="CreateNewForumThread" asp-route-categoryId="@Model.ForumCategory.ForumCategoryId">CREATE</a>
+
+<partial name="_ForumThreadListOfCategory" model="Model" />
