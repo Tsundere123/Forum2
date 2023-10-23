@@ -3,6 +3,7 @@ using System;
 using Forum2.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum2.Migrations.ForumDb
 {
     [DbContext(typeof(ForumDbContext))]
-    partial class ForumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231023133444_ForumPostLastEditedByWhen")]
+    partial class ForumPostLastEditedByWhen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,11 +60,11 @@ namespace Forum2.Migrations.ForumDb
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ForumPostLastEditedBy")
-                        .IsRequired()
+                    b.Property<DateTime>("ForumPostLastEdited")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("ForumPostLastEditedTime")
+                    b.Property<string>("ForumPostLastEditedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ForumThreadId")
@@ -92,13 +95,6 @@ namespace Forum2.Migrations.ForumDb
 
                     b.Property<bool>("ForumThreadIsSoftDeleted")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("ForumThreadLastEditedBy")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("ForumThreadLastEditedTime")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("ForumThreadTitle")
                         .IsRequired()

@@ -99,6 +99,8 @@ public class ForumPostController : Controller
         {
             if (ModelState.IsValid)
             {
+                forumPost.ForumPostLastEditedTime = DateTime.Now;
+                forumPost.ForumPostLastEditedBy = _userManager.GetUserAsync(User).Result.Id;
                 await _forumPostRepository.UpdateForumPost(forumPost);
                 //Needed for RedirectToAction
                 var forumThreadId = forumPost.ForumThreadId;
