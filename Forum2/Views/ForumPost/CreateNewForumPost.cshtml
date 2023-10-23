@@ -11,5 +11,6 @@
         <input asp-for="ForumPost.ForumPostContent" class="form-control">
         <span asp-validation-for="ForumPost.ForumPostContent" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-secondary">Create</button>
+        <button type="submit" class="btn btn-secondary">Create</button>
+        <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThread.ForumThreadId" class="btn btn-secondary">Cancel</a>
 </form>
