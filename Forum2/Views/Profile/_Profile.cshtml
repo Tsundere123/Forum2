@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject RoleManager<ApplicationRole> RoleManager
+@inject UserManager<ApplicationUser> UserManager
+@model ApplicationUser
+@{
+    var user = UserManager.FindByIdAsync(Model.Id).Result;
+    var roles = UserManager.GetRolesAsync(user).Result;
+}
+
+<div class="card mb-2">
+    <div class="card-body">
+        <div class="text-center">
+            <img class="img-thumbnail rounded" height="128" width="128" src="@Model.AvatarUrl" alt="@Model.DisplayName"/>
+            <div>
+                <h1 class="fw-bold fs-6">@Model.DisplayName</h1>
+            </div>
+            @if (roles.Count > 0) {
+                var role = RoleManager.FindByNameAsync(roles[0]).Result;
+                <div class="badge" style="background: @role.Color;">@role.Name</div>
+            }
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <span>Joined</span>
+            <span>@Model.CreatedAt.ToString("d")</span>
+        </div>
+    </div>
+</div>

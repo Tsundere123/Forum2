@@ -2,63 +2,23 @@
     ViewData["Title"] = @Model.User.DisplayName;
 }
 
-@model ProfileViewModel
+@model ProfileIndexViewModel
 
 <div>
     <div class="row">
         <div class="col-md-3 mb-2 mb-md-0">
-            <div class="card">
-                <div class="card-body">
-                    <div class="text-center">
-                        <img class="img-thumbnail rounded" height="128" width="128" src="@Model.User.AvatarUrl" alt="@Model.User.DisplayName"/>
-                        <div>
-                            <h1 class="fw-bold fs-6">@Model.User.DisplayName</h1>
-                        </div>
-                        @if (Model.Roles != null)
-                        {
-                            @foreach (var role in Model.Roles)
-                            {
-                                <div class="badge" style="background: @role.Color;">@role.Name</div>
-                            }
-                        }
-                    </div>
-                </div>
-            </div>
+            <partial name="_Profile" model="Model.User"/>
         </div>
         <div class="col-md-9">
-            <h2>Latest Activity</h2>
-            @if (Model.Threads == null && Model.Posts == null)
-            {
-                <p>@Model.User.DisplayName has no activity</p>
-            }
-            else
-            {
-                @if (Model.Threads != null)
-                {
-                    <h3>Threads</h3>
-                    <ul>
-                        @foreach(var thread in Model.Threads)
-                        {
-                            <li>
-                                <a>@thread.ForumThreadTitle</a>
-                                <span class="badge bg-secondary">@thread.ForumPosts?.Count.ToString()</span>
-                            </li>
-                        }
-                    </ul>
-                }
-                if (Model.Posts != null)
-                {
-                    <h3>Posts</h3>
-                    <ul>
-                        @foreach (var post in Model.Posts)
-                        {
-                            <li>
-                                <a>@post.ForumThread?.ForumThreadTitle</a>
-                            </li>
-                        }
-                    </ul>
-                }
-            }
+            <partial name="_ProfileNav" model="Model.User"/>
+            <h2 class="h3 mb-2 fw-normal">Wall</h2>
+            <form>
+                <div class="mb-2">
+                    <label for="wallPostContent" class="form-label">Post on @Model.User.DisplayName's wall</label>
+                    <textarea class="form-control" id="wallPostContent" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary">Post</button>
+            </form>
         </div>
     </div>
 </div>

@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = @Model.User.DisplayName;
+}
+
+@model ProfileThreadsViewModel
+
+<div>
+    <div class="row">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <partial name="_Profile" model="Model.User"/>
+        </div>
+        <div class="col-md-9">
+            <partial name="_ProfileNav" model="Model.User"/>
+            <h2 class="h3 mb-2 fw-normal">Threads</h2>
+            @if (Model.Threads != null)
+            {
+                if (Model.Threads.Count < 1)
+                {
+                    <p>@Model.User.DisplayName has no threads. :-(</p>
+                }
+                else
+                {
+                    <ul class="list-group mb-2">
+                        @foreach (var thread in Model.Threads)
+                        {
+                            <li class="list-group-item">
+                                <div class="d-flex">
+                                    <img src="@Model.User.AvatarUrl" alt="@Model.User.DisplayName" height="48" width="48" class="me-2" />
+                                    <div>
+                                        <div class="d-block">
+                                            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@thread.ForumThreadId">
+                                                @thread.ForumThreadTitle
+                                            </a>
+                                        </div>
+                                        <div class="d-block" style="font-size: 14px;">
+                                            in @thread.ForumCategory.ForumCategoryName
+                                        </div>
+                                        <div class="d-block" style="font-size: 12px;">
+                                            <span class="me-1">
+                                                By <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.User.DisplayName">@Model.User.DisplayName</a>
+                                            </span>
+                                            <span class="text-muted">
+                                                on @thread.ForumThreadCreationTimeUnix.ToString("D")
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            @if (Model.CurrentPage != 1)
+                            {
+                                <li class="page-item">
+                                    <a asp-controller="Profile" asp-action="Threads" asp-route-displayName="@Model.User.DisplayName" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">Previous</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <a class="page-link">Previous</a>
+                                </li>
+                            }
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                if (i == Model.CurrentPage)
+                                {
+                                    <li class="page-item active"><a class="page-link">@i.ToString()</a></li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a asp-controller="Profile" asp-action="Threads" asp-route-displayName="@Model.User.DisplayName" asp-route-page="@i" class="page-link">@i.ToString()</a>
+                                    </li>
+                                }
+                            }
+                            @if (Model.CurrentPage != Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a asp-controller="Profile" asp-action="Threads" asp-route-displayName="@Model.User.DisplayName" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">Next</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <a class="page-link">Next</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            }
+        </div>
+    </div>
+</div>
