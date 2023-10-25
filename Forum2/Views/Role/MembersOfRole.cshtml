@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@model RoleViewModel
+@inject UserManager<ApplicationUser> UserManager
+@inject RoleManager<ApplicationRole> RoleManager
+
+<div class="container">
+    <h1>List of members</h1>
+    <table class='table table-striped'>
+        <tr>
+            <th>Name</th>
+        </tr>
+        @foreach (var member in Model.Accounts)
+        {
+            if (await UserManager.IsInRoleAsync(member,Model.CurrentRole.Name))
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Account" asp-action="Details" asp-route-accountId="@member.Id">@member.DisplayName</a>
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
