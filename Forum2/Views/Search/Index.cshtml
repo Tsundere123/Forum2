@@ -1,11 +1,12 @@
-﻿@{
-    ViewData["Title"] = "Search";
-}
-
-@using Microsoft.AspNetCore.Identity
-@model SearchResultViewModel
+﻿@using Microsoft.AspNetCore.Identity
 @inject RoleManager<ApplicationRole> RoleManager
 @inject UserManager<ApplicationUser> UserManager
+
+@model SearchResultViewModel
+
+@{
+    ViewData["Title"] = "Search";
+}
 
 <h1>Search</h1>
 

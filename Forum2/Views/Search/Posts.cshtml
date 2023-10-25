@@ -1,10 +1,11 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@model SearchResultViewModel
+
+@{
     ViewData["Title"] = "Search";
 }
-
-@using Microsoft.AspNetCore.Identity
-@model SearchResultViewModel
-@inject UserManager<ApplicationUser> UserManager
 
 <h1>Search Posts</h1>
 
@@ -25,7 +26,7 @@
     }
     else
     {
-        <ul class="list-group">
+        <ul class="list-group mb-2">
             @foreach (var post in Model.Posts)
             {
                 var user = @UserManager.FindByIdAsync(post.ForumPostCreatorId).Result;
@@ -34,7 +35,7 @@
                         <img src="@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
                         <div>
                             <div class="d-block">
-                                <a href="#">@post.ForumThread.ForumThreadTitle</a>
+                                <a href="#">@post.ForumThread!.ForumThreadTitle</a>
                             </div>
                             <div class="d-block" style="font-size: 14px;">
                                 @if (post.ForumPostContent.Length >= 20)
@@ -47,11 +48,11 @@
                                 }
                             </div>
                             <div class="d-block" style="font-size: 12px;">
-                                <span class="me-1">
-                                    <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
+                                <span>
+                                    By <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
                                 </span>
                                 <span class="text-muted">
-                                    Date Here <!-- TODO -->
+                                    on @post.ForumPostCreationTimeUnix.ToString("D")
                                 </span>
                             </div>
                         </div>
@@ -59,8 +60,8 @@
                 </li>
             }
         </ul>
-        <nav class="mt-4">
-            <ul class="pagination justify-content-center">
+        <nav>
+            <ul class="pagination pagination-sm justify-content-center">
                 @if (Model.CurrentPage != 1)
                 {
                     <li class="page-item">
