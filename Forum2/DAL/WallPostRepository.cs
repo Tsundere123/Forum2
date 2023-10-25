@@ -13,26 +13,12 @@ public class WallPostRepository : IWallPostRepository
         _db = db;
         _logger = logger;
     }
-
-
-    public async Task<IEnumerable<WallPost>?> GetAll()
-    {
-        try
-        {
-            return await _db.WallPost.ToListAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "[WallPostRepository] WallPost GetAll failed, error message: {E}", e.Message);
-            return null;
-        }
-    }
-
+    
     public async Task<IEnumerable<WallPost>?> GetAllByProfile(string id)
     {
         try
         {
-            return await _db.WallPost.Where(p => p.ProfileId == id).ToListAsync();
+            return await _db.WallPost.Where(p => p.ProfileId == id).OrderByDescending(p => p.CreatedAt).ToListAsync();
         }
         catch (Exception e)
         {
@@ -41,7 +27,7 @@ public class WallPostRepository : IWallPostRepository
         }
     }
 
-    public async Task<WallPost?> GetWallPostById(int id)
+    public async Task<WallPost?> GetById(int id)
     {
         try
         {
@@ -54,7 +40,7 @@ public class WallPostRepository : IWallPostRepository
         }
     }
 
-    public async Task<bool> CreateNewWallPost(WallPost wallPost)
+    public async Task<bool> Create(WallPost wallPost)
     {
         try
         {
@@ -68,23 +54,8 @@ public class WallPostRepository : IWallPostRepository
             return false;
         }
     }
-
-    public async Task<bool> UpdateWallPost(WallPost wallPost)
-    {
-        try
-        {
-            _db.WallPost.Update(wallPost);
-            await _db.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "[WallPostRepository] WallPost UpdateWallPost failed, error message: {E}", e.Message);
-            return false;
-        }
-    }
-
-    public async Task<bool> DeleteWallPost(int wallPostId)
+    
+    public async Task<bool> Delete(int wallPostId)
     {
         try
         {

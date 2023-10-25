@@ -19,5 +19,5 @@ public class WallPost
     [Required]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     
-    public virtual List<WallPostReply> Replies { get; set; } = new();
+    public virtual List<WallPostReply>? Replies { get; set; } = new();
 }

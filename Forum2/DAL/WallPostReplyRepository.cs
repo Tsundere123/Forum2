@@ -14,24 +14,11 @@ public class WallPostReplyRepository : IWallPostReplyRepository
         _logger = logger;
     }
 
-    public async Task<IEnumerable<WallPostReply>?> GetAll()
+    public async Task<WallPostReply?> GetById(int id)
     {
         try
         {
-            return await _db.WallPostReply.ToListAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "[WallPostReplyRepository] WallPostReply GetAll failed, error message: {E}", e.Message);
-            return null;
-        }
-    }
-
-    public async Task<IEnumerable<WallPostReply>?> GetAllByWallPostId(int wallPostId)
-    {
-        try
-        {
-            return await _db.WallPostReply.Where(r => r.WallPostId == wallPostId).ToListAsync();
+            return await _db.WallPostReply.FindAsync(id);
         }
         catch (Exception e)
         {
@@ -40,7 +27,7 @@ public class WallPostReplyRepository : IWallPostReplyRepository
         }
     }
 
-    public async Task<bool> CreateNewWallPostReply(WallPostReply wallPostReply)
+    public async Task<bool> Create(WallPostReply wallPostReply)
     {
         try
         {
@@ -55,23 +42,7 @@ public class WallPostReplyRepository : IWallPostReplyRepository
         }
     }
 
-    public async Task<bool> UpdateWallPostReply(WallPostReply wallPostReply)
-    {
-        try
-        {
-            _db.WallPostReply.Update(wallPostReply);
-            await _db.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e,
-                "[WallPostReplyRepository] WallPostReply UpdateWallPostReply failed, error message: {E}", e.Message);
-            return false;
-        }
-    }
-
-    public async Task<bool> DeleteWallPostReply(int wallPostReplyId)
+    public async Task<bool> Delete(int wallPostReplyId)
     {
         try
         {

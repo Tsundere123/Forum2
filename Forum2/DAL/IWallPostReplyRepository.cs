@@ -4,10 +4,8 @@ namespace Forum2.DAL;
 
 public interface IWallPostReplyRepository
 {
-    Task<IEnumerable<WallPostReply>?> GetAll();
-    Task<IEnumerable<WallPostReply>?> GetAllByWallPostId(int wallPostId);
+    Task<WallPostReply?> GetById(int id);
     
-    Task<bool> CreateNewWallPostReply(WallPostReply wallPostReply);
-    Task<bool> UpdateWallPostReply(WallPostReply wallPostReply);
-    Task<bool> DeleteWallPostReply(int wallPostReplyId);
+    Task<bool> Create(WallPostReply wallPostReply);
+    Task<bool> Delete(int wallPostReplyId);
 }
