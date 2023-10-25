@@ -38,4 +38,7 @@
       <_ContentIncludedByDefault Remove="Views\AccountRole\Table.cshtml" />
     </ItemGroup>
 
+
+
+
 </Project>

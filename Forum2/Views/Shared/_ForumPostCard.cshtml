@@ -5,15 +5,15 @@
 
 @inject UserManager<ApplicationUser> UserManager
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <div class="container">
     <div class="row">
         <div class="col-2">
             <div class="col-sm">@UserManager.FindByIdAsync(@Model.ForumPostCreatorId).Result.DisplayName</div>
             <div class="col-sm"><img src="@UserManager.FindByIdAsync(@Model.ForumPostCreatorId).Result.AvatarUrl" width="100px" height="100px"></div>
         </div>
-        <div class="col-10">
-            @Model.ForumPostContent
-        </div>
+        <div id="postContent_@Model.ForumPostId" class="col-10">@Model.ForumPostContent</div>
         <div>
             @if (SignInManager.IsSignedIn(User))
             {
@@ -24,6 +24,60 @@
                 }
             }
         </div>
+        <div>
+            <button id="quoteThisPost_@Model.ForumPostId">Quote</button>
+        </div>
+        
+        <script>
+        function checkIfInputVisible()
+        {
+            if (!document.getElementById("createNewForumPost").innerHTML )
+            {
+                console.log("Value " + document.getElementById("createNewForumPost").value)
+                console.log("New post box");
+                $.ajax({
+                    url: "/ForumPost/Create/@Model.ForumThreadId",
+                    success: function (html) {
+                        // Update the page with the HTML of the partial view.
+                        $("#createNewForumPost").html(html);
+                    }
+                });
+            }
+        }
+
+        function quotePostContent()
+        {
+            let result = "";
+            let postContent = document.getElementById("postContent_@Model.ForumPostId").value;
+            // console.log(postContent);
+
+            let inputField = document.getElementById("inputNewPostContent").value;
+            // console.log("inputFieldValue: " + inputField);
+
+            result += inputField;
+
+            // console.log("@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName");
+            result += "Quoted from post by " + "@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName";
+
+
+            result += ' "@Model.ForumPostContent"';
+            // console.log("Result: " + result);
+
+            document.getElementById("inputNewPostContent").value = result;
+        }
+            
+        function quotePost()
+        {
+            checkIfInputVisible();
+            quotePostContent();
+            document.getElementById('createNewForumPostButton').hidden = true;
+        }
+        </script>
+        
+        <script>
+        $("#quoteThisPost_@Model.ForumPostId").click(quotePost);
+        </script>
+        
         <div>
             @if (Model.ForumPostLastEditedTime > Model.ForumPostCreationTimeUnix)
             {

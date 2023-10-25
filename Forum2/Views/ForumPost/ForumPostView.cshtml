@@ -1,6 +1,7 @@
-﻿@using Microsoft.AspNetCore.Server.Kestrel.Core
+﻿﻿@using Microsoft.AspNetCore.Server.Kestrel.Core
 @model ForumPostViewModel
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <h1>Current thread: @Model.CurrentForumThread.ForumThreadTitle</h1>
 
 
@@ -13,3 +14,27 @@
         <h2>This is post nr @i</h2>
         <partial name="_ForumPostCard" model="post"/>
     }
+    
+<button id="createNewForumPostButton" data-ajax="true">Create new forum post</button>
+
+<script>
+    $(document).ready(function () {
+        $("#createNewForumPostButton").click(function () {
+            // Make an Ajax call to render the partial view.
+            $.ajax({
+                url: "/ForumPost/Create/@Model.CurrentForumThread.ForumThreadId",
+                success: function (html) {
+                    // Update the page with the HTML of the partial view.
+                    $("#createNewForumPost").html(html);
+                }
+            });
+            document.getElementById('createNewForumPostButton').hidden = true;
+        });
+    });
+</script>
+
+<script>
+$("#cancelButton").click(
+   $("createNewForumPost").empty);
+</script>
+<div id="createNewForumPost"></div>
