@@ -1,8 +1,8 @@
-﻿@{
-    ViewData["Title"] = @Model.User.DisplayName;
-}
+﻿@model ProfilePostsViewModel
 
-@model ProfilePostsViewModel
+@{
+    ViewData["Title"] = ViewData["Title"] = $"{Model.User.DisplayName}'s Posts";
+}
 
 <div>
     <div class="row">
@@ -28,7 +28,7 @@
                                     <img src="@Model.User.AvatarUrl" alt="@Model.User.DisplayName" height="48" width="48" class="me-2" />
                                     <div>
                                         <div class="d-block">
-                                            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@post.ForumThread.ForumThreadId">
+                                            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@post.ForumThread!.ForumThreadId">
                                                 @post.ForumThread.ForumThreadTitle
                                             </a>
                                         </div>
@@ -56,7 +56,7 @@
                         }
                     </ul>
                     <nav>
-                        <ul class="pagination justify-content-center">
+                        <ul class="pagination pagination-sm justify-content-center">
                             @if (Model.CurrentPage != 1)
                             {
                                 <li class="page-item">
