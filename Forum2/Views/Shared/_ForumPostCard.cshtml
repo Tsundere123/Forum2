@@ -63,15 +63,15 @@ $("#quoteThisPost_@Model.ForumPostId").click(quotePost);
             <partial name="_Profile" model="UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result"/>
         </div>
         
-        <div class="col-md-9" id="postContent_@Model.ForumPostId" class="col-10">
-            <div>@Model.ForumPostContent</div>
-            <div>
+        <div class="col-md-9" id="postContent_@Model.ForumPostId">
+            <div class="card">@Model.ForumPostContent</div>
+            <div class="card">
                 @if (SignInManager.IsSignedIn(User))
                 {
                     @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
                     {
-                        <a asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
-                        <a asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
+                        <a class="btn btn-secondary" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
+                        <a class="btn btn-danger" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
                     }
                 }
             </div>
