@@ -11,7 +11,7 @@
 
 <ul class="nav nav-tabs mb-2">
     <li class="nav-item">
-        <a class="nav-link @(currentRoute is "Index" ? "active" : "")" id="wall" asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.DisplayName">
+        <a class="nav-link @(currentRoute is "Index" or "NewWallPost" or "ReplyWallPost" ? "active" : "")" id="wall" asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.DisplayName">
             Wall
         </a>
     </li>
