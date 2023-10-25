@@ -35,4 +35,5 @@ public class AccountController : Controller
         if (account == null) return BadRequest("Account not found");
         return View(account);
     }
+    
 }
