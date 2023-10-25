@@ -3,6 +3,7 @@
 #nullable disable
 
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -56,22 +57,25 @@ namespace Forum2.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
+            
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Username")]
+            [RegularExpression(@"^[a-zA-Z0-9_-]*$", ErrorMessage = "Only alphanumeric characters, hyphen, and underscores are allowed.")]
+            [StringLength(32, MinimumLength = 1)]
+            public string DisplayName { get; set; }
+            
+            [Display(Name = "Avatar")]
+            public IFormFile AvatarUrl { get; set; }
         }
 
-        private async Task LoadAsync(ApplicationUser user)
+        private Task LoadAsync(ApplicationUser user)
         {
-            var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
-            Username = userName;
-
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                DisplayName = user.DisplayName
             };
+            return Task.CompletedTask;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -99,17 +103,58 @@ namespace Forum2.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
-
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
+            
+            // Check if DisplayName is changed and taken
+            if (user.DisplayName != Input.DisplayName)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                var userWithSameDisplayName = _userManager.Users.FirstOrDefault(u => u.DisplayName == Input.DisplayName);
+                if (userWithSameDisplayName != null)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
-                    return RedirectToPage();
+                    ModelState.AddModelError(string.Empty, "Username is already taken.");
+                    await LoadAsync(user);
+                    return Page();
                 }
+                
+                // Update user DisplayName
+                user.DisplayName = Input.DisplayName;
             }
+            
+            // Check if Avatar is changed
+            if (Input.AvatarUrl is { Length: > 0 })
+            {
+                // Ensure avatar is an image
+                var isImage = Input.AvatarUrl.ContentType.StartsWith("image/");
+                if (!isImage)
+                {
+                    ModelState.AddModelError(string.Empty, "The avatar must be an image.");
+                    return Page();
+                }
+                
+                // Ensure avatar is not too large
+                var isTooLarge = Input.AvatarUrl.Length > 1024 * 1024 * 2;
+                if (isTooLarge)
+                {
+                    ModelState.AddModelError(string.Empty, "The avatar must be less than 2 MB.");
+                    return Page();
+                }
+                
+                // Get file extension
+                var extension = Input.AvatarUrl.FileName.Split('.').Last().ToLower();
+                
+                // Save avatar to disk
+                var avatarFileName = $"{Guid.NewGuid()}.{extension}";
+                var avatarPath = $"wwwroot/avatars/{avatarFileName}";
+                await using (var stream = System.IO.File.Create(avatarPath))
+                {
+                    await Input.AvatarUrl.CopyToAsync(stream);
+                }
+                    
+                // Update user avatar
+                user.AvatarUrl = avatarFileName;
+            }
+            
+            // Update user
+            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
