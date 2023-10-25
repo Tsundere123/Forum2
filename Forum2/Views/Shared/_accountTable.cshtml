@@ -25,7 +25,7 @@
                     
                 </td>
                 <td>
-                    <img src="@account.AvatarUrl" width="100px" height="100px">
+                    <img src="~/avatars/@account.AvatarUrl" width="100px" height="100px">
                 </td>
             </tr>
         }
@@ -35,7 +35,7 @@
         @if (UserManager.GetUserAsync(User).Result != null)
         {
             @UserManager.GetUserAsync(User).Result.DisplayName
-            <img src="@UserManager.GetUserAsync(User).Result.AvatarUrl" width="100px" height="100px">
+            <img src="~/avatars/@UserManager.GetUserAsync(User).Result.AvatarUrl" width="100px" height="100px">
         }
         else
         {

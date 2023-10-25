@@ -35,7 +35,7 @@
                         var user = UserManager.FindByIdAsync(thread.ForumThreadCreatorId).Result;
                         <li class="list-group-item">
                             <div class="d-flex">
-                                <img src="@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
+                                <img src="~/avatars/@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
                                 <div>
                                     <div class="d-block">
                                         <a href="#">@thread.ForumThreadTitle</a>
@@ -73,7 +73,7 @@
                         var user = @UserManager.FindByIdAsync(post.ForumPostCreatorId).Result;
                         <li class="list-group-item">
                             <div class="d-flex">
-                                <img src="@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
+                                <img src="~/avatars/@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
                                 <div>
                                     <div class="d-block">
                                         <a href="#">@post.ForumThread.ForumThreadTitle</a>
@@ -116,7 +116,7 @@
                     {
                         <li class="list-group-item">
                             <div class="d-flex">
-                                <img src="@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
+                                <img src="~/avatars/@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
                                 <div>
                                     <div class="d-block">
                                         <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>

@@ -25,7 +25,7 @@
                         {
                             <li class="list-group-item">
                                 <div class="d-flex">
-                                    <img src="@Model.User.AvatarUrl" alt="@Model.User.DisplayName" height="48" width="48" class="me-2" />
+                                    <img src="~/avatars/@Model.User.AvatarUrl" alt="@Model.User.DisplayName" height="48" width="48" class="me-2" />
                                     <div>
                                         <div class="d-block">
                                             <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@post.ForumThread!.ForumThreadId">
