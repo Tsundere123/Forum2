@@ -1,13 +1,13 @@
 ﻿@model ForumPostCreationViewModel
 
 <form asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-forumThreadId="@Model.ForumThread.ForumThreadId">
-        <input type="hidden" asp-for="ForumPost.ForumThreadId">
-        <div class="form-group">
-            <label asp-for="ForumPost.ForumPostContent">Post content</label>
-            <input asp-for="ForumPost.ForumPostContent" id="inputNewPostContent" class="form-control">
-            <span asp-validation-for="ForumPost.ForumPostContent" class="text-danger"></span>
-        </div>
+    <input type="hidden" asp-for="ForumPost.ForumThreadId">
+    <div class="form-group">
+        <label asp-for="ForumPost.ForumPostContent">Post content</label>
+        <input asp-for="ForumPost.ForumPostContent" id="inputNewPostContent" class="form-control">
+        <span asp-validation-for="ForumPost.ForumPostContent" class="text-danger"></span>
+    </div>
         
-        <button type="submit" class="btn btn-secondary">Create</button>
-        <button class="btn btn-secondary" id="cancelButton">Cancel</button>
+    <button type="submit" class="btn btn-secondary">Create</button>
+    <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThread.ForumThreadId" class="btn btn-secondary" id="cancelButton">Cancel</a>
 </form>

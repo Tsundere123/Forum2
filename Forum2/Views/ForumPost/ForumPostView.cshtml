@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Server.Kestrel.Core
+﻿﻿@using Microsoft.AspNetCore.Server.Kestrel.Core
 @model ForumPostViewModel
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -18,21 +18,19 @@
 <button id="createNewForumPostButton" data-ajax="true">Create new forum post</button>
 
 <script>
-
-function createNew()
-{
-    $("#createNewForumPostButton").click(function () {
-        // Make an Ajax call to render the partial view.
-        $.ajax({
-            url: "/ForumPost/Create/@Model.CurrentForumThread.ForumThreadId",
-            success: function (html) {
-                // Update the page with the HTML of the partial view.
-                $("#createNewForumPost").html(html);
-            }
+    $(document).ready(function () {
+        $("#createNewForumPostButton").click(function () {
+            // Make an Ajax call to render the partial view.
+            $.ajax({
+                url: "/ForumPost/Create/@Model.CurrentForumThread.ForumThreadId",
+                success: function (html) {
+                    // Update the page with the HTML of the partial view.
+                    $("#createNewForumPost").html(html);
+                }
+            });
+            document.getElementById('createNewForumPostButton').hidden = true;
         });
     });
-}
-$("createNewForumPostButton").click(createNew());
 </script>
 
 <script>
