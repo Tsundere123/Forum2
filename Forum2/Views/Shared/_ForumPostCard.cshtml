@@ -21,7 +21,7 @@
                 <a asp-controller="Profile"
                    asp-action="Index"
                    asp-route-displayName="@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName">
-                    <img src="@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.AvatarUrl)" width="100px" height="100px">
+                    <img src="~/avatars/@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.AvatarUrl)" width="100px" height="100px">
                 </a>
             </div>
         </div>

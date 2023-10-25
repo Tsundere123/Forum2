@@ -32,7 +32,7 @@
             {
                 <li class="list-group-item">
                     <div class="d-flex">
-                        <img src="@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
+                        <img src="~/avatars/@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
                         <div>
                             <div class="d-block">
                                 <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>

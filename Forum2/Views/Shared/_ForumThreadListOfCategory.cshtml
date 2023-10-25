@@ -11,7 +11,7 @@
             <th>Thread title</th>
             <th>OP Name</th>
             <th>Last edited</th>
-            <th>Actions</th>
+            @* <th>Actions</th> *@
         </tr>
         
         @foreach (var forumThread in Model.ForumThreads)
@@ -50,16 +50,16 @@
                                 <p>At: @forumThread.ForumThreadLastEditedTime</p>
                         }
                     </td>
-                    <td>
-                        @if (UserManager.GetUserAsync(User).Result != null)
-                        {
-                            @if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == forumThread.ForumThreadCreatorId))
-                            {
-                                <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@forumThread.ForumThreadId">DELETE</a>
-                                <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@forumThread.ForumThreadId">EDIT</a>
-                            } 
-                        }
-                    </td>
+                    @* <td> *@
+                    @*     @if (UserManager.GetUserAsync(User).Result != null) *@
+                    @*     { *@
+                    @*         @if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == forumThread.ForumThreadCreatorId)) *@
+                    @*         { *@
+                    @*             <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@forumThread.ForumThreadId">DELETE</a> *@
+                    @*             <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@forumThread.ForumThreadId">EDIT</a> *@
+                    @*         }  *@
+                    @*     } *@
+                    @* </td> *@
                 </tr>
             }
         }
