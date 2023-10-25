@@ -38,7 +38,7 @@
                                 <a asp-controller="Profile"
                                    asp-action="Index"
                                    asp-route-displayName="@UserManager.FindByIdAsync(forumThread.ForumThreadCreatorId).Result.DisplayName">
-                                    <img src="@UserManager.FindByIdAsync(forumThread.ForumThreadCreatorId).Result.AvatarUrl" width="100px" height="100px">
+                                    <img src="~/avatars/@account.AvatarUrl" width="100px" height="100px">
                                 </a>
                             }
                         }
