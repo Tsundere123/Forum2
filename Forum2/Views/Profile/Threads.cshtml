@@ -1,8 +1,8 @@
-﻿@{
-    ViewData["Title"] = @Model.User.DisplayName;
-}
+﻿@model ProfileThreadsViewModel
 
-@model ProfileThreadsViewModel
+@{
+    ViewData["Title"] = ViewData["Title"] = $"{Model.User.DisplayName}'s Threads";
+}
 
 <div>
     <div class="row">
@@ -33,7 +33,7 @@
                                             </a>
                                         </div>
                                         <div class="d-block" style="font-size: 14px;">
-                                            in @thread.ForumCategory.ForumCategoryName
+                                            in @thread.ForumCategory!.ForumCategoryName
                                         </div>
                                         <div class="d-block" style="font-size: 12px;">
                                             <span class="me-1">
@@ -49,7 +49,7 @@
                         }
                     </ul>
                     <nav>
-                        <ul class="pagination justify-content-center">
+                        <ul class="pagination pagination-sm justify-content-center">
                             @if (Model.CurrentPage != 1)
                             {
                                 <li class="page-item">

@@ -1,0 +1,25 @@
+﻿@model ProfileReplyWallPostViewModel
+
+@{
+    ViewData["Title"] = ViewData["Title"] = $"{Model.User.DisplayName}'s Wall";
+}
+
+<div>
+    <div class="row">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <partial name="_Profile" model="Model.User"/>
+        </div>
+        <div class="col-md-9">
+            <partial name="_ProfileNav" model="Model.User"/>
+            <h2 class="h3 mb-2 fw-normal">Reply to Wall Post</h2>
+            <form asp-controller="Profile" asp-action="ReplyWallPost" asp-route-displayName="@Model.User.DisplayName" asp-route-id="@Model.WallPostId">
+                <div class="mb-3">
+                    <textarea asp-for="Content" class="form-control" rows="3" placeholder="Write something..."></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Post</button>
+                <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.User.DisplayName" class="btn btn-danger">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject RoleManager<ApplicationRole> RoleManager
 @inject UserManager<ApplicationUser> UserManager
+
 @model ApplicationUser
+
 @{
     var user = UserManager.FindByIdAsync(Model.Id).Result;
     var roles = UserManager.GetRolesAsync(user).Result;
