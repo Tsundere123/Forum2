@@ -5,7 +5,7 @@
 
 @inject UserManager<ApplicationUser> UserManager
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+@* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> *@
 
 <div class="container">
     <div class="row">
@@ -31,12 +31,22 @@
         <script>
         function quotePost() 
         {
-            console.log("quotePost");
-            var postContent = $("#postContent_@Model.ForumPostId").html();
+            let result = "";
+            let postContent = document.getElementById("postContent_@Model.ForumPostId").innerHTML;
             console.log(postContent);
-            $("#inputNewPostContent").val(postContent);
+            
+            let inputField = document.getElementById("inputNewPostContent").value;
+            console.log("inputFieldValue: " + inputField);
+
+            result += inputField;
+            result += "@Model.ForumPostContent";
+            console.log("Result: " + result);
+            
+            document.getElementById("inputNewPostContent").value = result;
         }
+        </script> 
         
+        <script>
         $("#quoteThisPost_@Model.ForumPostId").click(quotePost);
         </script>
         
