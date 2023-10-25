@@ -12,6 +12,7 @@
             @user.DisplayName <img src="@user.AvatarUrl" alt="@user.DisplayName" width="32" height="32" class="rounded-circle">
         </a>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="devDropdown">
+            <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">My Profile</a></li>
             <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Account Settings</a></li>
             <li>
                 <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
