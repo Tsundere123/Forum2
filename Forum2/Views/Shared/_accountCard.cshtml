@@ -2,17 +2,17 @@
 
 <div class="col">
     <div>
-        <a asp-controller="Account"
-           asp-action="Details"
-           asp-route-accountId="@Model.Id">
+        <a asp-controller="Profile"
+           asp-action="Index"
+           asp-route-displayName="@Model.DisplayName">
             <img src="@Model.AvatarUrl" class="card-img-top" alt="@Model.DisplayName">
         </a>
         <div>
             <div class="d-flex justify-content-between mt-2">
                 <h5 class="text-start">
-                    <a asp-controller="Account"
-                       asp-action="Details"
-                       asp-route-accountId="@Model.Id">@Model.DisplayName</a>
+                    <a asp-controller="Profile"
+                       asp-action="Index"
+                       asp-route-displayName="@Model.DisplayName">@Model.DisplayName</a>
                 </h5>
             </div>
         </div>
