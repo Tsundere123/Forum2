@@ -4,17 +4,23 @@
 @model ForumPostViewModel
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<h1>Current thread: @Model.CurrentForumThread.ForumThreadTitle</h1>
-    @if (UserManager.GetUserAsync(User).Result != null)
-    {
-        @if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.CurrentForumThread.ForumThreadCreatorId))
-        {
-            <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">DELETE</a>
-            <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">EDIT</a>
-        } 
-    }
 
+<div class="card">
+    <h1 class="card-body">@Model.CurrentForumThread.ForumThreadTitle</h1>
+</div>
+
+@* EDIT/DELETE *@
+@if (UserManager.GetUserAsync(User).Result != null)
+{
+    @if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.CurrentForumThread.ForumThreadCreatorId))
+    {
+        <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">DELETE</a>
+        <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">EDIT</a>
+    } 
+}
+@* CREATE *@
 <a asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">CREATE</a>
+
 
 @{ var i = 0;}
 @foreach(var post in Model.ForumPosts)

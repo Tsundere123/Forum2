@@ -11,7 +11,11 @@
         {
             <tr>
                 <td>
-                    <a asp-controller="Role" asp-action="MembersOfRole" asp-route-roleId="@role.Id">@role.Name</a>
+                    <a asp-controller="Role"
+                       asp-action="MembersOfRole"
+                       asp-route-roleId="@role.Id">
+                        @role.Name
+                    </a>
                 </td>
             </tr>
         }

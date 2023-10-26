@@ -9,96 +9,87 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-2">
-            <div class="col-sm">
-                <a asp-controller="Profile"
-                   asp-action="Index"
-                   asp-route-displayName="@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName">
-                    @UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName
-                </a>
-            </div>
-            <div class="col-sm">
-                <a asp-controller="Profile"
-                   asp-action="Index"
-                   asp-route-displayName="@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName">
-                    <img src="~/avatars/@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.AvatarUrl" width="100px" height="100px">
-                </a>
-            </div>
-        </div>
-        <div id="postContent_@Model.ForumPostId" class="col-10">@Model.ForumPostContent</div>
-        <div>
-            @if (SignInManager.IsSignedIn(User))
-            {
-                @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
-                {
-                    <a asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
-                    <a asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
-                }
-            }
-        </div>
-        <div>
-            <button id="quoteThisPost_@Model.ForumPostId">Quote</button>
-        </div>
         
-        <script>
-        function checkIfInputVisible()
-        {
-            if (!document.getElementById("createNewForumPost").innerHTML )
-            {
-                console.log("Value " + document.getElementById("createNewForumPost").value)
-                console.log("New post box");
-                $.ajax({
-                    url: "/ForumPost/Create/@Model.ForumThreadId",
-                    success: function (html) {
-                        // Update the page with the HTML of the partial view.
-                        $("#createNewForumPost").html(html);
-                    }
-                });
-            }
-        }
+        @* Profile card *@
+        <div class="col-md-3 mb-2 mb-md-0">
+            <partial name="_Profile" model="UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result"/>
+        </div>
 
-        function quotePostContent()
-        {
-            let result = "";
-            let postContent = document.getElementById("postContent_@Model.ForumPostId").value;
-            // console.log(postContent);
-
-            let inputField = document.getElementById("inputNewPostContent").value;
-            // console.log("inputFieldValue: " + inputField);
-
-            result += inputField;
-
-            // console.log("@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName");
-            result += "Quoted from post by " + "@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName";
-
-
-            result += ' "@Model.ForumPostContent"';
-            // console.log("Result: " + result);
-
-            document.getElementById("inputNewPostContent").value = result;
-        }
+        @* Main post content *@
+        <div class="col-md-9" >
+            <div id="postContent_@Model.ForumPostId" class="card" style="min-height: 10rem">
+                @Model.ForumPostContent
+            </div>
             
-        function quotePost()
-        {
-            checkIfInputVisible();
-            quotePostContent();
-            document.getElementById('createNewForumPostButton').hidden = true;
-        }
-        </script>
-        
-        <script>
-        $("#quoteThisPost_@Model.ForumPostId").click(quotePost);
-        </script>
-        
-        <div>
-            @if (Model.ForumPostLastEditedTime > Model.ForumPostCreationTimeUnix)
-            {
-                <div>
-                    <p>Last edited by: @UserManager.FindByIdAsync(Model.ForumPostLastEditedBy).Result.DisplayName</p>
-                    <p>At: @Model.ForumPostLastEditedTime</p>
+
+            <div class="card-footer" style="border: 0;padding: 0;">
+                @* Quote button *@
+                <div style="border: 0;padding: 0;">
+                    <button class="btn col-1 btn-dark" style="display: inline-block;" id="quoteThisPost_@Model.ForumPostId">Quote</button>
+                    
+                    @* EDIT/DELETE *@
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
+                        {
+                            <a class="btn col-1 btn-secondary" style="display: inline-block;" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
+                            <a class="btn col-1 btn-danger" style="display: inline-block;" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
+                        }
+                    }
                 </div>
-            }
+            </div>
+            
+
+            @* Last edited *@
+            <div>
+                @if (Model.ForumPostLastEditedTime > Model.ForumPostCreationTimeUnix)
+                {
+                    <div>
+                        <p>Last edited by: @UserManager.FindByIdAsync(Model.ForumPostLastEditedBy).Result.DisplayName</p>
+                        <p>At: @Model.ForumPostLastEditedTime</p>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
 
+
+<script>
+//Check if create new post input box is visible, if not, enable
+async function checkIfInputVisible()
+{
+    if (!document.getElementById("createNewForumPost").innerHTML )
+    {
+        await $.ajax({
+            url: "/ForumPost/Create/@Model.ForumThreadId",
+            success: function (html) {
+                // Update the page with the HTML of the partial view.
+                $("#createNewForumPost").html(html);
+            }
+        });
+    }
+}
+    
+async function quotePost()
+{
+    //Check if create new post input box is visible, if not, enable
+    await checkIfInputVisible();
+    let result = "";
+    let inputField = document.getElementById("inputNewPostContent").value;
+    
+    //Quote text content to be input
+    result += inputField;
+    result += "Quoted from post by " + "@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName";
+    result += ' "@Model.ForumPostContent"';
+
+    //Places resulting quote into input box
+    document.getElementById("inputNewPostContent").value = result;
+    //Hides button to create new post
+    document.getElementById('createNewForumPostButton').hidden = true;
+}
+</script>
+
+<script>
+$("#quoteThisPost_@Model.ForumPostId").click(quotePost);
+</script>
