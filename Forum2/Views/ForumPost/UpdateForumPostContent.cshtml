@@ -9,7 +9,7 @@
     <input type="hidden" asp-for="ForumPostCreationTimeUnix">
     <div class="form-group">
         <label asp-for="ForumPostContent">Post content</label>
-        <input asp-for="ForumPostContent" class="form-control">
+        <textarea asp-for="ForumPostContent" class="form-control"></textarea>
         <span asp-validation-for="ForumPostContent" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-secondary">Save Changes</button>
