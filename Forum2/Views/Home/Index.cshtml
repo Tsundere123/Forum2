@@ -23,29 +23,10 @@
             <div id="latest_threads">
                 @foreach (var thread in Model.ForumThreads)
                 {
-                    var user = UserManager.Users.FirstOrDefault(u => u.Id == thread.ForumThreadCreatorId);
                     <div>
                         <div class="card">
                             <div class="card-body">
-                                <div class="d-flex">
-                                    <img src="~/avatars/@user!.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2 rounded" />
-                                    <div>
-                                        <div class="d-block">
-                                            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@thread.ForumThreadId.ToString()">@thread.ForumThreadTitle</a>
-                                        </div>
-                                        <div class="d-block" style="font-size: 14px;">
-                                            in @thread.ForumCategory!.ForumCategoryName
-                                        </div>
-                                        <div class="d-block" style="font-size: 12px;">
-                                            <span class="me-1">
-                                                <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
-                                            </span>
-                                            <span class="text-muted">
-                                                @thread.ForumThreadCreationTimeUnix.ToString("d")
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+                                <partial name="Lookup/_ThreadLookup" model="thread"/>
                             </div>
                         </div>
                     </div>
@@ -77,35 +58,10 @@
             <div id="latest_posts">
                 @foreach (var post in Model.ForumPosts)
                 {
-                    var user = UserManager.Users.FirstOrDefault(u => u.Id == post.ForumPostCreatorId);
                     <div>
                         <div class="card">
                             <div class="card-body">
-                                <div class="d-flex">
-                                    <img src="~/avatars/@user!.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
-                                    <div>
-                                        <div class="d-block">
-                                            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@post.ForumThreadId.ToString()">@post.ForumThread!.ForumThreadTitle</a>
-                                        </div>
-                                        <div class="d-block" style="font-size: 14px;">
-                                            @if (post.ForumPostContent.Length >= 20)
-                                            {
-                                                @post.ForumPostContent.Substring(0, 20)
-                                            } else
-                                            {
-                                                @post.ForumPostContent
-                                            }
-                                        </div>
-                                        <div class="d-block" style="font-size: 12px;">
-                                            <span class="me-1">
-                                                <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
-                                            </span>
-                                            <span class="text-muted">
-                                                @post.ForumPostCreationTimeUnix.ToString("d")
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+                                <partial name="Lookup/_PostLookup" model="post"/>
                             </div>
                         </div>
                     </div>
@@ -138,17 +94,7 @@
                 <div>
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <img src="~/avatars/@member.AvatarUrl" alt="@member.DisplayName" height="48" width="48" class="rounded"/>
-                                <div class="ms-2">
-                                    <div>
-                                        <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@member.DisplayName">
-                                            @member.DisplayName
-                                        </a>
-                                    </div>
-                                    <div style="font-size: 14px">Joined @member.CreatedAt.ToString("d")</div>
-                                </div>
-                            </div>
+                            <partial name="Lookup/_UserLookup" model="member"/>
                         </div>
                     </div>
                 </div>

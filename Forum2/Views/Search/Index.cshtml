@@ -32,27 +32,8 @@
                 <ul class="list-group">
                     @foreach (var thread in Model.Threads)
                     {
-                        var user = UserManager.FindByIdAsync(thread.ForumThreadCreatorId).Result;
                         <li class="list-group-item">
-                            <div class="d-flex">
-                                <img src="~/avatars/@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
-                                <div>
-                                    <div class="d-block">
-                                        <a href="#">@thread.ForumThreadTitle</a>
-                                    </div>
-                                    <div class="d-block" style="font-size: 14px;">
-                                        in @thread.ForumCategory.ForumCategoryName
-                                    </div>
-                                    <div class="d-block" style="font-size: 12px;">
-                                        <span class="me-1">
-                                            <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
-                                        </span>
-                                        <span class="text-muted">
-                                            Date Here <!-- TODO -->
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                            <partial name="Lookup/_ThreadLookup" model="thread"/>
                         </li>
                     }
                 </ul>
@@ -70,33 +51,8 @@
                 <ul class="list-group">
                     @foreach (var post in Model.Posts)
                     {
-                        var user = @UserManager.FindByIdAsync(post.ForumPostCreatorId).Result;
                         <li class="list-group-item">
-                            <div class="d-flex">
-                                <img src="~/avatars/@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
-                                <div>
-                                    <div class="d-block">
-                                        <a href="#">@post.ForumThread.ForumThreadTitle</a>
-                                    </div>
-                                    <div class="d-block" style="font-size: 14px;">
-                                        @if (post.ForumPostContent.Length >= 20)
-                                        {
-                                            @post.ForumPostContent.Substring(0, 20)
-                                        } else
-                                        {
-                                            @post.ForumPostContent
-                                        }
-                                    </div>
-                                    <div class="d-block" style="font-size: 12px;">
-                                        <span class="me-1">
-                                            <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
-                                        </span>
-                                        <span class="text-muted">
-                                            Date Here <!-- TODO -->
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                            <partial name="Lookup/_PostLookup" model="post"/>
                         </li>
                     }
                 </ul>
@@ -115,23 +71,7 @@
                     @foreach (var user in Model.Users)
                     {
                         <li class="list-group-item">
-                            <div class="d-flex">
-                                <img src="~/avatars/@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
-                                <div>
-                                    <div class="d-block">
-                                        <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
-                                    </div>
-                                    @if (UserManager.GetRolesAsync(user).Result.Count > 0)
-                                    {
-                                        var role = RoleManager.FindByNameAsync(UserManager.GetRolesAsync(user).Result.FirstOrDefault()).Result;
-                                        <div class="d-block">
-                                            <div class="badge" style="background: @role.Color;">
-                                                @role.Name
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
+                            <partial name="Lookup/_UserLookup" model="user"/>
                         </li>
                     }
                 </ul>

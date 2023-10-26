@@ -31,23 +31,7 @@
             @foreach (var user in Model.Users)
             {
                 <li class="list-group-item">
-                    <div class="d-flex">
-                        <img src="~/avatars/@user.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
-                        <div>
-                            <div class="d-block">
-                                <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
-                            </div>
-                            @if (UserManager.GetRolesAsync(user).Result.Count > 0)
-                            {
-                                var role = RoleManager.FindByNameAsync(UserManager.GetRolesAsync(user).Result.FirstOrDefault()).Result;
-                                <div class="d-block">
-                                    <div class="badge" style="background: @role.Color;">
-                                        @role.Name
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
+                    <partial name="Lookup/_UserLookup" model="user"/>
                 </li>
             }
         </ul>
