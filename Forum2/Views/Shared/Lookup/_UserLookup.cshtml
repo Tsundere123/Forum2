@@ -1,0 +1,13 @@
+﻿@model ApplicationUser
+
+<div class="d-flex align-items-center">
+    <img src="~/avatars/@Model.AvatarUrl" alt="@Model.DisplayName" height="48" width="48" class="rounded"/>
+    <div class="ms-2">
+        <div>
+            <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.DisplayName">
+                @Model.DisplayName
+            </a>
+        </div>
+        <div style="font-size: 14px">Joined @Model.CreatedAt.ToString("d")</div>
+    </div>
+</div>

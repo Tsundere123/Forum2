@@ -1,0 +1,34 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@model ForumPost
+
+@{
+    var user = UserManager.Users.FirstOrDefault(u => u.Id == Model.ForumPostCreatorId);
+}
+
+<div class="d-flex">
+    <img src="~/avatars/@user!.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2" />
+    <div>
+        <div class="d-block">
+            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThreadId.ToString()">@Model.ForumThread!.ForumThreadTitle</a>
+        </div>
+        <div class="d-block" style="font-size: 14px;">
+            @if (Model.ForumPostContent.Length >= 20)
+            {
+                @Model.ForumPostContent.Substring(0, 20)
+            } else
+            {
+                @Model.ForumPostContent
+            }
+        </div>
+        <div class="d-block" style="font-size: 12px;">
+            <span class="me-1">
+                <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
+            </span>
+            <span class="text-muted">
+                @Model.ForumPostCreationTimeUnix.ToString("d")
+            </span>
+        </div>
+    </div>
+</div>
