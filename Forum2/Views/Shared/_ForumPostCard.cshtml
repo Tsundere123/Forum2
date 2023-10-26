@@ -56,13 +56,12 @@
 
 
 <script>
-function checkIfInputVisible()
+//Check if create new post input box is visible, if not, enable
+async function checkIfInputVisible()
 {
     if (!document.getElementById("createNewForumPost").innerHTML )
     {
-        console.log("Value " + document.getElementById("createNewForumPost").value)
-        console.log("New post box");
-        $.ajax({
+        await $.ajax({
             url: "/ForumPost/Create/@Model.ForumThreadId",
             success: function (html) {
                 // Update the page with the HTML of the partial view.
@@ -71,32 +70,22 @@ function checkIfInputVisible()
         });
     }
 }
-
-function quotePostContent()
-{
-    let result = "";
-    let postContent = document.getElementById("postContent_@Model.ForumPostId").value;
-    // console.log(postContent);
-
-    let inputField = document.getElementById("inputNewPostContent").value;
-    // console.log("inputFieldValue: " + inputField);
-
-    result += inputField;
-
-    // console.log("@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName");
-    result += "Quoted from post by " + "@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName";
-
-
-    result += ' "@Model.ForumPostContent"';
-    // console.log("Result: " + result);
-
-    document.getElementById("inputNewPostContent").value = result;
-}
     
-function quotePost()
+async function quotePost()
 {
-    checkIfInputVisible();
-    quotePostContent();
+    //Check if create new post input box is visible, if not, enable
+    await checkIfInputVisible();
+    let result = "";
+    let inputField = document.getElementById("inputNewPostContent").value;
+    
+    //Quote text content to be input
+    result += inputField;
+    result += "Quoted from post by " + "@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName";
+    result += ' "@Model.ForumPostContent"';
+
+    //Places resulting quote into input box
+    document.getElementById("inputNewPostContent").value = result;
+    //Hides button to create new post
     document.getElementById('createNewForumPostButton').hidden = true;
 }
 </script>
