@@ -6,8 +6,12 @@
     <title>@ViewData["Title"] - Forum2</title>
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/lib/tiny-slider/tiny-slider.css"/>
+    <link rel="stylesheet" href="~/lib/easymde/easymde.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/Forum2.styles.css" asp-append-version="true"/>
+    
+    <!-- Load jQuery early -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
 </head>
 <body>
 <header>
@@ -62,7 +66,6 @@
     </div>
 </footer>
 
-<script src="~/lib/jquery/jquery.min.js"></script>
 <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 @* @await RenderSectionAsync("Scripts", required: false) *@

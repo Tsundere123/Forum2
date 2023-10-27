@@ -1,42 +1,117 @@
-﻿﻿@using Microsoft.AspNetCore.Server.Kestrel.Core
-@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
 @model ForumPostViewModel
+@{
+    var currentThreadCreator = UserManager.FindByIdAsync(Model.CurrentForumThread.ForumThreadCreatorId).Result;
+}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<h1 class="h2 fw-normal">@Model.CurrentForumThread.ForumThreadTitle</h1>
+<div class="d-flex flex-column flex-md-row gap-2 align-items-md-center justify-content-md-between">
+    <div class="d-inline-flex gap-2" style="font-size:14px;">
+        <div class="d-flex gap-2 align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+            </svg>
+            <a class="link-dark text-decoration-none" asp-controller="Profile" asp-action="Index" asp-route-displayName="@currentThreadCreator.DisplayName">
+                @currentThreadCreator.DisplayName
+            </a>
+        </div>
+        <div class="d-flex gap-2 align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+            </svg>
+            @Model.CurrentForumThread.ForumThreadCreationTimeUnix.ToString("g")
+        </div>
+    </div>
 
-<div class="card">
-    <h1 class="card-body">@Model.CurrentForumThread.ForumThreadTitle</h1>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.CurrentForumThread.ForumThreadCreatorId))
+        {
+            <div>
+                <a class="btn btn-sm btn-dark" asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId.ToString()">
+                    Edit Thread
+                </a>
+                <a class="btn btn-sm btn-danger" asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId.ToString()">
+                    Delete Thread
+                </a>
+            </div>
+        }
+    }
 </div>
 
-@* EDIT/DELETE *@
-@if (UserManager.GetUserAsync(User).Result != null)
-{
-    @if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.CurrentForumThread.ForumThreadCreatorId))
-    {
-        <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">DELETE</a>
-        <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">EDIT</a>
-    } 
-}
-@* CREATE *@
-<a asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">CREATE</a>
-
+<hr />
 
 @foreach(var post in Model.ForumPosts)
 {
     <partial name="_ForumPostCard" model="post"/>
 }
-    
-<button class="btn btn-primary" id="createNewForumPostButton" data-ajax="true">Create new forum post</button>
 
+<div class="d-block d-md-flex align-items-center justify-content-between mb-2">
+    @if (Model.TotalPages > 1)
+    {
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                @if (Model.CurrentPage != 1)
+                {
+                    <li class="page-item">
+                        <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">Previous</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link">Previous</a>
+                    </li>
+                }
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <li class="page-item active"><a class="page-link">@i.ToString()</a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId" asp-route-page="@i" class="page-link">@i.ToString()</a>
+                        </li>
+                    }
+                }
+                @if (Model.CurrentPage != Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">Next</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link">Next</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+        
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <button class="btn btn-sm btn-primary" id="createNewForumPostButton" data-ajax="true">New Post</button>
+    }
+</div>
+
+<div id="createNewForumPost"></div>
+
+<script src="~/lib/easymde/easymde.min.js"></script>
 <script>
+    $("#cancelButton").click($("createNewForumPost").empty);
+    
     $(document).ready(function () {
         $("#createNewForumPostButton").click(function () {
             // Make an Ajax call to render the partial view.
             $.ajax({
-                url: "/ForumPost/Create/@Model.CurrentForumThread.ForumThreadId",
+                url: "/ForumPost/Create/@Model.CurrentForumThread.ForumThreadId.ToString()",
                 success: function (html) {
                     // Update the page with the HTML of the partial view.
                     $("#createNewForumPost").html(html);
@@ -46,9 +121,3 @@
         });
     });
 </script>
-
-<script>
-$("#cancelButton").click(
-   $("createNewForumPost").empty);
-</script>
-<div id="createNewForumPost"></div>
