@@ -1,5 +1,8 @@
 ﻿@model ForumPost
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+
 <h2>Update forum post</h2>
 
 <form asp-controller="ForumPost" asp-action="UpdateForumPostContent">
@@ -9,9 +12,12 @@
     <input type="hidden" asp-for="ForumPostCreationTimeUnix">
     <div class="form-group">
         <label asp-for="ForumPostContent">Post content</label>
-        <textarea asp-for="ForumPostContent" class="form-control"></textarea>
+        <textarea asp-for="ForumPostContent" class="form-control" id="editForumPost"></textarea>
         <span asp-validation-for="ForumPostContent" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-secondary">Save Changes</button>
     <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThreadId" class="btn btn-secondary">Cancel</a>
 </form>
+<script>
+const easyMDE = new EasyMDE({element: document.getElementById('editForumPost')});
+</script>
