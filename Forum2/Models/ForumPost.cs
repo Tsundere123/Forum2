@@ -25,6 +25,9 @@ public class ForumPost
 
     public DateTime ForumPostLastEditedTime { get; set; } = DateTime.MinValue;
 
+    [Required] 
+    public bool ForumPostIsSoftDeleted { get; set; } = false;
+    
     public string ForumPostLastEditedBy { get; set; } = string.Empty;
     // Navigation Property
     public virtual ForumThread? ForumThread { get; set; }

@@ -150,7 +150,8 @@ public class ForumPostController : Controller
             //Needed for RedirectToAction
             var forumThreadId = forumPost.ForumThreadId;
             if (forumPost == null) return NotFound();
-            forumPost.ForumPostContent = "This post has been deleted";
+            // forumPost.ForumPostContent = "This post has been deleted";
+            forumPost.ForumPostIsSoftDeleted = true;
             await UpdateForumPostContent(forumPostId,forumPost);
             return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
         }
