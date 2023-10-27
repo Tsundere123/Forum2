@@ -9,7 +9,7 @@
     var roles = UserManager.GetRolesAsync(user).Result;
 }
 
-<div class="card mb-2">
+<div class="card">
     <div class="card-body">
         <div class="text-center">
             <a asp-controller="Profile"
@@ -34,12 +34,10 @@
             }
         </div>
     </div>
-</div>
-<div class="card">
-    <div class="card-body">
-        <div class="d-flex justify-content-between">
-            <span>Joined</span>
-            <span>@Model.CreatedAt.ToString("d")</span>
-        </div>
+    <div class="card-footer">
+            <div class="d-flex justify-content-between">
+                <span>Joined</span>
+                <span>@Model.CreatedAt.ToString("d")</span>
+            </div>
     </div>
 </div>

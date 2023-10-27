@@ -38,15 +38,15 @@
             <div class="card-footer" style="border: 0;padding: 0;">
                 @* Quote button *@
                 <div style="border: 0;padding: 0;">
-                    <button class="btn col-1 btn-dark" style="display: inline-block;" id="quoteThisPost_@Model.ForumPostId">Quote</button>
+                    <button class="btn col-xl-1 col-md-2 col-3 btn-dark" style="display: inline-block;" id="quoteThisPost_@Model.ForumPostId">Quote</button>
                     
                     @* EDIT/DELETE *@
                     @if (SignInManager.IsSignedIn(User))
                     {
                         @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
                         {
-                            <a class="btn col-1 btn-secondary" style="display: inline-block;" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
-                            <a class="btn col-1 btn-danger" style="display: inline-block;" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
+                            <a class="btn col-xl-1 col-md-2 col-3 btn-secondary" style="display: inline-block;" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
+                            <a class="btn col-xl-1 col-md-2 col-3 btn-danger" style="display: inline-block;" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
                         }
                     }
                 </div>
