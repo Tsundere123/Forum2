@@ -9,37 +9,33 @@
     var roles = UserManager.GetRolesAsync(user).Result;
 }
 
-<div class="card mb-2">
+<div class="card">
     <div class="card-body">
-        <div class="text-center">
+        <div class="text-center d-flex d-md-block align-items-center">
             <a asp-controller="Profile"
                asp-action="Index"
                asp-route-displayName="@Model.DisplayName">
-                <img class="img-thumbnail rounded" height="128" width="128" src="~/avatars/@Model.AvatarUrl" alt="@Model.DisplayName"/>
+                <img class="rounded d-none d-md-block mx-auto" height="128" width="128" src="~/avatars/@Model.AvatarUrl" alt="@Model.DisplayName"/>
+                <img class="rounded d-block d-md-none me-3" height="32" width="32" src="~/avatars/@Model.AvatarUrl" alt="@Model.DisplayName"/>
             </a>
             <div>
-                <a asp-controller="Profile"
-                   asp-action="Index"
-                   asp-route-displayName="@Model.DisplayName">
-                <h1 class="fw-bold fs-6">@Model.DisplayName</h1>
+                <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.DisplayName" class="link-dark text-decoration-none">
+                    <div class="fw-bold fs-6">@Model.DisplayName</div>
                 </a>
+            
+                @if (roles.Count > 0) {
+                    var role = RoleManager.FindByNameAsync(roles[0]).Result;
+                    <a asp-controller="Role" asp-action="MembersOfRole" asp-route-roleId="@role.Id">
+                        <div class="badge" style="background: @role.Color;">@role.Name</div>
+                    </a>
+                }
             </div>
-            @if (roles.Count > 0) {
-                var role = RoleManager.FindByNameAsync(roles[0]).Result;
-                <a asp-controller="Role"
-                   asp-action="MembersOfRole"
-                   asp-route-roleId="@role.Id">
-                <div class="badge" style="background: @role.Color;">@role.Name</div>
-                </a>
-            }
         </div>
     </div>
-</div>
-<div class="card">
-    <div class="card-body">
-        <div class="d-flex justify-content-between">
+    <div class="card-footer py-1 py-md-2">
+        <div class="d-flex justify-content-md-between">
             <span>Joined</span>
-            <span>@Model.CreatedAt.ToString("d")</span>
+            <span class="ps-1">@Model.CreatedAt.ToString("d")</span>
         </div>
     </div>
 </div>
