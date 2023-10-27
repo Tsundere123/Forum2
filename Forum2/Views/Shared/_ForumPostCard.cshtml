@@ -90,34 +90,26 @@ async function quotePost()
     await checkIfInputVisible();
     let result = "";
     
+    //Collects original data
     let inputField = easyMDE.value();
     let quotedPost = " @Model.ForumPostContent ";
     
-    console.log("originalPost" + quotedPost);
+    //Cleans data of HTML tags
     let inputParsed = new DOMParser().parseFromString(inputField,"text/html");
     let quoteParsed = new DOMParser().parseFromString(quotedPost,"text/html");
 
-    console.log("Before" + quoteParsed);
-    
     inputParsed = inputParsed.documentElement.textContent;
     quoteParsed = quoteParsed.documentElement.textContent;
     quoteParsed = quoteParsed.replace(/<\/?[^>]+(>|$)/g, "");
-    
-    console.log("decoded" + quoteParsed);
-    // let inputField = document.getElementById("inputNewPostContent").value;
-    
+
     //Quote text content to be input
     result += inputParsed;
     result += "Quoted from post by " + "@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName";
     result += quoteParsed;
 
     //Places resulting quote into input box
-    // const easyMDE = new EasyMDE();
-    // easyMDE.value("@Model.ForumPostContent");
     easyMDE.value(result);
     
-    
-    // document.getElementById("inputNewPostContent").value = result;
     //Hides button to create new post
     document.getElementById('createNewForumPostButton').hidden = true;
 }
