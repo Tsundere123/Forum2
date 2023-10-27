@@ -4,59 +4,37 @@
     ViewData["Title"] = "Register";
 }
 
-<style>
-    .form-floating:focus-within {
-      z-index: 2;
-    }
-    
-    #first-form-control {
-        border-bottom-right-radius: 0; 
-        border-bottom-left-radius: 0;
-    }
-    
-    .middle-form-control {
-        margin-top: -1px;
-        border-radius: 0; 
-    }
-    
-    #last-form-control {
-        margin-top: -1px;
-        border-top-left-radius: 0; 
-        border-top-right-radius: 0;
-    }
-</style>
-
 <div class="d-flex justify-content-center">
     <div class="col-12 col-md-6">
         <h1 class="h3 mb-3 fw-normal">@ViewData["Title"]</h1>
         <form id="account" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating">
+            <partial name="_ValidationSummary" model="ViewData.ModelState"/>
+            <div class="form-floating mb-2">
                 <input asp-for="Input.DisplayName" class="form-control" autocomplete="username" placeholder="Username" aria-required="true" id="first-form-control"/>
                 <label asp-for="Input.DisplayName"></label>
-                <span asp-validation-for="Input.DisplayName" class="text-danger"></span>
+                <span asp-validation-for="Input.DisplayName" class="invalid-feedback"></span>
             </div>
-            <div class="form-floating">
+            <div class="form-floating mb-2">
                 <input asp-for="Input.Email" class="form-control middle-form-control" autocomplete="email" placeholder="Email" aria-required="true"/>
                 <label asp-for="Input.Email"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                <span asp-validation-for="Input.Email" class="invalid-feedback"></span>
             </div>
-            <div class="form-floating">
+            <div class="form-floating mb-2">
                 <input asp-for="Input.Password" class="form-control middle-form-control" autocomplete="new-password" placeholder="New Password" aria-required="true"/>
                 <label asp-for="Input.Password"></label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <span asp-validation-for="Input.Password" class="invalid-feedback"></span>
             </div>
-            <div class="form-floating">
+            <div class="form-floating mb-2">
                 <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" placeholder="Confirm Password" aria-required="true" id="last-form-control"/>
                 <label asp-for="Input.ConfirmPassword"></label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                <span asp-validation-for="Input.ConfirmPassword" class="invalid-feedback"></span>
             </div>
-            <div class="mt-2">
-                <label asp-for="Input.AvatarUrl" class="form-label"></label>
+            <div class="mb-2">
+                <label asp-for="Input.AvatarUrl" class="form-label">Avatar <i>(Optional)</i></label>
                 <input asp-for="Input.AvatarUrl" class="form-control form-control-lg" type="file">
-                <span asp-validation-for="Input.AvatarUrl" class="text-danger"></span>
+                <span asp-validation-for="Input.AvatarUrl" class="invalid-feedback"></span>
             </div>
-            <div class="mt-2">
+            <div>
                 <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
             </div>
         </form>

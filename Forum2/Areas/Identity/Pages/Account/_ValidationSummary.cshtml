@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Mvc.ModelBinding
+@model ModelStateDictionary
+
+@if (!Model.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul class="mb-0 list-unstyled">
+            @foreach (var error in Model.SelectMany(keyValuePair => keyValuePair.Value!.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
