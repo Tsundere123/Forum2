@@ -27,17 +27,7 @@
                 @* Main post content *@
                 <div class="col-md-9" >
                     <div id="postContent_@Model.ForumPostId" class="card" style="min-height: 10rem">
-                        
-                        @* @{ var result = Markdig.Markdown.ToHtml(Model.ForumPostContent);} *@
-                        
                         @Html.Raw(Markdown.Parse(@Model.ForumPostContent, sanitizeHtml: true))
-                        
-                        @* SANITATION NEEDED*@
-        
-                        
-                        
-                        @* @{ Console.WriteLine(result); } *@
-                        
                     </div>
                     
         
@@ -58,7 +48,6 @@
                         </div>
                     </div>
                     
-        
                     @* Last edited *@
                     <div>
                         @if (Model.ForumPostLastEditedTime > Model.ForumPostCreationTimeUnix)
