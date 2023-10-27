@@ -20,7 +20,7 @@
 
         @* Main post content *@
         <div class="col-md-9" >
-            <div id="postContent_@Model.ForumPostId" class="card" style="min-height: 10rem">
+            <div id="postContent_@Model.ForumPostId" class="card post-content" style="min-height: 10rem">
                 
                 @* @{ var result = Markdig.Markdown.ToHtml(Model.ForumPostContent);} *@
                 
@@ -69,6 +69,11 @@
 
 
 <script>
+// Ensure that post images are responsive
+$(document).ready(function () {
+    $(".post-content img").addClass("img-fluid");
+});
+
 //Check if create new post input box is visible, if not, enable
 async function checkIfInputVisible()
 {
