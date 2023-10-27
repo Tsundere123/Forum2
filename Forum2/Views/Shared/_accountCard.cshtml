@@ -5,7 +5,7 @@
         <a asp-controller="Profile"
            asp-action="Index"
            asp-route-displayName="@Model.DisplayName">
-            <img src="@Model.AvatarUrl" class="card-img-top" alt="@Model.DisplayName">
+            <img src="~/avatars/@Model.AvatarUrl" width="100px" height="100px">
         </a>
         <div>
             <div class="d-flex justify-content-between mt-2">
