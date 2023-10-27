@@ -12,58 +12,59 @@
 
 <div class="container">
     <div class="row">
-        
-        @* Profile card *@
-        <div class="col-md-3 mb-2 mb-md-0">
-            <partial name="_Profile" model="UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result"/>
-        </div>
-
-        @* Main post content *@
-        <div class="col-md-9" >
-            <div id="postContent_@Model.ForumPostId" class="card" style="min-height: 10rem">
-                
-                @* @{ var result = Markdig.Markdown.ToHtml(Model.ForumPostContent);} *@
-                
-                @Html.Raw(Markdown.Parse(@Model.ForumPostContent, sanitizeHtml: true))
-                
-                @* SANITATION NEEDED*@
-
-                
-                
-                @* @{ Console.WriteLine(result); } *@
-                
-            </div>
-            
-
-            <div class="card-footer" style="border: 0;padding: 0;">
-                @* Quote button *@
-                <div style="border: 0;padding: 0;">
-                    <button class="btn col-1 btn-dark" style="display: inline-block;" id="quoteThisPost_@Model.ForumPostId">Quote</button>
-                    
-                    @* EDIT/DELETE *@
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
-                        {
-                            <a class="btn col-1 btn-secondary" style="display: inline-block;" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
-                            <a class="btn col-1 btn-danger" style="display: inline-block;" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
-                        }
-                    }
+        @{
+            //Checks if post is soft deleted. Sost deleted posts will be displayed as deleted, thus keeping context that a post was deleted.
+            //Does not delete any quotations from the post
+            if (Model.ForumPostIsSoftDeleted)
+            {
+                <div class="card text-danger">
+                    <p>This post has been deleted</p>
                 </div>
-            </div>
-            
-
-            @* Last edited *@
-            <div>
-                @if (Model.ForumPostLastEditedTime > Model.ForumPostCreationTimeUnix)
-                {
-                    <div>
-                        <p>Last edited by: @UserManager.FindByIdAsync(Model.ForumPostLastEditedBy).Result.DisplayName</p>
-                        <p>At: @Model.ForumPostLastEditedTime</p>
+            }
+            else
+            {
+                @* Profile card *@
+                <div class="col-md-3 mb-2 mb-md-0">
+                    <partial name="_Profile" model="UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result"/>
+                </div>
+        
+                @* Main post content *@
+                <div class="col-md-9" >
+                    <div id="postContent_@Model.ForumPostId" class="card" style="min-height: 10rem">
+                        @Html.Raw(Markdown.Parse(@Model.ForumPostContent, sanitizeHtml: true))
                     </div>
-                }
-            </div>
-        </div>
+                    
+        
+                    <div class="card-footer" style="border: 0;padding: 0;">
+                        @* Quote button *@
+                        <div style="border: 0;padding: 0;">
+                            <button class="btn col-1 btn-dark" style="display: inline-block;" id="quoteThisPost_@Model.ForumPostId">Quote</button>
+                            
+                            @* EDIT/DELETE *@
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
+                                {
+                                    <a class="btn col-1 btn-secondary" style="display: inline-block;" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">EDIT</a>
+                                    <a class="btn col-1 btn-danger" style="display: inline-block;" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">DELETE</a>
+                                }
+                            }
+                        </div>
+                    </div>
+                    
+                    @* Last edited *@
+                    <div>
+                        @if (Model.ForumPostLastEditedTime > Model.ForumPostCreationTimeUnix)
+                        {
+                            <div>
+                                <p>Last edited by: @UserManager.FindByIdAsync(Model.ForumPostLastEditedBy).Result.DisplayName</p>
+                                <p>At: @Model.ForumPostLastEditedTime</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
     </div>
 </div>
 
