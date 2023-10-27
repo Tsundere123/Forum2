@@ -24,13 +24,10 @@
 <a asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">CREATE</a>
 
 
-@{ var i = 0;}
 @foreach(var post in Model.ForumPosts)
-    {
-        i++;
-        <h2>This is post nr @i</h2>
-        <partial name="_ForumPostCard" model="post"/>
-    }
+{
+    <partial name="_ForumPostCard" model="post"/>
+}
     
 <button class="btn btn-primary" id="createNewForumPostButton" data-ajax="true">Create new forum post</button>
 

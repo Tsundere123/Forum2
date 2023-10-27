@@ -9,66 +9,51 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
 <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
 
-<div class="container">
-    <div class="row">
-        @if (Model.ForumPostIsSoftDeleted)
-        {
-            <div class="col-12">
-                <div class="alert alert-secondary">
-                    This post has been deleted.
-                </div>
-            </div>
-        }
-        else
-        {
-        @* Profile card *@
+@if (Model.ForumPostIsSoftDeleted)
+{
+    <div class="alert alert-secondary mb-4 fst-italic">
+        This post has been deleted.
+    </div>
+}
+else
+{
+    <div class="row mb-4">
         <div class="col-md-3 mb-2 mb-md-0">
             <partial name="_Profile" model="UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result"/>
         </div>
-
-        @* Main post content *@
-            <div class="col-md-9">
-                <div class="card">
-                    <div id="postContent_@Model.ForumPostId" class="card-body py-2">
-                        <div class="post-content">
-                            @Html.Raw(Markdown.Parse(@Model.ForumPostContent, sanitizeHtml: true))
-                        </div>
-
-                        @* Last edited *@
-                        <div>
-                            @if (Model.ForumPostLastEditedTime > Model.ForumPostCreationTimeUnix)
-                            {
-                                var editor = UserManager.FindByIdAsync(Model.ForumPostLastEditedBy).Result;
-                                <span class="text-muted" style="font-size: 12px">
-                                    Last edited by: <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@editor.DisplayName" class="text-decoration-none link-dark">
-                                        @editor.DisplayName
-                                    </a> on @Model.ForumPostLastEditedTime.ToString("g")
-                                </span>
-                            }
-                        </div>
+        <div class="col-md-9">
+            <div class="card h-100">
+                <div id="postContent_@Model.ForumPostId.ToString()" class="card-body py-2 d-flex flex-column justify-content-between">
+                    <div class="post-content">
+                        @Html.Raw(Markdown.Parse(Model.ForumPostContent, sanitizeHtml: true))
                     </div>
 
-                        <div class="card-footer" style="border: 0;padding: 0;">
-                            @* Quote button *@
-                            <div class="py-2 px-3">
-                                <button class="btn btn-sm btn-dark" style="display: inline-block;" id="quoteThisPost_@Model.ForumPostId">Quote</button>
-
-                                @* EDIT/DELETE *@
-                                @if (SignInManager.IsSignedIn(User))
-                                {
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
-                                    {
-                                        <a class="ms-2 btn btn-sm btn-secondary" style="display: inline-block;" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId">Edit Post</a>
-                                        <a class="ms-2 btn btn-sm btn-danger" style="display: inline-block;" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId">Delete Post</a>
-                                    }
-                                }
-                            </div>
-                        </div>
+                    <div>
+                        @if (Model.ForumPostLastEditedTime > Model.ForumPostCreationTimeUnix)
+                        {
+                            var editor = UserManager.FindByIdAsync(Model.ForumPostLastEditedBy).Result;
+                            <span class="text-muted fst-italic" style="font-size: 12px;">
+                                Last edited by
+                                <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@editor.DisplayName" class="text-decoration-none link-dark">
+                                    @editor.DisplayName
+                                </a>
+                                on @Model.ForumPostLastEditedTime.ToString("g")
+                            </span>
+                        }
                     </div>
+                </div>
+                <div class="card-footer py-2 px-3">
+                    <button class="btn btn-sm btn-dark d-inline" id="quoteThisPost_@Model.ForumPostId.ToString()">Quote Post</button>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
+                    {
+                        <a class="btn btn-sm btn-dark" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId.ToString()">Edit Post</a>
+                        <a class="btn btn-sm btn-danger" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId.ToString()">Delete Post</a>
+                    }
+                </div>
             </div>
-        }
+        </div>
     </div>
-</div>
+}
 
 
 <script>
@@ -86,7 +71,7 @@ async function checkIfInputVisible()
     if (!document.getElementById("createNewForumPost").innerHTML )
     {
         await $.ajax({
-            url: "/ForumPost/Create/@Model.ForumThreadId",
+            url: "/ForumPost/Create/@Model.ForumThreadId.ToString()",
             success: function (html) {
                 // Update the page with the HTML of the partial view.
                 $("#createNewForumPost").html(html);
@@ -127,5 +112,5 @@ async function quotePost()
 </script>
 
 <script>
-$("#quoteThisPost_@Model.ForumPostId").click(quotePost);
+$("#quoteThisPost_@Model.ForumPostId.ToString()").click(quotePost);
 </script>
