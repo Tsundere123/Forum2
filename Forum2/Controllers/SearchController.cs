@@ -23,7 +23,6 @@ public class SearchController : Controller
     // For consistency, use the same number of items per page for all lists
     private const int CountPerPage = 10;
 
-    // GET lists of {CountPerPage} threads, posts, and users that match the query
     [HttpGet]
     public async Task<IActionResult> Index(string? query)
     {
@@ -52,7 +51,6 @@ public class SearchController : Controller
         return View(model);
     }
     
-    // GET lists of {CountPerPage} threads that match the query with pagination
     [HttpGet]
     [Route("/Search/Threads")]
     public async Task<IActionResult> Threads(string? query, int? page)
@@ -79,7 +77,6 @@ public class SearchController : Controller
         return View(model);
     }
 
-    // GET lists of {CountPerPage} posts that match the query with pagination
     [HttpGet]
     [Route("/Search/Posts")]
     public async Task<IActionResult> Posts(string? query, int? page)
@@ -106,7 +103,6 @@ public class SearchController : Controller
         return View(model);
     }
     
-    // GET lists of {CountPerPage} users that match the query with pagination
     [HttpGet]
     [Route("/Search/Users")]
     public IActionResult Users(string? query, int? page)
