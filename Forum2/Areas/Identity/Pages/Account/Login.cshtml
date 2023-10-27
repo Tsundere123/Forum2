@@ -5,50 +5,33 @@
     ViewData["Title"] = "Login";
 }
 
-<style>
-    .form-floating:focus-within {
-      z-index: 2;
-    }
-    
-    #email {
-        margin-bottom: -1px;  
-        border-bottom-right-radius: 0; 
-        border-bottom-left-radius: 0;
-    }
-    
-    #password {
-        border-top-left-radius: 0; 
-        border-top-right-radius: 0;
-    }
-</style>
-
 <div class="d-flex justify-content-center">
     <div class="col-12 col-md-6">
         <h1 class="h3 mb-3 fw-normal">@ViewData["Title"]</h1>
         <form id="account" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating">
+            <partial name="_ValidationSummary" model="ViewData.ModelState"/>
+            <div class="form-floating mb-2">
                 <input asp-for="Input.Email" class="form-control" autocomplete="email" placeholder="Email" aria-required="true" id="email"/>
                 <label asp-for="Input.Email"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                <span asp-validation-for="Input.Email" class="invalid-feedback"></span>
             </div>
-            <div class="form-floating">
+            <div class="form-floating mb-2">
                 <input asp-for="Input.Password" class="form-control" autocomplete="current-password" placeholder="Password" aria-required="true" id="password"/>
                 <label asp-for="Input.Password"></label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <span asp-validation-for="Input.Password" class="invalid-feedback"></span>
             </div>
             <div>
-                <div class="checkbox d-flex justify-content-around my-2">
+                <div class="checkbox">
                     <label asp-for="Input.RememberMe" class="form-label">
                         <input class="form-check-input" asp-for="Input.RememberMe"/>
                         @Html.DisplayNameFor(m => m.Input.RememberMe)
                     </label>
                 </div>
             </div>
-            <div>
+            <div class="mb-2">
                 <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
             </div>
-            <div class="d-flex justify-content-around my-2">
+            <div class="d-flex justify-content-around">
                 <ul class="list-inline">
                     <li class="list-inline-item"><a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a></li>
                     <li class="list-inline-item"><a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register new user</a></li>
