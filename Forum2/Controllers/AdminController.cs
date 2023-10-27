@@ -15,18 +15,15 @@ public class AdminController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IForumCategoryRepository _forumCategoryRepository;
 
-    public AdminController(
-        RoleManager<ApplicationRole> roleManager, 
-        UserManager<ApplicationUser> userManager, 
-        IForumCategoryRepository forumCategoryRepository
-        )
+    public AdminController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, 
+        IForumCategoryRepository forumCategoryRepository)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _forumCategoryRepository = forumCategoryRepository;
     }
 
-    // Dashboard
+    // GET dashboard
     [HttpGet]
     public IActionResult Index()
     {
@@ -304,6 +301,8 @@ public class AdminController : Controller
         try
         {
             var categoryToDelete = await _forumCategoryRepository.GetForumCategoryById(id);
+            if (categoryToDelete == null) return NotFound();
+            
             await _forumCategoryRepository.DeleteForumCategory(categoryToDelete);
             return RedirectToAction(nameof(Categories));
         }
