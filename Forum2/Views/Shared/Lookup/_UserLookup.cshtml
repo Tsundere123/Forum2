@@ -4,7 +4,8 @@
     <img src="~/avatars/@Model.AvatarUrl" alt="@Model.DisplayName" height="48" width="48" class="rounded"/>
     <div class="ms-2">
         <div>
-            <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.DisplayName">
+            <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.DisplayName"
+               class="stretched-link">
                 @Model.DisplayName
             </a>
         </div>
