@@ -22,15 +22,21 @@ public class AdminController : Controller
         _userManager = userManager;
         _forumCategoryRepository = forumCategoryRepository;
     }
-
-    // GET dashboard
+    
+    //
+    // Dashboard
+    //
+    
     [HttpGet]
     public IActionResult Index()
     {
         return View();
     }
 
+    //
     // Roles
+    //
+    
     [HttpGet]
     public IActionResult Roles()
     {
@@ -142,8 +148,11 @@ public class AdminController : Controller
             throw;
         }
     }
-
+    
+    //
     // Users
+    //
+    
     [HttpGet]
     public IActionResult Users()
     {
@@ -226,7 +235,10 @@ public class AdminController : Controller
         }
     }
     
+    //
     // Categories
+    //
+    
     [HttpGet]
     public async Task<IActionResult> Categories()
     {
