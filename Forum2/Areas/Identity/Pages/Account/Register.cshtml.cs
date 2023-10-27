@@ -2,24 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
 using Forum2.Models;
-using Humanizer;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
 
 namespace Forum2.Areas.Identity.Pages.Account
 {
@@ -79,6 +71,7 @@ namespace Forum2.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
+            [RegularExpression(@"^([\w\.\-\+]+)@([\w\-]+)((\.(\w){2,})+)$", ErrorMessage = "Email is invalid.")]
             public string Email { get; set; }
 
             /// <summary>
@@ -107,10 +100,8 @@ namespace Forum2.Areas.Identity.Pages.Account
             [StringLength(32, MinimumLength = 1)]
             public string DisplayName { get; set; }
             
-            [Required]
-            [DataType(DataType.Text)]
-            [Display(Name = "Avatar URL")]
-            public string AvatarUrl { get; set; }
+            [Display(Name = "Avatar")]
+            public IFormFile AvatarUrl { get; set; }
         }
 
 
@@ -134,9 +125,48 @@ namespace Forum2.Areas.Identity.Pages.Account
                     return Page();
                 }
                 
+                // Create user
                 var user = CreateUser();
+                
+                // Set avatar
+                if (Input.AvatarUrl.Length > 0)
+                {
+                    // Ensure avatar is an image
+                    var isImage = Input.AvatarUrl.ContentType.StartsWith("image/");
+                    if (!isImage)
+                    {
+                        ModelState.AddModelError(string.Empty, "The avatar must be an image.");
+                        return Page();
+                    }
+                    
+                    // Ensure avatar is not too large
+                    var isTooLarge = Input.AvatarUrl.Length > 1024 * 1024 * 2;
+                    if (isTooLarge)
+                    {
+                        ModelState.AddModelError(string.Empty, "The avatar must be less than 2 MB.");
+                        return Page();
+                    }
+                    
+                    // Get file extension
+                    var extension = Input.AvatarUrl.FileName.Split('.').Last().ToLower();
+                    
+                    // Save avatar to disk
+                    var avatarFileName = $"{Guid.NewGuid()}.{extension}";
+                    var avatarPath = $"wwwroot/avatars/{avatarFileName}";
+                    await using (var stream = System.IO.File.Create(avatarPath))
+                    {
+                        await Input.AvatarUrl.CopyToAsync(stream);
+                    }
+                    
+                    user.AvatarUrl = $"{avatarFileName}";
+                }
+                else
+                {
+                    user.AvatarUrl = "default.png";
+                }
+                
+                // Set displayName
                 user.DisplayName = Input.DisplayName;
-                user.AvatarUrl = Input.AvatarUrl;
                 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

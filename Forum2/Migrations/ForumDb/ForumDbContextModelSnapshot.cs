@@ -57,6 +57,16 @@ namespace Forum2.Migrations.ForumDb
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("ForumPostIsSoftDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ForumPostLastEditedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ForumPostLastEditedTime")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("ForumThreadId")
                         .HasColumnType("INTEGER");
 
@@ -86,6 +96,13 @@ namespace Forum2.Migrations.ForumDb
                     b.Property<bool>("ForumThreadIsSoftDeleted")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ForumThreadLastEditedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ForumThreadLastEditedTime")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ForumThreadTitle")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -95,6 +112,59 @@ namespace Forum2.Migrations.ForumDb
                     b.HasIndex("ForumCategoryId");
 
                     b.ToTable("ForumThread");
+                });
+
+            modelBuilder.Entity("Forum2.Models.WallPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProfileId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WallPost");
+                });
+
+            modelBuilder.Entity("Forum2.Models.WallPostReply", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("WallPostId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WallPostId");
+
+                    b.ToTable("WallPostReply");
                 });
 
             modelBuilder.Entity("Forum2.Models.ForumPost", b =>
@@ -119,6 +189,17 @@ namespace Forum2.Migrations.ForumDb
                     b.Navigation("ForumCategory");
                 });
 
+            modelBuilder.Entity("Forum2.Models.WallPostReply", b =>
+                {
+                    b.HasOne("Forum2.Models.WallPost", "WallPost")
+                        .WithMany("Replies")
+                        .HasForeignKey("WallPostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WallPost");
+                });
+
             modelBuilder.Entity("Forum2.Models.ForumCategory", b =>
                 {
                     b.Navigation("ForumThreads");
@@ -127,6 +208,11 @@ namespace Forum2.Migrations.ForumDb
             modelBuilder.Entity("Forum2.Models.ForumThread", b =>
                 {
                     b.Navigation("ForumPosts");
+                });
+
+            modelBuilder.Entity("Forum2.Models.WallPost", b =>
+                {
+                    b.Navigation("Replies");
                 });
 #pragma warning restore 612, 618
         }

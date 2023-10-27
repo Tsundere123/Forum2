@@ -1,10 +1,209 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@model HomeViewModel
+
+@{
+    ViewData["Title"] = "Home";
+    var latestMembers = UserManager.Users.OrderByDescending(u => u.CreatedAt).Take(5);
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@if (Model.ForumThreads is {Count: > 0 })
+{
+    <h2 class="h2 fw-normal">Latest Threads</h2>
+    <div class="d-flex align-items-center">
+        <div>
+            <button class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" id="lt_prev">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                  <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="flex-grow-1">
+            <div id="latest_threads">
+                @foreach (var thread in Model.ForumThreads)
+                {
+                    <div>
+                        <div class="card">
+                            <div class="card-body">
+                                <partial name="Lookup/_ThreadLookup" model="thread"/>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" id="lt_next">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+                  <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+}
+
+@if (Model.ForumPosts is {Count: > 0 })
+{
+    <h2 class="h2 fw-normal">Latest Posts</h2>
+    <div class="d-flex align-items-center">
+        <div>
+            <button class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" id="lp_prev">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                  <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="flex-grow-1">
+            <div id="latest_posts">
+                @foreach (var post in Model.ForumPosts)
+                {
+                    <div>
+                        <div class="card">
+                            <div class="card-body">
+                                <partial name="Lookup/_PostLookup" model="post"/>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" id="lp_next">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+                  <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+}
+
+<h2 class="h2 fw-normal">Latest Members</h2>
+<div class="d-flex align-items-center">
+    <div>
+        <button class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" id="lm_prev">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+              <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
+            </svg>
+        </button>
+    </div>
+    <div class="flex-grow-1">
+        <div id="new_members">
+            @foreach (var member in latestMembers)
+            {
+                <div>
+                    <div class="card">
+                        <div class="card-body">
+                            <partial name="Lookup/_UserLookup" model="member"/>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div>
+        <button class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" id="lm_next">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+              <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+            </svg>
+        </button>
+    </div>
 </div>
 
-<partial name="_Carousel"/>
+<style>
+    .tns-nav {
+      text-align: center;
+    }
+    
+    .tns-nav > [aria-controls] {
+        width: 9px;
+        height: 9px;
+        padding: 0;
+        margin: 0 5px;
+        border-radius: 50%;
+        background: #ddd;
+        border: 0;
+    }
+    
+    .tns-nav > .tns-nav-active {
+        background: #999;
+    }
+</style>
+
+<script src="~/lib/tiny-slider/tiny-slider.js"></script>
+<script type="text/javascript">
+    // Latest Threads slider
+    const slider_threads = tns({
+        container: '#latest_threads',
+        prevButton: '#lt_prev',
+        nextButton: '#lt_next',
+        slideBy: 'page',
+        autoplay: false,
+        controls: true,
+        controlsPosition: 'bottom',
+        nav: true,
+        navPosition: 'bottom',
+        mouseDrag: true,
+        loop: false,
+        responsive: {
+            640: {
+                edgePadding: 20,
+                gutter: 10,
+                items: 2
+            },
+            900: {
+                items: 3
+            }
+        }
+    });
+    
+    // Latest Posts slider
+    const slider_posts = tns({
+        container: '#latest_posts',
+        prevButton: '#lp_prev',
+        nextButton: '#lp_next',
+        slideBy: 'page',
+        autoplay: false,
+        controls: true,
+        controlsPosition: 'bottom',
+        nav: true,
+        navPosition: 'bottom',
+        mouseDrag: true,
+        loop: false,
+        responsive: {
+            640: {
+                edgePadding: 20,
+                gutter: 10,
+                items: 2
+            },
+            900: {
+                items: 3
+            }
+        }
+    });
+    
+    // Latest Member slider
+    const slider_members = tns({
+        container: '#new_members',
+        prevButton: '#lm_prev',
+        nextButton: '#lm_next',
+        slideBy: 'page',
+        autoplay: false,
+        controls: true,
+        controlsPosition: 'bottom',
+        nav: true,
+        navPosition: 'bottom',
+        mouseDrag: true,
+        loop: false,
+        responsive: {
+            640: {
+                edgePadding: 20,
+                gutter: 10,
+                items: 2
+            },
+            900: {
+                items: 3
+            }
+        }
+    });
+</script>

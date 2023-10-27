@@ -12,103 +12,119 @@ public class SearchController : Controller
     private readonly IForumThreadRepository _threadRepository;
     private readonly IForumPostRepository _postRepository;
     
-    public SearchController(UserManager<ApplicationUser> userManager, IForumThreadRepository threadRepository, IForumPostRepository postRepository)
+    public SearchController(UserManager<ApplicationUser> userManager, IForumThreadRepository threadRepository, 
+        IForumPostRepository postRepository)
     {
         _userManager = userManager;
         _threadRepository = threadRepository;
         _postRepository = postRepository;
     }
+    
+    // For consistency, use the same number of items per page for all lists
+    private const int CountPerPage = 10;
 
     [HttpGet]
     public async Task<IActionResult> Index(string? query)
     {
-        var viewModel = new SearchResultViewModel();
-        if (query == null) return View(viewModel);
+        var model = new SearchResultViewModel();
+        if (query == null) return View(model);
         
         var threads = await _threadRepository.GetAll();
         var posts = await _postRepository.GetAll();
         var users = _userManager.Users.ToList();
         
-        viewModel.Query = query;
+        // Upper case for case-insensitive search
+        var threadsToShow = (threads ?? Array.Empty<ForumThread>())
+            .Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).Take(CountPerPage).ToList();
+        
+        var postsToShow = (posts ?? Array.Empty<ForumPost>())
+            .Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).Take(CountPerPage).ToList();
+        
+        var usersToShow = users
+            .Where(u => u.DisplayName.ToUpper().Contains(query.ToUpper())).Take(CountPerPage).ToList();
+        
+        model.Query = query;
+        model.Threads = threadsToShow;
+        model.Posts = postsToShow;
+        model.Users = usersToShow;
 
-        var limit = 10;
-        viewModel.Threads = threads.Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).Take(limit).ToList();
-        viewModel.Posts = posts.Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).Take(limit).ToList();
-        viewModel.Users = users.Where(u => u.DisplayName.ToUpper().Contains(query.ToUpper())).Take(limit).ToList();
-
-        return View(viewModel);
+        return View(model);
     }
     
     [HttpGet]
     [Route("/Search/Threads")]
     public async Task<IActionResult> Threads(string? query, int? page)
     {
-        var viewModel = new SearchResultViewModel();
-        if (query == null) return View(viewModel);
+        var model = new SearchResultViewModel();
+        if (query == null) return View(model);
         
         var threads = await _threadRepository.GetAll();
-        var threadsRelevant = threads.Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).ToList();
+        
+        // Upper case for case-insensitive search
+        var threadsRelevant = (threads ?? Array.Empty<ForumThread>())
+            .Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).ToList();
         
         var threadsCount = threadsRelevant.Count;
-        var threadsPerPage = 10;
-        var totalPages = (int) Math.Ceiling((double) threadsCount / threadsPerPage);
+        var totalPages = (int) Math.Ceiling((double) threadsCount / CountPerPage);
         var currentPage = page ?? 1;
-        var threadsToShow = threadsRelevant.Skip((currentPage - 1) * threadsPerPage).Take(threadsPerPage).ToList();
+        var threadsToShow = threadsRelevant.Skip((currentPage - 1) * CountPerPage).Take(CountPerPage).ToList();
         
-        
-        viewModel.Query = query;
-        viewModel.Threads = threadsToShow;
-        viewModel.CurrentPage = currentPage;
-        viewModel.TotalPages = totalPages;
+        model.Query = query;
+        model.Threads = threadsToShow;
+        model.CurrentPage = currentPage;
+        model.TotalPages = totalPages;
 
-        return View(viewModel);
+        return View(model);
     }
-    
+
     [HttpGet]
     [Route("/Search/Posts")]
     public async Task<IActionResult> Posts(string? query, int? page)
     {
-        var viewModel = new SearchResultViewModel();
-        if (query == null) return View(viewModel);
+        var model = new SearchResultViewModel();
+        if (query == null) return View(model);
         
         var posts = await _postRepository.GetAll();
-        var postsRelevant = posts.Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).ToList();
+        
+        // Upper case for case-insensitive search
+        var postsRelevant = (posts ?? Array.Empty<ForumPost>())
+            .Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).ToList();
 
         var postsCount = postsRelevant.Count;
-        var postsPerPage = 10;
-        var totalPages = (int) Math.Ceiling((double) postsCount / postsPerPage);
+        var totalPages = (int) Math.Ceiling((double) postsCount / CountPerPage);
         var currentPage = page ?? 1;
-        var postsToShow = postsRelevant.Skip((currentPage - 1) * postsPerPage).Take(postsPerPage).ToList();
+        var postsToShow = postsRelevant.Skip((currentPage - 1) * CountPerPage).Take(CountPerPage).ToList();
         
-        viewModel.Query = query;
-        viewModel.Posts = postsToShow;
-        viewModel.CurrentPage = currentPage;
-        viewModel.TotalPages = totalPages;
+        model.Query = query;
+        model.Posts = postsToShow;
+        model.CurrentPage = currentPage;
+        model.TotalPages = totalPages;
 
-        return View(viewModel);
+        return View(model);
     }
     
     [HttpGet]
     [Route("/Search/Users")]
     public IActionResult Users(string? query, int? page)
     {
-        var viewModel = new SearchResultViewModel();
-        if (query == null) return View(viewModel);
+        var model = new SearchResultViewModel();
+        if (query == null) return View(model);
         
         var users = _userManager.Users.ToList();
+        
+        // Upper case for case-insensitive search
         var usersRelevant = users.Where(u => u.DisplayName.ToUpper().Contains(query.ToUpper())).ToList();
         
         var userCount = usersRelevant.Count;
-        var usersPerPage = 10;
-        var totalPages = (int) Math.Ceiling((double) userCount / usersPerPage);
+        var totalPages = (int) Math.Ceiling((double) userCount / CountPerPage);
         var currentPage = page ?? 1;
-        var usersToShow = usersRelevant.Skip((currentPage - 1) * usersPerPage).Take(usersPerPage).ToList();
+        var usersToShow = usersRelevant.Skip((currentPage - 1) * CountPerPage).Take(CountPerPage).ToList();
         
-        viewModel.Query = query;
-        viewModel.Users = usersToShow;
-        viewModel.CurrentPage = currentPage;
-        viewModel.TotalPages = totalPages;
+        model.Query = query;
+        model.Users = usersToShow;
+        model.CurrentPage = currentPage;
+        model.TotalPages = totalPages;
 
-        return View(viewModel);
+        return View(model);
     }
 }

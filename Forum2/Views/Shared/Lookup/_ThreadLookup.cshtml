@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@model ForumThread
+
+@{
+    var user = UserManager.Users.FirstOrDefault(u => u.Id == Model.ForumThreadCreatorId);
+}
+
+<div class="d-flex">
+        <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">
+            <img src="~/avatars/@user!.AvatarUrl" alt="@user.DisplayName" height="48" width="48" class="me-2 rounded"/>
+        </a>
+    <div>
+        <div class="d-block">
+            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThreadId.ToString()">@Model.ForumThreadTitle</a>
+        </div>
+        <div class="d-block" style="font-size: 14px;">
+            in @Model.ForumCategory!.ForumCategoryName
+        </div>
+        <div class="d-block" style="font-size: 12px;">
+            <span class="me-1">
+                <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
+            </span>
+            <span class="text-muted">
+                @Model.ForumThreadCreationTimeUnix.ToString("g")
+            </span>
+        </div>
+    </div>
+</div>

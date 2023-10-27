@@ -16,36 +16,22 @@
         {
             <tr>
                 <td>                            
-                    <a asp-controller="Account"
-                       asp-action="Details"
-                       asp-route-accountId="@account.Id">@account.DisplayName</a>
+                    <a asp-controller="Profile"
+                       asp-action="Index"
+                       asp-route-displayName="@account.DisplayName">@account.DisplayName</a>
                 </td>
                 <td>
                     @string.Join(", ", UserManager.GetRolesAsync(account).Result)
                     
                 </td>
                 <td>
-                    <a asp-controller="Account"
-                       asp-action="Details"
-                       asp-route-accountId="@account.Id">
-                        <img src="@account.AvatarUrl" width="100px" height="100px" alt="@account.DisplayName">
+                    <a asp-controller="Profile"
+                       asp-action="Index"
+                       asp-route-displayName="@account.DisplayName">
+                        <img src="~/avatars/@account.AvatarUrl" width="100px" height="100px">
                     </a>
                 </td>
             </tr>
         }
     </table>
-    <div>
-        <h2>Currently logged in user</h2>
-        @if (UserManager.GetUserAsync(User).Result != null)
-        {
-            @UserManager.GetUserAsync(User).Result.DisplayName
-            <img src="@UserManager.GetUserAsync(User).Result.AvatarUrl" width="100px" height="100px">
-        }
-        else
-        {
-            <p>Not logged in</p>
-        }
-
-        
-    </div>
 </div>

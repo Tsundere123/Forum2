@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject RoleManager<ApplicationRole> RoleManager
+<div class="container">
+    <table class='table table-striped'>
+        <tr>
+            <th>Name</th>
+        </tr>
+        
+        @foreach (var role in RoleManager.Roles)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="Role"
+                       asp-action="MembersOfRole"
+                       asp-route-roleId="@role.Id">
+                        @role.Name
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

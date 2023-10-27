@@ -9,6 +9,7 @@
 
 
     <ItemGroup>
+      <PackageReference Include="Markdig" Version="0.33.0" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.22" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.22" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.22" />
@@ -21,6 +22,7 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11" />
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
       <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
+      <PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.12.0" />
     </ItemGroup>
 
 
@@ -36,6 +38,27 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Views\AccountRole\Table.cshtml" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
     </ItemGroup>
+
+
+
+    <ItemGroup>
+      <Folder Include="Pages\" />
+    </ItemGroup>
+
+
+
 
 </Project>

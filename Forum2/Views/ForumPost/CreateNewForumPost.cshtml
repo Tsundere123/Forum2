@@ -1,15 +1,19 @@
 ﻿@model ForumPostCreationViewModel
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
 
-<h2>Create new post</h2>
-<h3>This is thread: @Model.ForumThread.ForumThreadId @Model.ForumThread.ForumThreadTitle</h3>
 <form asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-forumThreadId="@Model.ForumThread.ForumThreadId">
-    <legend>Forum Post</legend> 
-        <input type="hidden" asp-for="ForumPost.ForumThreadId">
+    <input type="hidden" asp-for="ForumPost.ForumThreadId">
     <div class="form-group">
         <label asp-for="ForumPost.ForumPostContent">Post content</label>
-        <input asp-for="ForumPost.ForumPostContent" class="form-control">
+        <textarea rows="8" asp-for="ForumPost.ForumPostContent" id="inputNewPostContent" class="form-control"></textarea>
         <span asp-validation-for="ForumPost.ForumPostContent" class="text-danger"></span>
     </div>
+        
     <button type="submit" class="btn btn-secondary">Create</button>
+    <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThread.ForumThreadId" class="btn btn-secondary" id="cancelButton">Cancel</a>
 </form>
+<script>
+const easyMDE = new EasyMDE({element: document.getElementById('inputNewPostContent')});
+</script>

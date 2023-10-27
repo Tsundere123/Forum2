@@ -55,6 +55,7 @@ public class ForumPostController : Controller
         var forumPost = new ForumPost();
         forumPost.ForumThreadId = forumThread.ForumThreadId;
         var viewModel = new ForumPostCreationViewModel(forumThread, forumPost, accounts);
+        return PartialView(viewModel);
         return View(viewModel);
     }
     [Authorize]
@@ -99,6 +100,8 @@ public class ForumPostController : Controller
         {
             if (ModelState.IsValid)
             {
+                forumPost.ForumPostLastEditedTime = DateTime.Now;
+                forumPost.ForumPostLastEditedBy = _userManager.GetUserAsync(User).Result.Id;
                 await _forumPostRepository.UpdateForumPost(forumPost);
                 //Needed for RedirectToAction
                 var forumThreadId = forumPost.ForumThreadId;
@@ -147,7 +150,8 @@ public class ForumPostController : Controller
             //Needed for RedirectToAction
             var forumThreadId = forumPost.ForumThreadId;
             if (forumPost == null) return NotFound();
-            forumPost.ForumPostContent = "This post has been deleted";
+            // forumPost.ForumPostContent = "This post has been deleted";
+            forumPost.ForumPostIsSoftDeleted = true;
             await UpdateForumPostContent(forumPostId,forumPost);
             return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
         }

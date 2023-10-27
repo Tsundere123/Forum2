@@ -8,11 +8,11 @@
     <div class="col-12 col-md-6">
         <h1 class="h3 mb-3 fw-normal">@ViewData["Title"]</h1>
         <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <partial name="_ValidationSummary" model="ViewData.ModelState"/>
             <div class="form-floating mb-2">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="Email" aria-required="true" id="email"/>
                 <label asp-for="Input.Email"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                <span asp-validation-for="Input.Email" class="invalid-feedback"></span>
             </div>
             <div>
                 <button type="submit" class="w-100 btn btn-lg btn-primary">Resend Confirmation</button>

@@ -1,10 +1,28 @@
-﻿@using Microsoft.AspNetCore.Server.Kestrel.Core
+﻿﻿@using Microsoft.AspNetCore.Server.Kestrel.Core
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 @model ForumPostViewModel
 
-<h1>Current thread: @Model.CurrentForumThread.ForumThreadTitle</h1>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
 
+<div class="card">
+    <h1 class="card-body">@Model.CurrentForumThread.ForumThreadTitle</h1>
+</div>
 
+@* EDIT/DELETE *@
+@if (UserManager.GetUserAsync(User).Result != null)
+{
+    @if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.CurrentForumThread.ForumThreadCreatorId))
+    {
+        <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">DELETE</a>
+        <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">EDIT</a>
+    } 
+}
+@* CREATE *@
 <a asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-forumThreadId="@Model.CurrentForumThread.ForumThreadId">CREATE</a>
+
 
 @{ var i = 0;}
 @foreach(var post in Model.ForumPosts)
@@ -13,3 +31,27 @@
         <h2>This is post nr @i</h2>
         <partial name="_ForumPostCard" model="post"/>
     }
+    
+<button class="btn btn-primary" id="createNewForumPostButton" data-ajax="true">Create new forum post</button>
+
+<script>
+    $(document).ready(function () {
+        $("#createNewForumPostButton").click(function () {
+            // Make an Ajax call to render the partial view.
+            $.ajax({
+                url: "/ForumPost/Create/@Model.CurrentForumThread.ForumThreadId",
+                success: function (html) {
+                    // Update the page with the HTML of the partial view.
+                    $("#createNewForumPost").html(html);
+                }
+            });
+            document.getElementById('createNewForumPostButton').hidden = true;
+        });
+    });
+</script>
+
+<script>
+$("#cancelButton").click(
+   $("createNewForumPost").empty);
+</script>
+<div id="createNewForumPost"></div>

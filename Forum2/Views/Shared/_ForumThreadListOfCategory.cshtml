@@ -10,7 +10,8 @@
             <th>Thread ID</th>
             <th>Thread title</th>
             <th>OP Name</th>
-            <th>Actions</th>
+            <th>Last edited</th>
+            @* <th>Actions</th> *@
         </tr>
         
         @foreach (var forumThread in Model.ForumThreads)
@@ -27,21 +28,43 @@
                     </td>
                     <td>@foreach (var account in Model.Accounts)
                         {
-                            if (forumThread.ForumThreadCreatorId == account.Id)
-                            {
-                                @account.DisplayName
-                            }
-                        }</td>
-                    <td>
-                        @if (UserManager.GetUserAsync(User).Result != null)
-                        {
-                            @if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == forumThread.ForumThreadCreatorId))
-                            {
-                                <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@forumThread.ForumThreadId">DELETE</a>
-                                <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@forumThread.ForumThreadId">EDIT</a>
-                            } 
+                            <div class="row">
+                                @{
+                                    if (forumThread.ForumThreadCreatorId == account.Id)
+                                    {
+                                        <a asp-controller="Profile"
+                                           asp-action="Index"
+                                           asp-route-displayName="@UserManager.FindByIdAsync(forumThread.ForumThreadCreatorId).Result.DisplayName">
+                                            <img src="~/avatars/@account.AvatarUrl" width="100px" height="100px">
+                                        </a>
+                                        <a asp-controller="Profile"
+                                           asp-action="Index"
+                                           asp-route-displayName="@UserManager.FindByIdAsync(forumThread.ForumThreadCreatorId).Result.DisplayName">
+                                            @account.DisplayName
+                                        </a>
+                                    }
+                                }
+                            </div>
+
                         }
                     </td>
+                    <td>
+                        @if (forumThread.ForumThreadLastEditedTime > forumThread.ForumThreadCreationTimeUnix)
+                        {
+                                <p>Last edited by: @UserManager.FindByIdAsync(forumThread.ForumThreadLastEditedBy).Result.DisplayName</p>
+                                <p>At: @forumThread.ForumThreadLastEditedTime</p>
+                        }
+                    </td>
+                    @* <td> *@
+                    @*     @if (UserManager.GetUserAsync(User).Result != null) *@
+                    @*     { *@
+                    @*         @if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == forumThread.ForumThreadCreatorId)) *@
+                    @*         { *@
+                    @*             <a asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@forumThread.ForumThreadId">DELETE</a> *@
+                    @*             <a asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@forumThread.ForumThreadId">EDIT</a> *@
+                    @*         }  *@
+                    @*     } *@
+                    @* </td> *@
                 </tr>
             }
         }

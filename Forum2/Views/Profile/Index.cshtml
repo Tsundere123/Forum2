@@ -1,63 +1,146 @@
-﻿@{
-    ViewData["Title"] = @Model.User.DisplayName;
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
+@model ProfileIndexViewModel
+
+@{
+    ViewData["Title"] = $"{Model.User.DisplayName}'s Wall";
 }
 
-@model ProfileViewModel
 
 <div>
     <div class="row">
         <div class="col-md-3 mb-2 mb-md-0">
-            <div class="card">
-                <div class="card-body">
-                    <div class="text-center">
-                        <img class="img-thumbnail rounded" height="128" width="128" src="@Model.User.AvatarUrl" alt="@Model.User.DisplayName"/>
-                        <div>
-                            <h1 class="fw-bold fs-6">@Model.User.DisplayName</h1>
-                        </div>
-                        @if (Model.Roles != null)
-                        {
-                            @foreach (var role in Model.Roles)
-                            {
-                                <div class="badge" style="background: @role.Color;">@role.Name</div>
-                            }
-                        }
-                    </div>
-                </div>
-            </div>
+            <partial name="_Profile" model="Model.User"/>
         </div>
         <div class="col-md-9">
-            <h2>Latest Activity</h2>
-            @if (Model.Threads == null && Model.Posts == null)
+            <partial name="_ProfileNav" model="Model.User"/>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h2 class="h3 fw-normal">Wall</h2>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a asp-controller="Profile" asp-action="NewWallPost" asp-route-displayName="@Model.User.DisplayName" class="btn btn-sm btn-primary">New</a>
+                }
+            </div>
+            
+            @if (Model.WallPosts!.Count < 1)
             {
-                <p>@Model.User.DisplayName has no activity</p>
+                <p>There are no posts on this wall. Be the first!</p>
             }
             else
             {
-                @if (Model.Threads != null)
-                {
-                    <h3>Threads</h3>
-                    <ul>
-                        @foreach(var thread in Model.Threads)
+                <ul class="list-group mb-2">
+                    @foreach (var post in Model.WallPosts)
+                    {
+                        var poster = UserManager.FindByIdAsync(post.AuthorId).Result;
+                        var currentUser = UserManager.GetUserAsync(User).Result;
+                        <li class="list-group-item">
+                            <div class="d-flex">
+                                <img src="~/avatars/@poster.AvatarUrl" alt="@poster.DisplayName" height="48" width="48" class="me-2" />
+                                <div>
+                                    <div class="d-block">
+                                        @post.Content
+                                    </div>
+                                    <div class="d-block" style="font-size: 12px;">
+                                        <span>
+                                            By <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@poster.DisplayName">@poster.DisplayName</a>
+                                        </span>
+                                        <span class="text-muted">
+                                            on @post.CreatedAt.ToString("D")
+                                        </span>
+                                        @if (SignInManager.IsSignedIn(User))
+                                        {
+                                            <span>
+                                                <a class="text-muted" asp-controller="Profile" asp-action="ReplyWallPost" asp-route-displayName="@Model.User.DisplayName" asp-route-id="@post.Id.ToString()">Reply</a>
+                                            </span>
+                                            @if (User.IsInRole("Moderator") || User.IsInRole("Administrator") || currentUser.Id == poster.Id || currentUser.Id == Model.User.Id)
+                                            {
+                                                <span>
+                                                    <a class="text-danger" asp-controller="Profile" asp-action="DeleteWallPost" asp-route-displayName="@Model.User.DisplayName" asp-route-id="@post.Id.ToString()">Delete</a>
+                                                </span>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            @if (post.Replies!.Count > 0)
+                            {
+                                <ul class="list-group mt-2">
+                                    @foreach (var reply in post.Replies)
+                                    {
+                                        var replier = UserManager.FindByIdAsync(reply.AuthorId).Result;
+                                        <li class="list-group-item">
+                                            <div class="d-flex">
+                                                <img src="~/avatars/@replier.AvatarUrl" alt="@replier.DisplayName" height="48" width="48" class="me-2" />
+                                                <div>
+                                                    <div class="d-block">
+                                                        @reply.Content
+                                                    </div>
+                                                    <div class="d-block" style="font-size: 12px;">
+                                                        <span>
+                                                            By <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@replier.DisplayName">@replier.DisplayName</a>
+                                                        </span>
+                                                        <span class="text-muted">
+                                                            on @reply.CreatedAt.ToString("D")
+                                                        </span>
+                                                        @if (SignInManager.IsSignedIn(User) && (User.IsInRole("Moderator") || User.IsInRole("Administrator") || currentUser.Id == replier.Id || currentUser.Id == Model.User.Id))
+                                                        {
+                                                            <span>
+                                                                <a class="text-danger" asp-controller="Profile" asp-action="DeleteWallPostReply" asp-route-displayName="@Model.User.DisplayName" asp-route-id="@reply.Id.ToString()">Delete</a>
+                                                            </span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                </ul>
+                <nav>
+                    <ul class="pagination pagination-sm justify-content-center">
+                        @if (Model.CurrentPage != 1)
                         {
-                            <li>
-                                <a>@thread.ForumThreadTitle</a>
-                                <span class="badge bg-secondary">@thread.ForumPosts?.Count.ToString()</span>
+                            <li class="page-item">
+                                <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.User.DisplayName" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">Previous</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <a class="page-link">Previous</a>
+                            </li>
+                        }
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            if (i == Model.CurrentPage)
+                            {
+                                <li class="page-item active"><a class="page-link">@i.ToString()</a></li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.User.DisplayName" asp-route-page="@i" class="page-link">@i.ToString()</a>
+                                </li>
+                            }
+                        }
+                        @if (Model.CurrentPage != Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.User.DisplayName" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">Next</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <a class="page-link">Next</a>
                             </li>
                         }
                     </ul>
-                }
-                if (Model.Posts != null)
-                {
-                    <h3>Posts</h3>
-                    <ul>
-                        @foreach (var post in Model.Posts)
-                        {
-                            <li>
-                                <a>@post.ForumThread?.ForumThreadTitle</a>
-                            </li>
-                        }
-                    </ul>
-                }
+                </nav>
             }
         </div>
     </div>
