@@ -1,24 +1,18 @@
 using Forum2.DAL;
 using Microsoft.EntityFrameworkCore;
 using Forum2.Models;
-using Microsoft.AspNetCore.Identity;
 using Serilog;
 using Serilog.Events;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("AccountDbContextConnection") ??
-                       throw new InvalidOperationException("Connection string 'AccountDbContextConnection' not found");
-
-// Add services to the container.
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 
+// DbContext
 builder.Services.AddDbContext<AccountDbContext>(options =>
 {
     options.UseSqlite(
@@ -30,13 +24,15 @@ builder.Services.AddDbContext<ForumDbContext>(options =>
         builder.Configuration["ConnectionStrings:ForumDbContextConnection"]);
 });
 
-builder.Services.AddScoped<Forum2.DAL.IForumCategoryRepository, ForumCategoryRepository>();
-builder.Services.AddScoped<Forum2.DAL.IForumThreadRepository, ForumThreadRepository>();
-builder.Services.AddScoped<Forum2.DAL.IForumPostRepository, ForumPostRepository>();
+// Repositories
+builder.Services.AddScoped<IForumCategoryRepository, ForumCategoryRepository>();
+builder.Services.AddScoped<IForumThreadRepository, ForumThreadRepository>();
+builder.Services.AddScoped<IForumPostRepository, ForumPostRepository>();
 
-builder.Services.AddScoped<Forum2.DAL.IWallPostRepository, WallPostRepository>();
-builder.Services.AddScoped<Forum2.DAL.IWallPostReplyRepository, WallPostReplyRepository>();
+builder.Services.AddScoped<IWallPostRepository, WallPostRepository>();
+builder.Services.AddScoped<IWallPostReplyRepository, WallPostReplyRepository>();
 
+// Identity
 builder.Services.AddDefaultIdentity<ApplicationUser>().AddRoles<ApplicationRole>().AddEntityFrameworkStores<AccountDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
@@ -55,25 +51,16 @@ builder.Logging.AddSerilog(loggerConfiguration.CreateLogger());
 
 var app = builder.Build();
 
-// app.MapDefaultControllerRoute();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     InitDb.Seed(app);
 }
-
-
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-app.UseStatusCodePagesWithRedirects("/Error/{0}");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -84,18 +71,9 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseStatusCodePagesWithRedirects("/Error/{0}");
 
 app.MapRazorPages();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}");
-
-//Backup of old
-
-// app.MapControllerRoute(
-//     name: "default",
-//     pattern: "{controller=Home}/{action=Index}/{forumCategoryId?}");
-
+app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}");
 
 app.Run();
