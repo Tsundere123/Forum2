@@ -86,22 +86,22 @@ async function checkIfInputVisible()
     
 async function quotePost()
 {
-
     //Check if create new post input box is visible, if not, enable
     await checkIfInputVisible();
     let result = "";
     
     let inputField = easyMDE.value();
-    let quotedPost = " @Markdown.Parse(Model.ForumPostContent) ";
+    let quotedPost = " @Model.ForumPostContent ";
     
     console.log("originalPost" + quotedPost);
     let inputParsed = new DOMParser().parseFromString(inputField,"text/html");
     let quoteParsed = new DOMParser().parseFromString(quotedPost,"text/html");
-    
+
     console.log("Before" + quoteParsed);
     
     inputParsed = inputParsed.documentElement.textContent;
     quoteParsed = quoteParsed.documentElement.textContent;
+    quoteParsed = quoteParsed.replace(/<\/?[^>]+(>|$)/g, "");
     
     console.log("decoded" + quoteParsed);
     // let inputField = document.getElementById("inputNewPostContent").value;
