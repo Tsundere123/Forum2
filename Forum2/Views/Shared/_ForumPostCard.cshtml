@@ -13,9 +13,13 @@
 <div class="container">
     <div class="row">
         @{
+            //Checks if post is soft deleted. Sost deleted posts will be displayed as deleted, thus keeping context that a post was deleted.
+            //Does not delete any quotations from the post
             if (Model.ForumPostIsSoftDeleted)
             {
-                <p>This forumpost has been deleted</p>;
+                <div class="card text-danger">
+                    <p>This post has been deleted</p>
+                </div>
             }
             else
             {
