@@ -1,4 +1,12 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(document).ready(function () {
+    // Ensure that post content images are responsive
+    $(".post-content img").addClass("img-fluid");
 
-// Write your JavaScript code.
+    // Remove paragraph margin on post content
+    $(".post-content p:last-child").addClass("m-0");
+
+    $(".post-content table").addClass("table table-sm table-striped table-bordered");
+
+    // Add blockquote class to blockquotes
+    $("blockquote").addClass("post-content-quote");
+});

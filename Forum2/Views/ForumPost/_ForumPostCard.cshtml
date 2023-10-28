@@ -1,0 +1,121 @@
+﻿@using Westwind.AspNetCore.Markdown
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@model ForumPost
+
+@if (Model.ForumPostIsSoftDeleted)
+{
+    <div class="alert alert-secondary mb-4 fst-italic">
+        This post has been deleted.
+    </div>
+}
+else
+{
+    <div class="row mb-4">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <partial name="_Profile" model="UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result"/>
+        </div>
+        <div class="col-md-9">
+            <div class="card h-100">
+                <div id="postContent_@Model.ForumPostId.ToString()" class="card-body py-2 d-flex flex-column justify-content-between">
+                    <div class="post-content">
+                        @Html.Raw(Markdown.Parse(Model.ForumPostContent, sanitizeHtml: true))
+                    </div>
+
+                    <div>
+                        @if (Model.ForumPostLastEditedTime > Model.ForumPostCreationTimeUnix)
+                        {
+                            var editor = UserManager.FindByIdAsync(Model.ForumPostLastEditedBy).Result;
+                            <span class="text-muted fst-italic" style="font-size: 12px;">
+                                Posted on @Model.ForumPostCreationTimeUnix.ToString("g"), edited by
+                                <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@editor.DisplayName" class="text-decoration-none link-dark">
+                                    @editor.DisplayName
+                                </a>
+                                on @Model.ForumPostLastEditedTime.ToString("g")
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-muted fst-italic" style="font-size: 12px;">
+                                Posted on @Model.ForumPostCreationTimeUnix.ToString("g")
+                            </span>
+                        }
+                    </div>
+                </div>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <div class="card-footer py-2 px-3">
+                        <button class="btn btn-sm btn-dark d-inline" id="quoteThisPost_@Model.ForumPostId.ToString()">Quote Post</button>
+                        @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
+                        {
+                            <a class="btn btn-sm btn-dark" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId.ToString()">Edit Post</a>
+                            <a class="btn btn-sm btn-danger" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId.ToString()">Delete Post</a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    //Check if create new post input box is visible, if not, enable
+    async function checkIfInputVisible()
+    {
+        if (!document.getElementById("createNewForumPost").innerHTML )
+        {
+            await $.ajax({
+                url: "/ForumPost/Create/@Model.ForumThreadId.ToString()",
+                success: function (html) {
+                    // Update the page with the HTML of the partial view.
+                    $("#createNewForumPost").html(html);
+                }
+            });
+        }
+    }
+    
+    async function quotePost()
+    {
+        //Check if create new post input box is visible, if not, enable
+        await checkIfInputVisible();
+        let result = "";
+        
+        //Collects original data
+        let inputField = easyMDE.value();
+        let quotedPost = " @Model.ForumPostContent ";
+        
+        let inputParsed = new DOMParser().parseFromString(inputField,"text/html");
+        let quoteParsed = new DOMParser().parseFromString(quotedPost,"text/html");
+    
+        inputParsed = inputParsed.documentElement.textContent;
+        quoteParsed = quoteParsed.documentElement.textContent;
+        
+        console.log(quoteParsed);
+       
+        // Remove newlines
+        quoteParsed = quoteParsed.replace(/\n/g, " ");
+        
+        // Remove tags
+        quoteParsed = quoteParsed.replace(/<\/?[^>]+(>|$)/g, "");
+        
+        // Add markdown blockquote 
+        quoteParsed = quoteParsed.replace(/^/gm, "> ");
+    
+        //Quote text content to be input
+        if (inputParsed.length > 0)
+        {
+            result += inputParsed + "\n";
+        }
+        result += "Originally posted by @UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName\n";
+        result += quoteParsed;
+    
+        //Places resulting quote into input box
+        easyMDE.value(result);
+        
+        //Hides button to create new post
+        document.getElementById('createNewForumPostButton').hidden = true;
+    }
+
+    $("#quoteThisPost_@Model.ForumPostId.ToString()").click(quotePost);
+</script>

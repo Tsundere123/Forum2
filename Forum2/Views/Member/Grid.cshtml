@@ -1,0 +1,19 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Members";
+}
+
+<div class="d-flex align-items-center justify-content-between">
+    <h1 class="h2 fw-normal">@ViewData["Title"]</h1>
+    <a class="btn btn-sm btn-dark" asp-controller="Member" asp-action="List">View List</a>
+</div>
+
+<div class="row row-cols-2 row-cols-md-4">
+    @foreach (var user in UserManager.Users)
+    {
+        <div class="p-1">
+            <partial name="_Profile" model="user" />
+        </div>
+    }
+</div>

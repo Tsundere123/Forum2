@@ -9,7 +9,7 @@
     var user = UserManager.GetUserAsync(User).Result;
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle text-dark" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            @user.DisplayName <img src="~/avatars/@user.AvatarUrl" alt="@user.DisplayName" width="32" height="32" class="rounded-circle">
+            @user.DisplayName <img src="~/avatars/@user.AvatarUrl" alt="@user.DisplayName" width="32" height="32" class="rounded">
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
             <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">My Profile</a></li>

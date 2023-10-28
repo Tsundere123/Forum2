@@ -23,9 +23,12 @@ public class ForumPostController : Controller
         _forumPostRepository = forumPostRepository;
         _userManager = userManager;
     }
+
+    private const int PageSize = 10;
+
     [HttpGet]
-    [Route("/ForumPost/{forumThreadId}")]
-    public async Task<IActionResult> ForumPostView(int forumThreadId)
+    [Route("/ForumPost/{forumThreadId}/{page?}")]
+    public async Task<IActionResult> ForumPostView(int forumThreadId, int? page)
     {
         var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId);
         var forumCategory = await _forumCategoryRepository.GetForumCategoryById(_forumThreadRepository.GetForumThreadById(forumThreadId).Result.ForumCategoryId);
@@ -40,8 +43,14 @@ public class ForumPostController : Controller
             }
         }
         
+        var forumPostsCount = forumPosts.Count();
+        var totalPages = (int)Math.Ceiling((double)forumPostsCount / PageSize);
+        var currentPage = page ?? 1;
+        
+        forumPosts = forumPosts.Skip((currentPage - 1) * PageSize).Take(PageSize);
+        
         var accounts = await _userManager.Users.ToListAsync();
-        var forumPostViewModel = new ForumPostViewModel(forumCategory, currentForumThread, forumPosts, accounts);
+        var forumPostViewModel = new ForumPostViewModel(forumCategory, currentForumThread, forumPosts, accounts, currentPage, totalPages);
         
         return View(forumPostViewModel);
     }
@@ -69,9 +78,14 @@ public class ForumPostController : Controller
         addPost.ForumPostCreationTimeUnix = DateTime.UtcNow;
         addPost.ForumPostCreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
         await _forumPostRepository.CreateNewForumPost(addPost);
+        
+        // Get last page
+        var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId);
+        var forumPostsCount = forumPosts.Count();
+        var totalPages = (int)Math.Ceiling((double)forumPostsCount / PageSize);
 
         //Needed for RedirectToAction
-        return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
+        return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId, page = totalPages});
     }
 
     [Authorize]

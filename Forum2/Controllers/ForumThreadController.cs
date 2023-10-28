@@ -36,13 +36,32 @@ public class ForumThreadController : Controller
         return View(forumListViewModel);
     }
     [HttpGet]
-    [Route("/Category/{forumCategoryId}")]
-    public async Task<IActionResult> ForumThreadOfCategoryTable(int forumCategoryId)
+    [Route("/Category/{forumCategoryId}/{page?}")]
+    public async Task<IActionResult> ForumThreadOfCategoryTable(int forumCategoryId, int? page)
     {
         var forumThreads = await _forumThreadRepository.GetForumThreadsByCategoryId(forumCategoryId);
         var forumCategory = await _forumCategoryRepository.GetForumCategoryById(forumCategoryId);
         var accounts = await _userManager.Users.ToListAsync();
-        var forumThreadOfCategoryViewModel = new ForumThreadOfCategoryViewModel(forumCategory,forumThreads,accounts);
+        
+        // Remove soft deleted threads
+        forumThreads = forumThreads.Where(x => x.ForumThreadIsSoftDeleted == false).ToList();
+        
+        // Sort threads by last post
+        var sortedThreads = forumThreads
+            .Select(t => new 
+            {
+                ForumThread = t,
+                LastPost = t.ForumPosts.Any() ? t.ForumPosts.Max(p => p.ForumPostCreationTimeUnix) : t.ForumThreadCreationTimeUnix
+            })
+            .OrderByDescending(t => t.LastPost)
+            .Select(t => t.ForumThread);
+
+        var perPage = 10;
+        var totalPages = (int)Math.Ceiling((double)sortedThreads.Count() / perPage);
+        var currentPage = page ?? 1;
+        var forumThreadsOfCategory = sortedThreads.Skip((currentPage - 1) * perPage).Take(perPage);
+        
+        var forumThreadOfCategoryViewModel = new ForumThreadOfCategoryViewModel(forumCategory,forumThreadsOfCategory,accounts, currentPage, totalPages);
         return View(forumThreadOfCategoryViewModel);
     }
 

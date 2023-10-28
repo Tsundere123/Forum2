@@ -17,17 +17,15 @@ public class RoleController : Controller
         _userManager = userManager;
     }
 
-    public async Task<IActionResult> RoleTable()
+    public IActionResult List()
     {
-        var roles = await _roleManager.Roles.ToListAsync();
-        return View(roles);
+        return View();
     }
     
-    public async Task<IActionResult> MembersOfRole(string roleId)
+    [Route("Role/Members/{roleName}")]
+    public IActionResult Members(string roleName)
     {
-        var role = await _roleManager.FindByIdAsync(roleId);
-        var users = await _userManager.Users.ToListAsync();
-        var RoleViewModel = new RoleViewModel(users, role);
-        return View(RoleViewModel);
+        var role = _roleManager.FindByNameAsync(roleName).Result;
+        return View(role);
     }
 }
