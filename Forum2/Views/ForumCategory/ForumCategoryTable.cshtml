@@ -47,7 +47,12 @@
                         var lastPost = lastThread.ForumPosts.LastOrDefault(p => p.ForumPostIsSoftDeleted == false);
                         if (lastPost is null)
                         {
-                            <div class="fst-italic" style="font-size: 14px;">No posts.</div>
+                            <div style="font-size: 14px;">
+                                <a class="link-dark text-decoration-none" asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@lastThread.ForumThreadId.ToString()">
+                                    @lastThread.ForumThreadTitle
+                                </a>
+                            </div>
+                            <div class="fst-italic" style="font-size: 12px;">Thread has no posts.</div>
                         }
                         else
                         {
