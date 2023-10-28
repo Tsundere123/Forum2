@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Forum2.Models;
+﻿using Forum2.Models;
 
-namespace Forum2.ViewModels
+namespace Forum2.ViewModels;
+
+public class ForumCategoryViewModel
 {
-    public class ForumCategoryViewModel
-    {
-        public IEnumerable<ForumCategory> ForumCategories;
-        public IEnumerable<ForumThread> ForumThreads;
-        public string? CurrentViewName;
-
-        public ForumCategoryViewModel(IEnumerable<ForumCategory> forumCategories, IEnumerable<ForumThread> forumThreads, string? currentViewName)
-        {
-            ForumCategories = forumCategories;
-            ForumThreads = forumThreads;
-            CurrentViewName = currentViewName;
-        }
-    }
+    public IEnumerable<ForumCategory> ForumCategories { get; set; }
+    public IEnumerable<ForumThread> ForumThreads { get; set; }
+    public string? CurrentViewName { get; set; }
 }

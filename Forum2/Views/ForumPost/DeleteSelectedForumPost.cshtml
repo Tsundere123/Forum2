@@ -4,19 +4,19 @@
 
 <dl class="row">
     <dt class="col-sm-2">Post Id</dt>
-    <dd class="col-sm-10">@Model.ForumPostId</dd>
+    <dd class="col-sm-10">@Model.Id</dd>
         
     <dt class="col-sm-2">Thread Name</dt>
-    <dd class="col-sm-10">@Model.ForumThreadId</dd>
+    <dd class="col-sm-10">@Model.ThreadId</dd>
         
     <dt class="col-sm-2">Poster ID</dt>
-    <dd class="col-sm-10">@Model.ForumPostCreatorId</dd>
+    <dd class="col-sm-10">@Model.CreatorId</dd>
         
     <dt class="col-sm-2">Posted at</dt>
-    <dd class="col-sm-10">@Model.ForumPostCreationTimeUnix</dd>
+    <dd class="col-sm-10">@Model.CreatedAt</dd>
     
     <dt class="col-sm-2">Content</dt>
-    <dd class="col-sm-10">@Model.ForumPostContent</dd>
+    <dd class="col-sm-10">@Model.Content</dd>
     
     @* Hard delete only visible to Admins and Mods *@
     @* Hard delete (Commented out, functionality shuffles posts around and can create new OP *@
@@ -28,8 +28,8 @@
     @*         </form> *@
     @*     } *@
 
-    <form asp-controller="ForumPost" asp-action="SoftDeleteSelectedForumPostContent" asp-route-forumPostId="@Model.ForumPostId" method="post">
+    <form asp-controller="ForumPost" asp-action="SoftDeleteSelectedForumPostContent" asp-route-forumPostId="@Model.Id" method="post">
         <button type="submit" class="btn btn-danger">Soft Delete</button>
     </form>
-    <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThreadId" class="btn btn-secondary">Cancel</a>
+    <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ThreadId" class="btn btn-secondary">Cancel</a>
 </dl>

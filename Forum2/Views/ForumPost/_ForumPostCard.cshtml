@@ -4,7 +4,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @model ForumPost
 
-@if (Model.ForumPostIsSoftDeleted)
+@if (Model.IsSoftDeleted)
 {
     <div class="alert alert-secondary mb-4 fst-italic">
         This post has been deleted.
@@ -14,31 +14,31 @@ else
 {
     <div class="row mb-4">
         <div class="col-md-3 mb-2 mb-md-0">
-            <partial name="_Profile" model="UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result"/>
+            <partial name="_Profile" model="UserManager.FindByIdAsync(Model.CreatorId).Result"/>
         </div>
         <div class="col-md-9">
             <div class="card h-100">
-                <div id="postContent_@Model.ForumPostId.ToString()" class="card-body py-2 d-flex flex-column justify-content-between">
+                <div id="postContent_@Model.Id.ToString()" class="card-body py-2 d-flex flex-column justify-content-between">
                     <div class="post-content">
-                        @Html.Raw(Markdown.Parse(Model.ForumPostContent, sanitizeHtml: true))
+                        @Html.Raw(Markdown.Parse(Model.Content, sanitizeHtml: true))
                     </div>
 
                     <div>
-                        @if (Model.ForumPostLastEditedTime > Model.ForumPostCreationTimeUnix)
+                        @if (Model.EditedAt > Model.CreatedAt)
                         {
-                            var editor = UserManager.FindByIdAsync(Model.ForumPostLastEditedBy).Result;
+                            var editor = UserManager.FindByIdAsync(Model.EditedBy).Result;
                             <span class="text-muted fst-italic" style="font-size: 12px;">
-                                Posted on @Model.ForumPostCreationTimeUnix.ToString("g"), edited by
+                                Posted on @Model.CreatedAt.ToString("g"), edited by
                                 <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@editor.DisplayName" class="text-decoration-none link-dark">
                                     @editor.DisplayName
                                 </a>
-                                on @Model.ForumPostLastEditedTime.ToString("g")
+                                on @Model.EditedAt.ToString("g")
                             </span>
                         }
                         else
                         {
                             <span class="text-muted fst-italic" style="font-size: 12px;">
-                                Posted on @Model.ForumPostCreationTimeUnix.ToString("g")
+                                Posted on @Model.CreatedAt.ToString("g")
                             </span>
                         }
                     </div>
@@ -46,11 +46,11 @@ else
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <div class="card-footer py-2 px-3">
-                        <button class="btn btn-sm btn-dark d-inline" id="quoteThisPost_@Model.ForumPostId.ToString()">Quote Post</button>
-                        @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.ForumPostCreatorId)
+                        <button class="btn btn-sm btn-dark d-inline" id="quoteThisPost_@Model.Id.ToString()">Quote Post</button>
+                        @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.CreatorId)
                         {
-                            <a class="btn btn-sm btn-dark" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.ForumPostId.ToString()">Edit Post</a>
-                            <a class="btn btn-sm btn-danger" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.ForumPostId.ToString()">Delete Post</a>
+                            <a class="btn btn-sm btn-dark" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.Id.ToString()">Edit Post</a>
+                            <a class="btn btn-sm btn-danger" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.Id.ToString()">Delete Post</a>
                         }
                     </div>
                 }
@@ -66,7 +66,7 @@ else
         if (!document.getElementById("createNewForumPost").innerHTML )
         {
             await $.ajax({
-                url: "/ForumPost/Create/@Model.ForumThreadId.ToString()",
+                url: "/ForumPost/Create/@Model.ThreadId.ToString()",
                 success: function (html) {
                     // Update the page with the HTML of the partial view.
                     $("#createNewForumPost").html(html);
@@ -83,7 +83,7 @@ else
         
         //Collects original data
         let inputField = easyMDE.value();
-        let quotedPost = " @Model.ForumPostContent ";
+        let quotedPost = " @Model.Content ";
         
         let inputParsed = new DOMParser().parseFromString(inputField,"text/html");
         let quoteParsed = new DOMParser().parseFromString(quotedPost,"text/html");
@@ -107,7 +107,7 @@ else
         {
             result += inputParsed + "\n";
         }
-        result += "Originally posted by @UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName\n";
+        result += "Originally posted by @UserManager.FindByIdAsync(Model.CreatorId).Result.DisplayName\n";
         result += quoteParsed;
     
         //Places resulting quote into input box
@@ -117,5 +117,5 @@ else
         document.getElementById('createNewForumPostButton').hidden = true;
     }
 
-    $("#quoteThisPost_@Model.ForumPostId.ToString()").click(quotePost);
+    $("#quoteThisPost_@Model.Id.ToString()").click(quotePost);
 </script>

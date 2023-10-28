@@ -3,19 +3,16 @@ using System;
 using Forum2.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Forum2.Migrations.ForumDb
+namespace Forum2.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    [Migration("20231027131857_ForumPostSoftDeleteTag")]
-    partial class ForumPostSoftDeleteTag
+    partial class ForumDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,93 +23,93 @@ namespace Forum2.Migrations.ForumDb
 
             modelBuilder.Entity("Forum2.Models.ForumCategory", b =>
                 {
-                    b.Property<int>("ForumCategoryId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ForumCategoryDescription")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ForumCategoryName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ForumCategoryId");
+                    b.HasKey("Id");
 
                     b.ToTable("ForumCategory");
                 });
 
             modelBuilder.Entity("Forum2.Models.ForumPost", b =>
                 {
-                    b.Property<int>("ForumPostId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ForumPostContent")
+                    b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("ForumPostCreationTimeUnix")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ForumPostCreatorId")
+                    b.Property<string>("CreatorId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("ForumPostIsSoftDeleted")
+                    b.Property<DateTime>("EditedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EditedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSoftDeleted")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ForumPostLastEditedBy")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("ForumPostLastEditedTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ForumThreadId")
+                    b.Property<int>("ThreadId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ForumPostId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("ForumThreadId");
+                    b.HasIndex("ThreadId");
 
                     b.ToTable("ForumPost");
                 });
 
             modelBuilder.Entity("Forum2.Models.ForumThread", b =>
                 {
-                    b.Property<int>("ForumThreadId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ForumCategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("ForumThreadCreationTimeUnix")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ForumThreadCreatorId")
+                    b.Property<string>("CreatorId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("ForumThreadIsSoftDeleted")
+                    b.Property<DateTime>("EditedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EditedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSoftDeleted")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ForumThreadLastEditedBy")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("ForumThreadLastEditedTime")
-                        .HasColumnType("TEXT");
+                    b.HasKey("Id");
 
-                    b.Property<string>("ForumThreadTitle")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ForumThreadId");
-
-                    b.HasIndex("ForumCategoryId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("ForumThread");
                 });
@@ -172,24 +169,24 @@ namespace Forum2.Migrations.ForumDb
 
             modelBuilder.Entity("Forum2.Models.ForumPost", b =>
                 {
-                    b.HasOne("Forum2.Models.ForumThread", "ForumThread")
-                        .WithMany("ForumPosts")
-                        .HasForeignKey("ForumThreadId")
+                    b.HasOne("Forum2.Models.ForumThread", "Thread")
+                        .WithMany("Posts")
+                        .HasForeignKey("ThreadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ForumThread");
+                    b.Navigation("Thread");
                 });
 
             modelBuilder.Entity("Forum2.Models.ForumThread", b =>
                 {
-                    b.HasOne("Forum2.Models.ForumCategory", "ForumCategory")
-                        .WithMany("ForumThreads")
-                        .HasForeignKey("ForumCategoryId")
+                    b.HasOne("Forum2.Models.ForumCategory", "Category")
+                        .WithMany("Threads")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ForumCategory");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Forum2.Models.WallPostReply", b =>
@@ -205,12 +202,12 @@ namespace Forum2.Migrations.ForumDb
 
             modelBuilder.Entity("Forum2.Models.ForumCategory", b =>
                 {
-                    b.Navigation("ForumThreads");
+                    b.Navigation("Threads");
                 });
 
             modelBuilder.Entity("Forum2.Models.ForumThread", b =>
                 {
-                    b.Navigation("ForumPosts");
+                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("Forum2.Models.WallPost", b =>

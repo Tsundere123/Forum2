@@ -32,7 +32,12 @@ public class ForumThreadController : Controller
         var forumThreads = await _forumThreadRepository.GetAll();
         var forumCategories = await _forumCategoryRepository.GetAll();
         var accounts = await _userManager.Users.ToListAsync();
-        var forumListViewModel = new ForumListViewModel(forumCategories,forumThreads,accounts);
+        var forumListViewModel = new ForumListViewModel
+        {
+            ForumCategories = forumCategories,
+            ForumThreads = forumThreads,
+            Accounts = accounts,
+        };
         return View(forumListViewModel);
     }
     [HttpGet]
@@ -44,14 +49,14 @@ public class ForumThreadController : Controller
         var accounts = await _userManager.Users.ToListAsync();
         
         // Remove soft deleted threads
-        forumThreads = forumThreads.Where(x => x.ForumThreadIsSoftDeleted == false).ToList();
+        forumThreads = forumThreads.Where(x => x.IsSoftDeleted == false).ToList();
         
         // Sort threads by last post
         var sortedThreads = forumThreads
             .Select(t => new 
             {
                 ForumThread = t,
-                LastPost = t.ForumPosts.Any() ? t.ForumPosts.Max(p => p.ForumPostCreationTimeUnix) : t.ForumThreadCreationTimeUnix
+                LastPost = t.Posts.Any() ? t.Posts.Max(p => p.CreatedAt) : t.CreatedAt
             })
             .OrderByDescending(t => t.LastPost)
             .Select(t => t.ForumThread);
@@ -61,7 +66,14 @@ public class ForumThreadController : Controller
         var currentPage = page ?? 1;
         var forumThreadsOfCategory = sortedThreads.Skip((currentPage - 1) * perPage).Take(perPage);
         
-        var forumThreadOfCategoryViewModel = new ForumThreadOfCategoryViewModel(forumCategory,forumThreadsOfCategory,accounts, currentPage, totalPages);
+        var forumThreadOfCategoryViewModel = new ForumThreadOfCategoryViewModel
+        {
+            ForumCategory = forumCategory,
+            ForumThreads = forumThreadsOfCategory,
+            Accounts = accounts,
+            CurrentPage = currentPage,
+            TotalPages = totalPages
+        };
         return View(forumThreadOfCategoryViewModel);
     }
 
@@ -73,7 +85,12 @@ public class ForumThreadController : Controller
         var forumCategory = await _forumCategoryRepository.GetForumCategoryById(categoryId);
         var accounts = await _userManager.Users.ToListAsync();
         var forumThread = new ForumThread();
-        var viewModel = new ForumThreadCreationViewModel(forumCategory, forumThread, null, accounts);
+        var viewModel = new ForumThreadCreationViewModel
+        {
+            ForumCategory = forumCategory,
+            ForumThread = forumThread,
+            Accounts = accounts
+        };
         return View(viewModel);
     }
     
@@ -83,13 +100,13 @@ public class ForumThreadController : Controller
     public async Task<IActionResult> CreateNewForumThread(ForumCategory forumCategory,ForumThread forumThread, ForumPost forumPost)
     {
         ForumThread addThread = new ForumThread();
-        addThread.ForumThreadTitle = forumThread.ForumThreadTitle;
-        addThread.ForumThreadCreationTimeUnix = DateTime.UtcNow;
-        addThread.ForumThreadCreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
-        addThread.ForumCategoryId = forumCategory.ForumCategoryId;
+        addThread.Title = forumThread.Title;
+        addThread.CreatedAt = DateTime.UtcNow;
+        addThread.CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
+        addThread.CategoryId = forumCategory.Id;
         
         await _forumThreadRepository.CreateNewForumThread(addThread);
-        int forumThreadId = addThread.ForumThreadId;
+        int forumThreadId = addThread.Id;
         CreateNewForumPost(forumThreadId, forumPost);
         return RedirectToAction("ForumPostView", "ForumPost", new {forumThreadId});
     }
@@ -98,10 +115,10 @@ public class ForumThreadController : Controller
     public async void CreateNewForumPost(int threadId,ForumPost forumPost)
     {
         ForumPost addPost = new ForumPost();
-        addPost.ForumPostCreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
-        addPost.ForumPostCreationTimeUnix = DateTime.UtcNow;
-        addPost.ForumThreadId = threadId;
-        addPost.ForumPostContent = forumPost.ForumPostContent;
+        addPost.CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
+        addPost.CreatedAt = DateTime.UtcNow;
+        addPost.ThreadId = threadId;
+        addPost.Content = forumPost.Content;
         await _forumPostRepository.CreateNewForumPost(addPost);
     }
     [Authorize]
@@ -111,7 +128,7 @@ public class ForumThreadController : Controller
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
 
-        if (_userManager.GetUserAsync(User).Result.Id == forumThread.ForumThreadCreatorId
+        if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
             || HttpContext.User.IsInRole("Moderator") 
             || HttpContext.User.IsInRole("Administrator"))
         {
@@ -126,17 +143,17 @@ public class ForumThreadController : Controller
     [Route("ForumThread/Update/{forumThreadId}")]
     public async Task<IActionResult> UpdateForumThreadTitle(ForumThread forumThread)
     {
-        if (_userManager.GetUserAsync(User).Result.Id == forumThread.ForumThreadCreatorId
+        if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
             || HttpContext.User.IsInRole("Moderator")
             || HttpContext.User.IsInRole("Administrator"))
         {
             if (ModelState.IsValid)
             {
-                forumThread.ForumThreadLastEditedTime = DateTime.Now;
-                forumThread.ForumThreadLastEditedBy = _userManager.GetUserAsync(User).Result.Id;
+                forumThread.EditedAt = DateTime.Now;
+                forumThread.EditedBy = _userManager.GetUserAsync(User).Result.Id;
                 await _forumThreadRepository.UpdateForumThread(forumThread);
                 //Needed for RedirectToAction
-                var forumCategoryId = forumThread.ForumCategoryId;
+                var forumCategoryId = forumThread.CategoryId;
                 return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread", new { forumCategoryId });
             }
             return View(forumThread);
@@ -150,7 +167,7 @@ public class ForumThreadController : Controller
     public async Task<IActionResult> DeleteSelectedForumThread(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
-        if (_userManager.GetUserAsync(User).Result.Id == forumThread.ForumThreadCreatorId
+        if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
             || HttpContext.User.IsInRole("Moderator")
             || HttpContext.User.IsInRole("Administrator"))
         {
@@ -165,7 +182,7 @@ public class ForumThreadController : Controller
     public async Task<IActionResult> PermaDeleteSelectedForumThreadConfirmed(int forumThreadId)
     {
         //Needed for RedirectToAction
-        var forumCategoryId = _forumThreadRepository.GetForumThreadById(forumThreadId).Result.ForumCategoryId;
+        var forumCategoryId = _forumThreadRepository.GetForumThreadById(forumThreadId).Result.CategoryId;
         await _forumThreadRepository.DeleteForumThread(forumThreadId);
         return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
     }
@@ -175,16 +192,16 @@ public class ForumThreadController : Controller
     public async Task<IActionResult> SoftDeleteSelectedForumThreadConfirmed(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
-        if (_userManager.GetUserAsync(User).Result.Id == forumThread.ForumThreadCreatorId
+        if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
             || HttpContext.User.IsInRole("Moderator")
             || HttpContext.User.IsInRole("Administrator"))
         {
             //Needed for RedirectToAction
-            var forumCategoryId = forumThread.ForumCategoryId;
+            var forumCategoryId = forumThread.CategoryId;
         
             if (forumThread == null) return NotFound();
 
-            forumThread.ForumThreadIsSoftDeleted = true;
+            forumThread.IsSoftDeleted = true;
             await UpdateForumThreadTitle(forumThread);
             return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
 

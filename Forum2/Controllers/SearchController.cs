@@ -35,10 +35,10 @@ public class SearchController : Controller
         
         // Upper case for case-insensitive search
         var threadsToShow = (threads ?? Array.Empty<ForumThread>())
-            .Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).Take(CountPerPage).ToList();
+            .Where(t => t.Title.ToUpper().Contains(query.ToUpper())).Take(CountPerPage).ToList();
         
         var postsToShow = (posts ?? Array.Empty<ForumPost>())
-            .Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).Take(CountPerPage).ToList();
+            .Where(p => p.Content.ToUpper().Contains(query.ToUpper())).Take(CountPerPage).ToList();
         
         var usersToShow = users
             .Where(u => u.DisplayName.ToUpper().Contains(query.ToUpper())).Take(CountPerPage).ToList();
@@ -62,7 +62,7 @@ public class SearchController : Controller
         
         // Upper case for case-insensitive search
         var threadsRelevant = (threads ?? Array.Empty<ForumThread>())
-            .Where(t => t.ForumThreadTitle.ToUpper().Contains(query.ToUpper())).ToList();
+            .Where(t => t.Title.ToUpper().Contains(query.ToUpper())).ToList();
         
         var threadsCount = threadsRelevant.Count;
         var totalPages = (int) Math.Ceiling((double) threadsCount / CountPerPage);
@@ -88,7 +88,7 @@ public class SearchController : Controller
         
         // Upper case for case-insensitive search
         var postsRelevant = (posts ?? Array.Empty<ForumPost>())
-            .Where(p => p.ForumPostContent.ToUpper().Contains(query.ToUpper())).ToList();
+            .Where(p => p.Content.ToUpper().Contains(query.ToUpper())).ToList();
 
         var postsCount = postsRelevant.Count;
         var totalPages = (int) Math.Ceiling((double) postsCount / CountPerPage);

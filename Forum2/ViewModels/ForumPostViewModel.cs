@@ -2,24 +2,12 @@
 
 namespace Forum2.ViewModels;
 
-
 public class ForumPostViewModel
 {
-    public IEnumerable<ApplicationUser> Accounts;
-    public ForumCategory ForumCategory;
-    public ForumThread CurrentForumThread;
-    public IEnumerable<ForumPost> ForumPosts;
-    public int CurrentPage;
-    public int TotalPages;
-
-    public ForumPostViewModel(ForumCategory forumCategory, ForumThread currentForumThread,IEnumerable<ForumPost> forumPosts,
-        IEnumerable<ApplicationUser> applicationUsers, int currentPage, int totalPages)
-    {
-        ForumCategory = forumCategory;
-        CurrentForumThread = currentForumThread;
-        ForumPosts = forumPosts;
-        Accounts = applicationUsers;
-        CurrentPage = currentPage;
-        TotalPages = totalPages;
-    }
+    public IEnumerable<ApplicationUser> Accounts { get; set; }
+    public ForumCategory ForumCategory { get; set; }
+    public ForumThread CurrentForumThread { get; set; }
+    public IEnumerable<ForumPost> ForumPosts { get; set; }
+    public int CurrentPage { get; set; }
+    public int TotalPages { get; set; }
 }
