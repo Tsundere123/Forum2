@@ -79,21 +79,21 @@ public class InitDb
                 Id = "dacf1d5f-3ae8-4b0a-bf7e-d00a633821a9",
                 DisplayName = "Ceno",
                 Email = "ceno@test.com",
-                NormalizedEmail = "ceno@TEST.COM",
-                UserName = "CENO@test.com",
+                NormalizedEmail = "CENO@TEST.COM",
+                UserName = "ceno@test.com",
                 NormalizedUserName = "CENO@TEST.COM",
                 AvatarUrl = "f55ec44f-88d8-4f25-b1da-e62b51797763.jpg",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
             var yes = new ApplicationUser
             {
-                Id = "dacf1d5f-3ae8-4b0a-bf7e-d00a633821a9",
+                Id = "264cc5d0-3fb6-471c-a45e-296d46c71efa",
                 DisplayName = "Yes",
                 Email = "yes@no.com",
                 NormalizedEmail = "YES@NO.COM",
                 UserName = "yes@no.com",
                 NormalizedUserName = "YES@NO.COM",
-                AvatarUrl = "264cc5d0-3fb6-471c-a45e-296d46c71efa",
+                AvatarUrl = "99d5e94a-cc07-4d5c-8205-166dbccdec96.jpg",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
             
@@ -170,10 +170,10 @@ public class InitDb
             {
 
                 ForumThreadId = 2,
-                ForumThreadCreatorId = "1f03d161-afc3-4507-9d6e-cdb55417b4ca",
+                ForumThreadCreatorId = "264cc5d0-3fb6-471c-a45e-296d46c71efa",
                 ForumThreadCreationTimeUnix = DateTime.Now,
                 ForumCategoryId = 1, 
-                ForumThreadTitle = "264cc5d0-3fb6-471c-a45e-296d46c71efa"
+                ForumThreadTitle = "The missile knows where it is at all times"
             };
 
             var yamato = new ForumThread()
@@ -187,7 +187,7 @@ public class InitDb
             
             var poi = new ForumThread()
             {
-                ForumThreadId = 3,
+                ForumThreadId = 4,
                 ForumThreadCreatorId = "dacf1d5f-3ae8-4b0a-bf7e-d00a633821a9",
                 ForumThreadCreationTimeUnix = DateTime.Now,
                 ForumCategoryId = 2,
