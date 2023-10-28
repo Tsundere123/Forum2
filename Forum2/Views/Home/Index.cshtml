@@ -19,7 +19,7 @@
                 </svg>
             </button>
         </div>
-        <div class="flex-grow-1">
+        <div style="min-width: 0;">
             <div id="latest_threads">
                 @foreach (var thread in Model.ForumThreads)
                 {
@@ -54,7 +54,7 @@
                 </svg>
             </button>
         </div>
-        <div class="flex-grow-1">
+        <div style="min-width: 0;">
             <div id="latest_posts">
                 @foreach (var post in Model.ForumPosts)
                 {
@@ -87,7 +87,7 @@
             </svg>
         </button>
     </div>
-    <div class="flex-grow-1">
+    <div style="min-width: 0;">
         <div id="new_members">
             @foreach (var member in latestMembers)
             {
@@ -145,6 +145,8 @@
         navPosition: 'bottom',
         mouseDrag: true,
         loop: false,
+        items: 1,
+        edgePadding: 10,
         responsive: {
             640: {
                 edgePadding: 20,
@@ -170,6 +172,8 @@
         navPosition: 'bottom',
         mouseDrag: true,
         loop: false,
+        items: 1,
+        edgePadding: 10,
         responsive: {
             640: {
                 edgePadding: 20,
@@ -195,6 +199,8 @@
         navPosition: 'bottom',
         mouseDrag: true,
         loop: false,
+        items: 1,
+        edgePadding: 10,
         responsive: {
             640: {
                 edgePadding: 20,
