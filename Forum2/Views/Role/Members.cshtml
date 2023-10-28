@@ -1,25 +1,34 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using Microsoft.EntityFrameworkCore
-@model RoleViewModel
 @inject UserManager<ApplicationUser> UserManager
-@inject RoleManager<ApplicationRole> RoleManager
+@model ApplicationRole
+@{
+    ViewData["Title"] = $"Members of {Model.Name}";
+    var users = UserManager.GetUsersInRoleAsync(Model.Name).Result;
+}
 
-<div class="container">
-    <h1>List of members</h1>
-    <table class='table table-striped'>
-        <tr>
-            <th>Name</th>
-        </tr>
-        @foreach (var member in Model.Accounts)
-        {
-            if (await UserManager.IsInRoleAsync(member,Model.CurrentRole.Name))
-            {
-                <tr>
-                    <td>
-                        <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@member.DisplayName">@member.DisplayName</a>
-                    </td>
-                </tr>
-            }
-        }
-    </table>
+<div class="d-flex align-items-center justify-content-between">
+    <h1 class="h2 fw-normal">@ViewData["Title"]</h1>
+    <a class="btn btn-sm btn-dark" asp-controller="Role" asp-action="List">Role List</a>
 </div>
+
+<ul class="list-group list-group-flush">
+    @foreach (var user in users)
+    {
+        <li class="list-group-item px-0">
+            <div class="d-flex align-items-center gap-2">
+                <img src="~/avatars/@user.AvatarUrl" alt="@user.DisplayName" height="32" width="32" class="rounded"/>
+                <div>
+                    <div>
+                        
+                        <a class="link-dark text-decoration-none" asp-controller="Profile" asp-action="Index" asp-route-roleName="@user.DisplayName">
+                            @user.DisplayName
+                        </a>
+                    </div>
+                    <div style="font-size: 14px;">
+                        Joined @user.CreatedAt.ToString("d")
+                    </div>
+                </div>
+            </div>
+        </li>
+    }
+</ul>
