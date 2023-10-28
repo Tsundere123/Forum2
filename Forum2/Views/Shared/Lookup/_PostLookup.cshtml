@@ -4,7 +4,7 @@
 @model ForumPost
 
 @{
-    var user = UserManager.Users.FirstOrDefault(u => u.Id == Model.ForumPostCreatorId);
+    var user = UserManager.Users.FirstOrDefault(u => u.Id == Model.CreatorId);
 }
 
 <div class="d-flex">
@@ -13,16 +13,16 @@
     </a>
     <div>
         <div class="d-block">
-            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThreadId.ToString()">@Model.ForumThread!.ForumThreadTitle</a>
+            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ThreadId.ToString()">@Model.Thread!.Title</a>
         </div>
         <div class="d-block" style="font-size: 14px;">
-            @if (Model.ForumPostContent.Length >= 20)
+            @if (Model.Content.Length >= 20)
             {
-                @Model.ForumPostContent.Substring(0, 20)
+                @Model.Content.Substring(0, 20)
             }
             else
             {
-                @Model.ForumPostContent
+                @Model.Content
             }
         </div>
         <div class="d-block" style="font-size: 12px;">
@@ -30,7 +30,7 @@
                 <a class="text-muted" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">@user.DisplayName</a>
             </span>
             <span class="text-muted">
-                @Model.ForumPostCreationTimeUnix.ToString("g")
+                @Model.CreatedAt.ToString("g")
             </span>
         </div>
     </div>

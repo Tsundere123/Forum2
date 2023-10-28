@@ -10,13 +10,13 @@
         @foreach (var forumThread in Model.ForumCategories)
         {
             <tr>
-                <td>@forumThread.ForumCategoryId</td>
+                <td>@forumThread.Id</td>
                 <td>
                     <a asp-controller="ForumThread"
                        asp-action="ForumThreadOfCategoryTable"
-                       asp-route-forumCategoryId="@forumThread.ForumCategoryId">@forumThread.ForumCategoryName</a>
+                       asp-route-forumCategoryId="@forumThread.Id">@forumThread.Name</a>
                 </td>
-                <td>@forumThread.ForumCategoryDescription</td>
+                <td>@forumThread.Description</td>
             </tr>
         }
     </table>

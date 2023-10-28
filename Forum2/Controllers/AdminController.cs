@@ -287,7 +287,7 @@ public class AdminController : Controller
 
         try
         {
-            category.ForumCategoryId = id;
+            category.Id = id;
             await _forumCategoryRepository.UpdateForumCategory(category);
             return RedirectToAction(nameof(Categories));
         }

@@ -7,28 +7,28 @@ namespace Forum2.Models;
 public class ForumPost
 {
     [Key]
-    public int ForumPostId { get; set; }
+    public int Id { get; set; }
 
     [Required]
-    [ForeignKey("ForumThreadId")]
-    public int ForumThreadId { get; set; } = default!;
+    [ForeignKey("Id")]
+    public int ThreadId { get; set; } = default!;
     
     [Required]
     [ForeignKey("Id")]
-    public string ForumPostCreatorId { get; set; } = string.Empty;
+    public string CreatorId { get; set; } = string.Empty;
     
     [Required]
-    public string ForumPostContent { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty;
     
     [Required]
-    public DateTime ForumPostCreationTimeUnix { get; set; } = DateTime.MinValue;
+    public DateTime CreatedAt { get; set; } = DateTime.MinValue;
 
-    public DateTime ForumPostLastEditedTime { get; set; } = DateTime.MinValue;
+    public DateTime EditedAt { get; set; } = DateTime.MinValue;
 
     [Required] 
-    public bool ForumPostIsSoftDeleted { get; set; } = false;
+    public bool IsSoftDeleted { get; set; } = false;
     
-    public string ForumPostLastEditedBy { get; set; } = string.Empty;
+    public string EditedBy { get; set; } = string.Empty;
     // Navigation Property
-    public virtual ForumThread? ForumThread { get; set; }
+    public virtual ForumThread? Thread { get; set; }
 }
