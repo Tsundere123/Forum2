@@ -2,9 +2,9 @@
 
 namespace Forum2.Controllers;
 
-public class AccountController : Controller
+public class MemberController : Controller
 {
-    public IActionResult Table()
+    public IActionResult List()
     {
         return View();
     }
