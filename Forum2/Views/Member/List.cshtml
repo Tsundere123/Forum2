@@ -30,7 +30,7 @@
                             @if (roles.Count > 0)
                             {
                                 var role = RoleManager.FindByNameAsync(roles[0]).Result;
-                                <a asp-controller="Role" asp-action="MembersOfRole" asp-route-roleId="@role.Id">
+                                <a asp-controller="Role" asp-action="Members" asp-route-roleId="@role.Id">
                                     <div class="badge" style="background: @role.Color;">@role.Name</div>
                                 </a>
                             }
