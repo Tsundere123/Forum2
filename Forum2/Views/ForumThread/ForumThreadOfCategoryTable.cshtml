@@ -2,6 +2,9 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @model ForumThreadOfCategoryViewModel
+@{
+    ViewData["Title"] = Model.ForumCategory.Name;
+}
 
 <div class="d-md-flex justify-content-md-between align-items-md-center">
     <h1 class="h2 fw-normal">@Model.ForumCategory.Name</h1>
