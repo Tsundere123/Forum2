@@ -207,7 +207,7 @@ public class AdminController : Controller
             if (viewModel.User != null)
             {
                 user.DisplayName = viewModel.User.DisplayName;
-                user.AvatarUrl = viewModel.User.AvatarUrl;
+                user.Avatar = viewModel.User.Avatar;
             }
 
             var resultUser = await _userManager.UpdateAsync(user);

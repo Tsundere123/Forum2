@@ -46,7 +46,7 @@ public class InitDb
                 NormalizedEmail = "ADMIN@TEST.COM",
                 UserName = "admin@test.com",
                 NormalizedUserName = "ADMIN@TEST.COM",
-                AvatarUrl = "546f26ec-9980-42e8-bf79-30fe3568998d.png",
+                Avatar = "546f26ec-9980-42e8-bf79-30fe3568998d.png",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
@@ -58,7 +58,7 @@ public class InitDb
                 NormalizedEmail = "MOD@TEST.COM",
                 UserName = "mod@test.com",
                 NormalizedUserName = "MOD@TEST.COM",
-                AvatarUrl = "aa348e8e-fce6-422f-9c90-9c7dd92bc1fb.png",
+                Avatar = "aa348e8e-fce6-422f-9c90-9c7dd92bc1fb.png",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
@@ -70,7 +70,7 @@ public class InitDb
                 NormalizedEmail = "USER@TEST.COM",
                 UserName = "user@test.com",
                 NormalizedUserName = "USER@TEST.COM",
-                AvatarUrl = "default.png",
+                Avatar = "default.png",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
             
@@ -82,7 +82,7 @@ public class InitDb
                 NormalizedEmail = "CENO@TEST.COM",
                 UserName = "ceno@test.com",
                 NormalizedUserName = "CENO@TEST.COM",
-                AvatarUrl = "f55ec44f-88d8-4f25-b1da-e62b51797763.jpg",
+                Avatar = "f55ec44f-88d8-4f25-b1da-e62b51797763.jpg",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
             var yes = new ApplicationUser
@@ -93,7 +93,7 @@ public class InitDb
                 NormalizedEmail = "YES@NO.COM",
                 UserName = "yes@no.com",
                 NormalizedUserName = "YES@NO.COM",
-                AvatarUrl = "99d5e94a-cc07-4d5c-8205-166dbccdec96.jpg",
+                Avatar = "99d5e94a-cc07-4d5c-8205-166dbccdec96.jpg",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
             

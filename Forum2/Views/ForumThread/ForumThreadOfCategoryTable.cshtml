@@ -24,7 +24,7 @@
                 <div class="col-md-7">
                     <div class="d-flex align-items-center gap-2">
                         <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@creator.DisplayName">
-                            <img src="~/avatars/@creator.AvatarUrl" alt="@creator.DisplayName" width="36" height="36" class="rounded"/>
+                            <img src="~/avatars/@creator.Avatar" alt="@creator.DisplayName" width="36" height="36" class="rounded"/>
                         </a>
                         <div>
                             <div>
@@ -87,7 +87,7 @@
                         var poster = UserManager.FindByIdAsync(lastUndeletedPost.CreatorId).Result;
                         <div class="d-flex align-items-center gap-2" style="font-size: 12px;">
                             <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@poster.DisplayName">
-                                <img src="~/avatars/@poster.AvatarUrl" alt="@poster.DisplayName" width="32" height="32" class="rounded"/>
+                                <img src="~/avatars/@poster.Avatar" alt="@poster.DisplayName" width="32" height="32" class="rounded"/>
                             </a>
                             <div>
                                 <div>

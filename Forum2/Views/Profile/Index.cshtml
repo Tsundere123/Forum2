@@ -37,7 +37,7 @@
                         var currentUser = UserManager.GetUserAsync(User).Result;
                         <li class="list-group-item">
                             <div class="d-flex">
-                                <img src="~/avatars/@poster.AvatarUrl" alt="@poster.DisplayName" height="48" width="48" class="me-2" />
+                                <img src="~/avatars/@poster.Avatar" alt="@poster.DisplayName" height="48" width="48" class="me-2" />
                                 <div>
                                     <div class="d-block">
                                         @post.Content
@@ -72,7 +72,7 @@
                                         var replier = UserManager.FindByIdAsync(reply.AuthorId).Result;
                                         <li class="list-group-item">
                                             <div class="d-flex">
-                                                <img src="~/avatars/@replier.AvatarUrl" alt="@replier.DisplayName" height="48" width="48" class="me-2" />
+                                                <img src="~/avatars/@replier.Avatar" alt="@replier.DisplayName" height="48" width="48" class="me-2" />
                                                 <div>
                                                     <div class="d-block">
                                                         @reply.Content
