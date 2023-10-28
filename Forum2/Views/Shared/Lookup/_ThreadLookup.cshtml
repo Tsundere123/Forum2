@@ -8,12 +8,21 @@
 }
 
 <div class="d-flex">
-        <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">
-            <img src="~/avatars/@user!.Avatar" alt="@user.DisplayName" height="48" width="48" class="me-2 rounded"/>
-        </a>
+    <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">
+        <img src="~/avatars/@user!.Avatar" alt="@user.DisplayName" height="48" width="48" class="me-2 rounded"/>
+    </a>
     <div>
         <div class="d-block">
-            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.Id.ToString()">@Model.Title</a>
+            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.Id.ToString()">
+                @if (Model.Title.Length > 30)
+                {
+                    @Model.Title.Substring(0, 30)<span>...</span>
+                }
+                else
+                {
+                    @Model.Title
+                }
+            </a>
         </div>
         <div class="d-block" style="font-size: 14px;">
             in @Model.Category!.Name
