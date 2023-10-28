@@ -32,7 +32,12 @@ public class ForumThreadController : Controller
         var forumThreads = await _forumThreadRepository.GetAll();
         var forumCategories = await _forumCategoryRepository.GetAll();
         var accounts = await _userManager.Users.ToListAsync();
-        var forumListViewModel = new ForumListViewModel(forumCategories,forumThreads,accounts);
+        var forumListViewModel = new ForumListViewModel
+        {
+            ForumCategories = forumCategories,
+            ForumThreads = forumThreads,
+            Accounts = accounts,
+        };
         return View(forumListViewModel);
     }
     [HttpGet]
@@ -61,7 +66,14 @@ public class ForumThreadController : Controller
         var currentPage = page ?? 1;
         var forumThreadsOfCategory = sortedThreads.Skip((currentPage - 1) * perPage).Take(perPage);
         
-        var forumThreadOfCategoryViewModel = new ForumThreadOfCategoryViewModel(forumCategory,forumThreadsOfCategory,accounts, currentPage, totalPages);
+        var forumThreadOfCategoryViewModel = new ForumThreadOfCategoryViewModel
+        {
+            ForumCategory = forumCategory,
+            ForumThreads = forumThreadsOfCategory,
+            Accounts = accounts,
+            CurrentPage = currentPage,
+            TotalPages = totalPages
+        };
         return View(forumThreadOfCategoryViewModel);
     }
 
@@ -73,7 +85,12 @@ public class ForumThreadController : Controller
         var forumCategory = await _forumCategoryRepository.GetForumCategoryById(categoryId);
         var accounts = await _userManager.Users.ToListAsync();
         var forumThread = new ForumThread();
-        var viewModel = new ForumThreadCreationViewModel(forumCategory, forumThread, null, accounts);
+        var viewModel = new ForumThreadCreationViewModel
+        {
+            ForumCategory = forumCategory,
+            ForumThread = forumThread,
+            Accounts = accounts
+        };
         return View(viewModel);
     }
     

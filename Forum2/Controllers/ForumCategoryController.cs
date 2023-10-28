@@ -21,7 +21,12 @@ public class ForumCategoryController : Controller
     {
         var forumCategories = await _forumCategoryRepository.GetAll();
         var forumThreads = await _forumThreadRepository.GetAll();
-        var forumCategoriesListViewModel = new ForumCategoryViewModel(forumCategories, forumThreads,"ForumCategoryTable");
+        var forumCategoriesListViewModel = new ForumCategoryViewModel
+        {
+            ForumCategories = forumCategories,
+            ForumThreads = forumThreads,
+            CurrentViewName = "ForumCategoryTable"
+        };
         return View(forumCategoriesListViewModel);
     }
 }

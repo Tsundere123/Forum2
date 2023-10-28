@@ -50,7 +50,15 @@ public class ForumPostController : Controller
         forumPosts = forumPosts.Skip((currentPage - 1) * PageSize).Take(PageSize);
         
         var accounts = await _userManager.Users.ToListAsync();
-        var forumPostViewModel = new ForumPostViewModel(forumCategory, currentForumThread, forumPosts, accounts, currentPage, totalPages);
+        var forumPostViewModel = new ForumPostViewModel
+        {
+            ForumCategory = forumCategory,
+            CurrentForumThread = currentForumThread,
+            ForumPosts = forumPosts,
+            Accounts = accounts,
+            CurrentPage = currentPage,
+            TotalPages = totalPages
+        };
         
         return View(forumPostViewModel);
     }
@@ -63,9 +71,13 @@ public class ForumPostController : Controller
         var accounts = await _userManager.Users.ToListAsync();
         var forumPost = new ForumPost();
         forumPost.ForumThreadId = forumThread.ForumThreadId;
-        var viewModel = new ForumPostCreationViewModel(forumThread, forumPost, accounts);
+        var viewModel = new ForumPostCreationViewModel
+        {
+            ForumThread = forumThread,
+            ForumPost = forumPost,
+            Accounts = accounts
+        };
         return PartialView(viewModel);
-        return View(viewModel);
     }
     [Authorize]
     [HttpPost]
