@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Forum2.Migrations
+namespace Forum2.Migrations.AccountDb
 {
     [DbContext(typeof(AccountDbContext))]
     partial class AccountDbContextModelSnapshot : ModelSnapshot
@@ -61,7 +61,7 @@ namespace Forum2.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AvatarUrl")
+                    b.Property<string>("Avatar")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

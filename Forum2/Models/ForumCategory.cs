@@ -6,11 +6,11 @@ namespace Forum2.Models;
 public class ForumCategory
 {
     [Key]
-    public int ForumCategoryId { get; set; }
+    public int Id { get; set; }
     [Required]
-    public string ForumCategoryName { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
     [Required]
-    public string ForumCategoryDescription { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     // public virtual ICollection<ForumThread>? ForumThreads{ get; set; }
-    public virtual List<ForumThread>? ForumThreads { get; set; }
+    public virtual List<ForumThread>? Threads { get; set; }
 }

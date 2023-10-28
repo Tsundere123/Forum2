@@ -28,12 +28,12 @@
                 @foreach (var category in Model)
                 {
                     <tr>
-                        <td>@category.ForumCategoryId.ToString()</td>
-                        <td>@category.ForumCategoryName</td>
-                        <td>@category.ForumCategoryDescription</td>
+                        <td>@category.Id.ToString()</td>
+                        <td>@category.Name</td>
+                        <td>@category.Description</td>
                         <td>
-                            <a asp-controller="Admin" asp-action="EditCategory" asp-route-id="@category.ForumCategoryId.ToString()">Edit</a>
-                            <a asp-controller="Admin" asp-action="DeleteCategory" asp-route-id="@category.ForumCategoryId.ToString()">Delete</a>
+                            <a asp-controller="Admin" asp-action="EditCategory" asp-route-id="@category.Id.ToString()">Edit</a>
+                            <a asp-controller="Admin" asp-action="DeleteCategory" asp-route-id="@category.Id.ToString()">Delete</a>
                         </td>
                     </tr>
                 }

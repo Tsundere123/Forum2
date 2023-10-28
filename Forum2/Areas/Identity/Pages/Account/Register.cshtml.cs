@@ -158,11 +158,11 @@ namespace Forum2.Areas.Identity.Pages.Account
                         await Input.AvatarUrl.CopyToAsync(stream);
                     }
                     
-                    user.AvatarUrl = $"{avatarFileName}";
+                    user.Avatar = $"{avatarFileName}";
                 }
                 else
                 {
-                    user.AvatarUrl = "default.png";
+                    user.Avatar = "default.png";
                 }
                 
                 // Set displayName

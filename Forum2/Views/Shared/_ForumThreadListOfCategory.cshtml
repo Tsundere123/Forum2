@@ -16,30 +16,30 @@
         
         @foreach (var forumThread in Model.ForumThreads)
         {
-            if (forumThread.ForumThreadIsSoftDeleted != true)
+            if (forumThread.IsSoftDeleted != true)
             {
-                <tr>@{ var categoryId = @forumThread.ForumCategoryId;}
-                    <td>@forumThread.ForumCategoryId</td>
-                    <td>@Model.ForumCategory.ForumCategoryName</td>
-                    <td>@forumThread.ForumThreadId</td>
+                <tr>@{ var categoryId = @forumThread.CategoryId;}
+                    <td>@forumThread.CategoryId</td>
+                    <td>@Model.ForumCategory.Name</td>
+                    <td>@forumThread.Id</td>
                     <td><a asp-controller="ForumPost"
                            asp-action="ForumPostView"
-                           asp-route-forumThreadId="@forumThread.ForumThreadId">@forumThread.ForumThreadTitle</a>
+                           asp-route-forumThreadId="@forumThread.Id">@forumThread.Title</a>
                     </td>
                     <td>@foreach (var account in Model.Accounts)
                         {
                             <div class="row">
                                 @{
-                                    if (forumThread.ForumThreadCreatorId == account.Id)
+                                    if (forumThread.CreatorId == account.Id)
                                     {
                                         <a asp-controller="Profile"
                                            asp-action="Index"
-                                           asp-route-displayName="@UserManager.FindByIdAsync(forumThread.ForumThreadCreatorId).Result.DisplayName">
-                                            <img src="~/avatars/@account.AvatarUrl" width="100px" height="100px">
+                                           asp-route-displayName="@UserManager.FindByIdAsync(forumThread.CreatorId).Result.DisplayName">
+                                            <img src="~/avatars/@account.Avatar" width="100px" height="100px">
                                         </a>
                                         <a asp-controller="Profile"
                                            asp-action="Index"
-                                           asp-route-displayName="@UserManager.FindByIdAsync(forumThread.ForumThreadCreatorId).Result.DisplayName">
+                                           asp-route-displayName="@UserManager.FindByIdAsync(forumThread.CreatorId).Result.DisplayName">
                                             @account.DisplayName
                                         </a>
                                     }
@@ -49,10 +49,10 @@
                         }
                     </td>
                     <td>
-                        @if (forumThread.ForumThreadLastEditedTime > forumThread.ForumThreadCreationTimeUnix)
+                        @if (forumThread.EditedAt > forumThread.CreatedAt)
                         {
-                                <p>Last edited by: @UserManager.FindByIdAsync(forumThread.ForumThreadLastEditedBy).Result.DisplayName</p>
-                                <p>At: @forumThread.ForumThreadLastEditedTime</p>
+                                <p>Last edited by: @UserManager.FindByIdAsync(forumThread.EditedBy).Result.DisplayName</p>
+                                <p>At: @forumThread.EditedAt</p>
                         }
                     </td>
                     @* <td> *@

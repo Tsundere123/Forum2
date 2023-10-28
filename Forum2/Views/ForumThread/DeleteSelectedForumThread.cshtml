@@ -1,32 +1,32 @@
 ﻿@model ForumThread
 
-<h2>Delete forum thread "@Model.ForumThreadTitle</h2>
+<h2>Delete forum thread "@Model.Title</h2>
 
 <dl class="row">
     <dt class="col-sm-2">Thread Id</dt>
-    <dd class="col-sm-10">@Model.ForumThreadId</dd>
+    <dd class="col-sm-10">@Model.Id</dd>
         
     <dt class="col-sm-2">Thread Name</dt>
-    <dd class="col-sm-10">@Model.ForumThreadTitle</dd>
+    <dd class="col-sm-10">@Model.Title</dd>
         
     <dt class="col-sm-2">Creator Id</dt>
-    <dd class="col-sm-10">@Model.ForumThreadCreatorId</dd>
+    <dd class="col-sm-10">@Model.CreatorId</dd>
         
     <dt class="col-sm-2">Category Id</dt>
-    <dd class="col-sm-10">@Model.ForumCategoryId</dd>
+    <dd class="col-sm-10">@Model.CategoryId</dd>
         
     <dt class="col-sm-2">Creation time</dt>
-    <dd class="col-sm-10">@Model.ForumThreadCreationTimeUnix</dd>
+    <dd class="col-sm-10">@Model.CreatedAt</dd>
     
     @* Hard delete only visible to Admins and Mods *@
     @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
     {
-        <form asp-controller="ForumThread" asp-action="PermaDeleteSelectedForumThreadConfirmed" asp-route-forumThreadId="@Model.ForumThreadId" method="post">
+        <form asp-controller="ForumThread" asp-action="PermaDeleteSelectedForumThreadConfirmed" asp-route-forumThreadId="@Model.Id" method="post">
             <button type="submit" class="btn btn-danger">Perma Delete</button>
         </form>
     }
-    <form asp-controller="ForumThread" asp-action="SoftDeleteSelectedForumThreadConfirmed" asp-route-forumThreadId="@Model.ForumThreadId" method="post">
+    <form asp-controller="ForumThread" asp-action="SoftDeleteSelectedForumThreadConfirmed" asp-route-forumThreadId="@Model.Id" method="post">
         <button type="submit" class="btn btn-danger">Soft Delete</button>
     </form>
-    <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.ForumCategoryId" class="btn btn-secondary">Cancel</a>
+    <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.CategoryId" class="btn btn-secondary">Cancel</a>
 </dl>
