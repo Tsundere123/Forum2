@@ -28,6 +28,10 @@
                     <a asp-controller="Role" asp-action="MembersOfRole" asp-route-roleId="@role.Id">
                         <div class="badge" style="background: @role.Color;">@role.Name</div>
                     </a>
+                } 
+                else
+                {
+                    <div class="badge bg-dark">Member</div>
                 }
             </div>
         </div>
