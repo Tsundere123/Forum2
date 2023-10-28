@@ -31,7 +31,7 @@ public class ForumThreadRepository : IForumThreadRepository
     {
         try
         {
-            return await _db.ForumThread.Include(t => t.Category).ToListAsync();
+            return await _db.ForumThread.Include(t => t.ForumCategory).ToListAsync();
         }
         catch (Exception e)
         {
@@ -61,7 +61,7 @@ public class ForumThreadRepository : IForumThreadRepository
             List<ForumThread> returnList = new List<ForumThread>();
             foreach(var forumThread in threadList)
             {
-                if (forumThread.CategoryId == id)
+                if (forumThread.ForumCategoryId == id)
                 {
                     returnList.Add(forumThread);
                 }
@@ -83,7 +83,7 @@ public class ForumThreadRepository : IForumThreadRepository
             List<ForumThread> returnList = new List<ForumThread>();
             foreach(var forumThread in threadList)
             {
-                if (forumThread.CreatorId == accountId)
+                if (forumThread.ForumThreadCreatorId == accountId)
                 {
                     returnList.Add(forumThread);
                 }

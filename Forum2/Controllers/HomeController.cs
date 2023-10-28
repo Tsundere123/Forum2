@@ -25,11 +25,11 @@ public class HomeController : Controller
         var posts = await _forumPostRepository.GetAll();
         
         var latestThreads = (threads ?? Array.Empty<ForumThread>())
-            .Where(t => t.IsSoftDeleted == false)
-            .OrderByDescending(t => t.CreatedAt).Take(5);
+            .Where(t => t.ForumThreadIsSoftDeleted == false)
+            .OrderByDescending(t => t.ForumThreadCreationTimeUnix).Take(5);
         
         var latestPosts = (posts ?? Array.Empty<ForumPost>())
-            .OrderByDescending(p => p.CreatedAt).Take(5);
+            .OrderByDescending(p => p.ForumPostCreationTimeUnix).Take(5);
 
         var model = new HomeViewModel
         {

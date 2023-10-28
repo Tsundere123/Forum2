@@ -150,7 +150,7 @@ namespace Forum2.Areas.Identity.Pages.Account.Manage
                 }
                     
                 // Update user avatar
-                user.Avatar = avatarFileName;
+                user.AvatarUrl = avatarFileName;
             }
             
             // Update user

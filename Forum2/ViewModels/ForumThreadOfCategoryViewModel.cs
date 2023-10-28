@@ -1,12 +1,28 @@
-﻿using Forum2.Models;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using Forum2.Models;
 
-namespace Forum2.ViewModels;
-
-public class ForumThreadOfCategoryViewModel
+namespace Forum2.ViewModels
 {
-    public IEnumerable<ForumThread> ForumThreads { get; set; } = new List<ForumThread>();
-    public ForumCategory ForumCategory { get; set; } = new ForumCategory();
-    public int CurrentPage { get; set; }
-    public int TotalPages { get; set; }
-    public IEnumerable<ApplicationUser> Accounts { get; set; } = new List<ApplicationUser>();
+    public class ForumThreadOfCategoryViewModel
+    {
+        public IEnumerable<ForumThread> ForumThreads;
+        public ForumCategory ForumCategory;
+        public int CurrentPage;
+        public int TotalPages;
+
+        public IEnumerable<ApplicationUser> Accounts;
+        // public string? CurrentViewName;
+
+        public ForumThreadOfCategoryViewModel(ForumCategory forumCategory,IEnumerable<ForumThread> forumThreads, IEnumerable<ApplicationUser> accounts, int currentPage, int totalPages)
+        {
+            ForumCategory = forumCategory;
+            ForumThreads = forumThreads;
+            Accounts = accounts;
+            CurrentPage = currentPage;
+            TotalPages = totalPages;
+            // CurrentViewName = currentViewName;
+        }
+    }
 }

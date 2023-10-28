@@ -6,17 +6,17 @@
 <h2>Update forum post</h2>
 
 <form asp-controller="ForumPost" asp-action="UpdateForumPostContent">
-    <input type="hidden" asp-for="Id">
-    <input type="hidden" asp-for="ThreadId">
-    <input type="hidden" asp-for="CreatorId">
-    <input type="hidden" asp-for="CreatedAt">
+    <input type="hidden" asp-for="ForumPostId">
+    <input type="hidden" asp-for="ForumThreadId">
+    <input type="hidden" asp-for="ForumPostCreatorId">
+    <input type="hidden" asp-for="ForumPostCreationTimeUnix">
     <div class="form-group">
-        <label asp-for="Content">Post content</label>
-        <textarea asp-for="Content" class="form-control" id="editForumPost"></textarea>
-        <span asp-validation-for="Content" class="text-danger"></span>
+        <label asp-for="ForumPostContent">Post content</label>
+        <textarea asp-for="ForumPostContent" class="form-control" id="editForumPost"></textarea>
+        <span asp-validation-for="ForumPostContent" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-secondary">Save Changes</button>
-    <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ThreadId" class="btn btn-secondary">Cancel</a>
+    <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThreadId" class="btn btn-secondary">Cancel</a>
 </form>
 <script>
 const easyMDE = new EasyMDE({element: document.getElementById('editForumPost')});

@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Forum2.Migrations.AccountDb
+namespace Forum2.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20231028183015_resetMigrations")]
-    partial class resetMigrations
+    [Migration("20231023120922_resetAccountDb")]
+    partial class resetAccountDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,7 +64,7 @@ namespace Forum2.Migrations.AccountDb
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Avatar")
+                    b.Property<string>("AvatarUrl")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

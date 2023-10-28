@@ -14,25 +14,25 @@
         
         @foreach (var forumThread in Model.ForumThreads)
         {
-            <tr>@{ var categoryId = @forumThread.CategoryId;}
-                <td>@forumThread.CategoryId</td>
+            <tr>@{ var categoryId = @forumThread.ForumCategoryId;}
+                <td>@forumThread.ForumCategoryId</td>
                 <td>
                     @foreach (var forumCategory in Model.ForumCategories)
                     {
-                        if (categoryId == forumCategory.Id)
+                        if (categoryId == forumCategory.ForumCategoryId)
                         {
-                            @forumCategory.Name
+                            @forumCategory.ForumCategoryName
                         }
                     }
                 </td>
-                <td>@forumThread.Id</td>
+                <td>@forumThread.ForumThreadId</td>
                 <td><a asp-controller="ForumPost"
                        asp-action="ForumPostView"
-                       asp-route-threadId="@forumThread.Id">@forumThread.Title</a>
+                       asp-route-threadId="@forumThread.ForumThreadId">@forumThread.ForumThreadTitle</a>
                 </td>
                 <td>@foreach (var account in Model.Accounts)
                     {
-                        if (forumThread.CreatorId == account.Id)
+                        if (forumThread.ForumThreadCreatorId == account.Id)
                         {
                             @account.DisplayName
                         }

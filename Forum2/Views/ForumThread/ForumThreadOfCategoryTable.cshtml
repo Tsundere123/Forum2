@@ -4,10 +4,10 @@
 @model ForumThreadOfCategoryViewModel
 
 <div class="d-md-flex justify-content-md-between align-items-md-center">
-    <h1 class="h2 fw-normal">@Model.ForumCategory.Name</h1>
+    <h1 class="h2 fw-normal">@Model.ForumCategory.ForumCategoryName</h1>
     @if (SignInManager.IsSignedIn(User))
     {
-        <a class="btn btn-sm btn-dark" asp-controller="ForumThread" asp-action="CreateNewForumThread" asp-route-categoryId="@Model.ForumCategory.Id.ToString()">
+        <a class="btn btn-sm btn-dark" asp-controller="ForumThread" asp-action="CreateNewForumThread" asp-route-categoryId="@Model.ForumCategory.ForumCategoryId.ToString()">
             New Thread
         </a>
     }
@@ -16,40 +16,40 @@
 <ul class="list-group list-group-flush">
     @foreach (var thread in Model.ForumThreads)
     {
-        var creator = UserManager.FindByIdAsync(thread.CreatorId).Result;
-        var lastUndeletedPost = thread.Posts.LastOrDefault(p => p.IsSoftDeleted == false);
-        var lastPostForced = thread.Posts.LastOrDefault();
+        var creator = UserManager.FindByIdAsync(thread.ForumThreadCreatorId).Result;
+        var lastUndeletedPost = thread.ForumPosts.LastOrDefault(p => p.ForumPostIsSoftDeleted == false);
+        var lastPostForced = thread.ForumPosts.LastOrDefault();
         <li class="list-group-item px-0">
             <div class="row">
                 <div class="col-md-7">
                     <div class="d-flex align-items-center gap-2">
                         <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@creator.DisplayName">
-                            <img src="~/avatars/@creator.Avatar" alt="@creator.DisplayName" width="36" height="36" class="rounded"/>
+                            <img src="~/avatars/@creator.AvatarUrl" alt="@creator.DisplayName" width="36" height="36" class="rounded"/>
                         </a>
                         <div>
                             <div>
-                                <a class="fw-bold text-decoration-none link-dark" asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@thread.Id">
-                                    @thread.Title
+                                <a class="fw-bold text-decoration-none link-dark" asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@thread.ForumThreadId">
+                                    @thread.ForumThreadTitle
                                 </a>
                             </div>
                             <div style="font-size: 12px;">
                                 By <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@creator.DisplayName" class="link-dark text-decoration-none">
                                     @creator.DisplayName
                                 </a>
-                                on @thread.CreatedAt.ToString("g")
+                                on @thread.ForumThreadCreationTimeUnix.ToString("g")
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div style="font-size: 14px;">
-                        <span class="fw-bold">@thread.Posts.Count.ToString()</span> Posts
+                        <span class="fw-bold">@thread.ForumPosts.Count.ToString()</span> Posts
                     </div>
                 </div>
                 <div class="col-md-3">
-                    @if (thread.Posts is { Count: > 0} && lastUndeletedPost is null)
+                    @if (thread.ForumPosts is { Count: > 0} && lastUndeletedPost is null)
                     {
-                        var poster = UserManager.FindByIdAsync(lastPostForced.CreatorId).Result;
+                        var poster = UserManager.FindByIdAsync(lastPostForced.ForumPostCreatorId).Result;
                         <div class="d-flex align-items-center gap-2" style="font-size: 12px;">
                             <div class="bg-dark text-light rounded d-flex justify-content-center align-items-center" style="width: 32px; height: 32px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
@@ -62,7 +62,7 @@
                                     Post deleted
                                 </div>
                                 <div>
-                                    @lastPostForced.CreatedAt.ToString("g");
+                                    @lastPostForced.ForumPostCreationTimeUnix.ToString("g");
                                 </div>
                             </div>
                         </div>
@@ -84,10 +84,10 @@
                     }
                     else
                     {
-                        var poster = UserManager.FindByIdAsync(lastUndeletedPost.CreatorId).Result;
+                        var poster = UserManager.FindByIdAsync(lastUndeletedPost.ForumPostCreatorId).Result;
                         <div class="d-flex align-items-center gap-2" style="font-size: 12px;">
                             <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@poster.DisplayName">
-                                <img src="~/avatars/@poster.Avatar" alt="@poster.DisplayName" width="32" height="32" class="rounded"/>
+                                <img src="~/avatars/@poster.AvatarUrl" alt="@poster.DisplayName" width="32" height="32" class="rounded"/>
                             </a>
                             <div>
                                 <div>
@@ -96,7 +96,7 @@
                                     </a>
                                 </div>
                                 <div>
-                                    @lastUndeletedPost.CreatedAt.ToString("g");
+                                    @lastUndeletedPost.ForumPostCreationTimeUnix.ToString("g");
                                 </div>
                             </div>
                         </div>
@@ -114,7 +114,7 @@
             @if (Model.CurrentPage != 1)
             {
                 <li class="page-item">
-                    <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.ForumCategory.Id.ToString()" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">Previous</a>
+                    <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.ForumCategory.ForumCategoryId.ToString()" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">Previous</a>
                 </li>
             }
             else
@@ -132,14 +132,14 @@
                 else
                 {
                     <li class="page-item">
-                        <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.ForumCategory.Id.ToString()" asp-route-page="@i" class="page-link">@i.ToString()</a>
+                        <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.ForumCategory.ForumCategoryId.ToString()" asp-route-page="@i" class="page-link">@i.ToString()</a>
                     </li>
                 }
             }
             @if (Model.CurrentPage != Model.TotalPages)
             {
                 <li class="page-item">
-                    <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.ForumCategory.Id.ToString()" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">Next</a>
+                    <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.ForumCategory.ForumCategoryId.ToString()" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">Next</a>
                 </li>
             }
             else

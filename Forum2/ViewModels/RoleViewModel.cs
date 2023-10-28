@@ -6,6 +6,12 @@ namespace Forum2.ViewModels;
 
 public class RoleViewModel
 {
-    public IEnumerable<ApplicationUser> Accounts { get; set; }
-    public ApplicationRole CurrentRole { get; set; }
+    public IEnumerable<ApplicationUser> Accounts;
+    public ApplicationRole CurrentRole;
+
+    public RoleViewModel(IEnumerable<ApplicationUser> applicationUsers, ApplicationRole currentRole)
+    {
+        Accounts = applicationUsers;
+        CurrentRole = currentRole;
+    }
 }

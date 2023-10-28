@@ -3,16 +3,16 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
 <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
 
-<form asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-forumThreadId="@Model.ForumThread.Id">
-    <input type="hidden" asp-for="ForumPost.ThreadId">
+<form asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-forumThreadId="@Model.ForumThread.ForumThreadId">
+    <input type="hidden" asp-for="ForumPost.ForumThreadId">
     <div class="form-group">
-        <label asp-for="ForumPost.Content">Post content</label>
-        <textarea rows="8" asp-for="ForumPost.Content" id="inputNewPostContent" class="form-control"></textarea>
-        <span asp-validation-for="ForumPost.Content" class="text-danger"></span>
+        <label asp-for="ForumPost.ForumPostContent">Post content</label>
+        <textarea rows="8" asp-for="ForumPost.ForumPostContent" id="inputNewPostContent" class="form-control"></textarea>
+        <span asp-validation-for="ForumPost.ForumPostContent" class="text-danger"></span>
     </div>
         
     <button type="submit" class="btn btn-secondary">Create</button>
-    <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThread.Id" class="btn btn-secondary" id="cancelButton">Cancel</a>
+    <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThread.ForumThreadId" class="btn btn-secondary" id="cancelButton">Cancel</a>
 </form>
 <script>
 const easyMDE = new EasyMDE({element: document.getElementById('inputNewPostContent')});

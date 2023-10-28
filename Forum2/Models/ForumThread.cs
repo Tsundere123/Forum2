@@ -7,37 +7,37 @@ namespace Forum2.Models;
 public class ForumThread
 {
     [Key]
-    public int Id { get; set; }
+    public int ForumThreadId { get; set; }
     [Required]
-    public string Title { get; set; } = string.Empty;
+    public string ForumThreadTitle { get; set; } = string.Empty;
     
     [Required]
     [ForeignKey("ForumCategoryId")]
-    public int CategoryId { get; set; } = default!;
+    public int ForumCategoryId { get; set; } = default!;
     // [Required]
     // [ForeignKey("AccountId")]
     // public int AccountId { get; set; }
 
-    public string CreatorId { get; set; } = string.Empty;
+    public string ForumThreadCreatorId { get; set; } = string.Empty;
     
     [Required]
     [DefaultValue(typeof(DateTime), "DateTime.UtcNow")]
-    public DateTime CreatedAt { get; set; } = DateTime.MinValue;
+    public DateTime ForumThreadCreationTimeUnix { get; set; } = DateTime.MinValue;
     
-    public DateTime EditedAt { get; set; } = DateTime.MinValue;
+    public DateTime ForumThreadLastEditedTime { get; set; } = DateTime.MinValue;
 
-    public string EditedBy { get; set; } = string.Empty;
+    public string ForumThreadLastEditedBy { get; set; } = string.Empty;
 
     [Required] 
-    public bool IsSoftDeleted { get; set; } = false;
+    public bool ForumThreadIsSoftDeleted { get; set; } = false;
     
     
     // //Navigation Property
     // public virtual Account? Account { get; set; }
     
     // //Navigation Property
-    public virtual ForumCategory? Category { get; set; }
+    public virtual ForumCategory? ForumCategory { get; set; }
     
     //Navigation Property
-    public virtual List<ForumPost>? Posts { get; set; }
+    public virtual List<ForumPost>? ForumPosts { get; set; }
 }

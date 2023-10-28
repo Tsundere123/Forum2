@@ -6,7 +6,16 @@ namespace Forum2.ViewModels;
 
 public class ForumPostCreationViewModel
 {
-    public IEnumerable<ApplicationUser> Accounts { get; set; }
-    public ForumThread ForumThread { get; set; }
-    public ForumPost ForumPost { get; set; }
+    public IEnumerable<ApplicationUser> Accounts;
+    public ForumThread ForumThread;
+    public ForumPost ForumPost;
+
+    public ForumPostCreationViewModel(ForumThread forumThread,
+        ForumPost forumPosts,
+        IEnumerable<ApplicationUser> applicationUsers)
+    {
+        ForumThread = forumThread;
+        ForumPost = forumPosts;
+        Accounts = applicationUsers;
+    }
 }

@@ -207,7 +207,7 @@ public class AdminController : Controller
             if (viewModel.User != null)
             {
                 user.DisplayName = viewModel.User.DisplayName;
-                user.Avatar = viewModel.User.Avatar;
+                user.AvatarUrl = viewModel.User.AvatarUrl;
             }
 
             var resultUser = await _userManager.UpdateAsync(user);
@@ -287,7 +287,7 @@ public class AdminController : Controller
 
         try
         {
-            category.Id = id;
+            category.ForumCategoryId = id;
             await _forumCategoryRepository.UpdateForumCategory(category);
             return RedirectToAction(nameof(Categories));
         }

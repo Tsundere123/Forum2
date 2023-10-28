@@ -1,15 +1,15 @@
 ﻿@model ForumThread
 
 <form asp-controller="ForumThread" asp-action="UpdateForumThreadTitle">
-    <input type="hidden" asp-for="Id">
-    <input type="hidden" asp-for="CreatorId">
-    <input type="hidden" asp-for="CreatedAt">
-    <input type="hidden" asp-for="CategoryId">
+    <input type="hidden" asp-for="ForumThreadId">
+    <input type="hidden" asp-for="ForumThreadCreatorId">
+    <input type="hidden" asp-for="ForumThreadCreationTimeUnix">
+    <input type="hidden" asp-for="ForumCategoryId">
     <div class="form-group">
-        <label asp-for="Title">Thread title</label>
-        <input asp-for="Title" class="form-control">
-        <span asp-validation-for="Title" class="text-danger"></span>
+        <label asp-for="ForumThreadTitle">Thread title</label>
+        <input asp-for="ForumThreadTitle" class="form-control">
+        <span asp-validation-for="ForumThreadTitle" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-secondary">Save Changes</button>
-        <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.Category.Id" class="btn btn-secondary">Cancel</a>
+        <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.ForumCategory.ForumCategoryId" class="btn btn-secondary">Cancel</a>
 </form>
