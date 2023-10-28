@@ -59,16 +59,7 @@ else
     </div>
 }
 
-<script src="~/lib/easymde/easymde.min.js"></script>
 <script>
-    $(document).ready(function () {
-        // Ensure that post content images are responsive
-        $(".post-content img").addClass("img-fluid");
-        
-        // Remove paragraph margin on post content
-        $(".post-content p:first-child").addClass("m-0");
-    });
-
     //Check if create new post input box is visible, if not, enable
     async function checkIfInputVisible()
     {
@@ -94,17 +85,29 @@ else
         let inputField = easyMDE.value();
         let quotedPost = " @Model.ForumPostContent ";
         
-        //Cleans data of HTML tags
         let inputParsed = new DOMParser().parseFromString(inputField,"text/html");
         let quoteParsed = new DOMParser().parseFromString(quotedPost,"text/html");
     
         inputParsed = inputParsed.documentElement.textContent;
         quoteParsed = quoteParsed.documentElement.textContent;
+        
+        console.log(quoteParsed);
+       
+        // Remove newlines
+        quoteParsed = quoteParsed.replace(/\n/g, " ");
+        
+        // Remove tags
         quoteParsed = quoteParsed.replace(/<\/?[^>]+(>|$)/g, "");
+        
+        // Add markdown blockquote 
+        quoteParsed = quoteParsed.replace(/^/gm, "> ");
     
         //Quote text content to be input
-        result += inputParsed;
-        result += "Quoted from post by " + "@UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName";
+        if (inputParsed.length > 0)
+        {
+            result += inputParsed + "\n";
+        }
+        result += "Originally posted by @UserManager.FindByIdAsync(Model.ForumPostCreatorId).Result.DisplayName\n";
         result += quoteParsed;
     
         //Places resulting quote into input box
