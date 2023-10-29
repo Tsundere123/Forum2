@@ -14,13 +14,17 @@ public class AdminController : Controller
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IForumCategoryRepository _forumCategoryRepository;
-
+    private readonly IForumThreadRepository _forumThreadRepository;
+    private readonly IForumPostRepository _forumPostRepository;
+    
     public AdminController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, 
-        IForumCategoryRepository forumCategoryRepository)
+        IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository, IForumPostRepository forumPostRepository)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _forumCategoryRepository = forumCategoryRepository;
+        _forumThreadRepository = forumThreadRepository;
+        _forumPostRepository = forumPostRepository;
     }
     
     //
@@ -301,5 +305,39 @@ public class AdminController : Controller
         if (result) return RedirectToAction(nameof(Categories));
         
         return BadRequest();
+    }
+    
+    [HttpGet]
+    [Route("/ForumThread/Admin/Threads")]
+    public async Task<IActionResult> ViewAllSoftDeletedThreads()
+    {
+        List<ForumThread> allSoftDeletedThreads = new List<ForumThread>();
+        var allThreads = _forumThreadRepository.GetAll();
+        foreach (var thread in allThreads.Result)
+        {
+            if (thread.IsSoftDeleted)
+            {
+                allSoftDeletedThreads.Add(thread);
+            }
+        }
+
+        return View(allSoftDeletedThreads);
+    }
+    
+    [HttpGet]
+    [Route("/ForumThread/Admin/Posts")]
+    public async Task<IActionResult> ViewAllSoftDeletedPosts()
+    {
+        List<ForumPost> allSoftDeletedPosts = new List<ForumPost>();
+        var allPosts = _forumPostRepository.GetAll();
+        foreach (var post in allPosts.Result)
+        {
+            if (post.IsSoftDeleted)
+            {
+                allSoftDeletedPosts.Add(post);
+            }
+        }
+
+        return View(allSoftDeletedPosts);
     }
 }

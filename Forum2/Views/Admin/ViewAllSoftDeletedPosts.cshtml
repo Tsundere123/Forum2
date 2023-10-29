@@ -1,0 +1,30 @@
+﻿@model List<ForumPost>
+
+@{
+    ViewData["Title"] = "Deleted Posts";
+}
+
+<h1>Admin Panel</h1>
+
+
+<div>
+    <h2>Soft deleted posts</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <partial name="_AdminNavListPartial" />
+        </div>
+    </div>
+    <div class="row">
+        <table>
+            <tr>                    
+                @foreach (var post in Model)
+                {
+                    <partial name="_ForumPostCard" model="post"/>
+                }
+            </tr>
+        </table>
+    </div>
+</div>
+
+

@@ -33,9 +33,12 @@ public class ForumThreadController : Controller
         if (forumCategory == null) return NotFound();
         
         var forumThreads = await _forumThreadRepository.GetForumThreadsByCategoryId(forumCategoryId);
-        
-        // Remove soft deleted threads
-        forumThreads = forumThreads.Where(x => x.IsSoftDeleted == false);
+
+        if (!User.IsInRole("Administrator"))
+        {
+            // Remove soft deleted threads
+            forumThreads = forumThreads.Where(x => x.IsSoftDeleted == false);
+        }
         
         // Pinned threads
         var pinnedThreads = forumThreads.Where(t => t.IsPinned).ToList();
@@ -217,6 +220,43 @@ public class ForumThreadController : Controller
         return Forbid();
     }
     
+    [Authorize(Roles = "Administrator")]
+    [HttpGet]
+    [Route("ForumThread/Undelete/{forumThreadId}")]
+    public async Task<IActionResult> UnDeleteSelectedForumThread(int forumThreadId)
+    {
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        if (forumThread == null) return NotFound();
+
+
+        if (forumThread == null) return NotFound();
+        return View(forumThread);
+
+    }
+    
+    [Authorize(Roles = "Administrator")]
+    [HttpPost]
+    public async Task<IActionResult> UnSoftDeleteSelectedForumThreadConfirmed(int forumThreadId)
+    {
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+            //Needed for RedirectToAction
+            var forumCategoryId = forumThread.CategoryId;
+        
+            if (forumThread == null) return NotFound();
+
+            forumThread.IsSoftDeleted = false;
+            await UpdateForumThreadTitle(forumThread);
+            
+            //Unsoft deletes all forumposts as well
+            foreach (var forumPost in _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId).Result)
+            {
+                forumPost.IsSoftDeleted = false;
+                await _forumPostRepository.UpdateForumPost(forumPost);
+            }
+            
+            return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
+    }
+    
     //
     // Pin Thread Toggle
     //
@@ -250,4 +290,5 @@ public class ForumThreadController : Controller
         await _forumThreadRepository.UpdateForumThread(forumThread);
         return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
     }
+    
 }

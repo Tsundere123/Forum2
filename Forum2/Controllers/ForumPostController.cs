@@ -185,11 +185,37 @@ public class ForumPostController : Controller
             var forumThreadId = forumPost.ThreadId;
             
             if (forumPost == null) return NotFound();
-            // forumPost.ForumPostContent = "This post has been deleted";
             forumPost.IsSoftDeleted = true;
             await UpdateForumPostContent(forumPostId,forumPost);
             return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
         }
         return Forbid();
+    }
+    
+    [Authorize(Roles = "Administrator")]
+    [HttpGet]
+    [Route("/ForumPost/Undelete/{forumPostId}")]
+    public async Task<IActionResult> UnDeleteSelectedForumPost(int forumPostId)
+    {
+        var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
+        if (forumPost == null) return NotFound();
+        
+        if (forumPost == null) return NotFound();
+        return View(forumPost);
+    }
+    
+    [Authorize(Roles="Administrator")]
+    [HttpPost]
+    public async Task<IActionResult> UnSoftDeleteSelectedForumPostContent(int forumPostId)
+    {
+        var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
+        if (forumPost == null) return BadRequest();
+        //Needed for RedirectToAction
+        var forumThreadId = forumPost.ThreadId;
+        
+        if (forumPost == null) return NotFound();
+        forumPost.IsSoftDeleted = false;
+        await UpdateForumPostContent(forumPostId,forumPost);
+        return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
     }
 }

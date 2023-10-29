@@ -4,7 +4,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @model ForumPost
 
-@if (Model.IsSoftDeleted)
+@if (Model.IsSoftDeleted && !User.IsInRole("Administrator"))
 {
     <div class="alert alert-secondary mb-4 fst-italic">
         This post has been deleted.
@@ -18,6 +18,14 @@ else
         </div>
         <div class="col-md-9">
             <div class="card h-100">
+                @{
+                    if (Model.IsSoftDeleted)
+                    {
+                        <div class="card-header alert-danger">This post is soft deleted 
+                            <a class="btn btn-danger" asp-controller="ForumPost"  asp-action="UnDeleteSelectedForumPost" asp-route-forumPostId="@Model.Id">Undelete</a>
+                        </div>
+
+                    }}
                 <div id="postContent_@Model.Id.ToString()" class="card-body py-2 d-flex flex-column justify-content-between">
                     <div class="post-content">
                         @Html.Raw(Markdown.Parse(Model.Content, sanitizeHtml: true))
@@ -50,7 +58,7 @@ else
                         {
                             <button class="btn btn-sm btn-dark d-inline" id="quoteThisPost_@Model.Id.ToString()">Quote Post</button>
                         }
-                        
+
                         @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.CreatorId)
                         {
                             @if (!Model.Thread!.IsLocked)
