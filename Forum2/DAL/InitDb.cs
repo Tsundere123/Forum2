@@ -15,6 +15,7 @@ public class InitDb
         accountDbContext.Database.EnsureCreated();
         forumDbContext.Database.EnsureCreated();
 
+        //Account Roles
         if (!accountDbContext.Roles.Any())
         {
             accountDbContext.Roles.Add(new ApplicationRole
@@ -36,6 +37,7 @@ public class InitDb
             accountDbContext.SaveChanges();
         }
 
+        //User accounts
         if (!accountDbContext.Users.Any())
         {
             var admin = new ApplicationUser
@@ -46,7 +48,7 @@ public class InitDb
                 NormalizedEmail = "ADMIN@TEST.COM",
                 UserName = "admin@test.com",
                 NormalizedUserName = "ADMIN@TEST.COM",
-                Avatar = "546f26ec-9980-42e8-bf79-30fe3568998d.png",
+                AvatarUrl = "546f26ec-9980-42e8-bf79-30fe3568998d.png",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
@@ -58,7 +60,7 @@ public class InitDb
                 NormalizedEmail = "MOD@TEST.COM",
                 UserName = "mod@test.com",
                 NormalizedUserName = "MOD@TEST.COM",
-                Avatar = "aa348e8e-fce6-422f-9c90-9c7dd92bc1fb.png",
+                AvatarUrl = "aa348e8e-fce6-422f-9c90-9c7dd92bc1fb.png",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
@@ -70,7 +72,7 @@ public class InitDb
                 NormalizedEmail = "USER@TEST.COM",
                 UserName = "user@test.com",
                 NormalizedUserName = "USER@TEST.COM",
-                Avatar = "default.png",
+                AvatarUrl = "default.png",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
             
@@ -82,7 +84,7 @@ public class InitDb
                 NormalizedEmail = "CENO@TEST.COM",
                 UserName = "ceno@test.com",
                 NormalizedUserName = "CENO@TEST.COM",
-                Avatar = "f55ec44f-88d8-4f25-b1da-e62b51797763.jpg",
+                AvatarUrl = "f55ec44f-88d8-4f25-b1da-e62b51797763.jpg",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
             var yes = new ApplicationUser
@@ -93,7 +95,7 @@ public class InitDb
                 NormalizedEmail = "YES@NO.COM",
                 UserName = "yes@no.com",
                 NormalizedUserName = "YES@NO.COM",
-                Avatar = "99d5e94a-cc07-4d5c-8205-166dbccdec96.jpg",
+                AvatarUrl = "99d5e94a-cc07-4d5c-8205-166dbccdec96.jpg",
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
             
@@ -125,27 +127,28 @@ public class InitDb
             accountDbContext.SaveChanges();
         }
 
+        //Forum categories
         if (!forumDbContext.ForumCategory.Any())
         {
             var missiles = new ForumCategory()
             {
-                Id = 1, 
-                Name = "Missiles", 
-                Description = "The missile knows where it is at all times"
+                ForumCategoryId = 1, 
+                ForumCategoryName = "Missiles", 
+                ForumCategoryDescription = "The missile knows where it is at all times"
             };
 
             var sheeps = new ForumCategory()
             {
-                Id = 2, 
-                Name = "Sheeps", 
-                Description = "Poi"
+                ForumCategoryId = 2, 
+                ForumCategoryName = "Sheeps", 
+                ForumCategoryDescription = "Poi"
             };
             
             var empty = new ForumCategory()
             {
-                Id = 3, 
-                Name = "Empty", 
-                Description = "Nothing here"
+                ForumCategoryId = 3, 
+                ForumCategoryName = "Empty", 
+                ForumCategoryDescription = "Nothing here"
             };
             
             forumDbContext.ForumCategory.Add(missiles);
@@ -155,128 +158,151 @@ public class InitDb
             forumDbContext.SaveChanges();
         }
 
+        //Forum Threads
         if (!forumDbContext.ForumThread.Any())
         {
             var first = new ForumThread()
             {
-                Id = 1,
-                CreatorId = "9c46cebe-38d8-471c-ab0a-a1df156965d8",
-                CreatedAt = DateTime.Now,
-                CategoryId = 1, 
-                Title = "First thread"
+                ForumThreadId = 1,
+                ForumThreadCreatorId = "9c46cebe-38d8-471c-ab0a-a1df156965d8",
+                ForumThreadCreationTimeUnix = DateTime.Now,
+                ForumCategoryId = 1, 
+                ForumThreadTitle = "First thread"
             };
             
             var missileKnows = new ForumThread()
             {
 
-                Id = 2,
-                CreatorId = "264cc5d0-3fb6-471c-a45e-296d46c71efa",
-                CreatedAt = DateTime.Now,
-                CategoryId = 1, 
-                Title = "The missile knows where it is at all times"
+                ForumThreadId = 2,
+                ForumThreadCreatorId = "264cc5d0-3fb6-471c-a45e-296d46c71efa",
+                ForumThreadCreationTimeUnix = DateTime.Now,
+                ForumCategoryId = 1, 
+                ForumThreadTitle = "The missile knows where it is at all times"
             };
 
             var yamato = new ForumThread()
             {
-                Id = 3,
-                CreatorId = "264cc5d0-3fb6-471c-a45e-296d46c71efa",
-                CreatedAt = DateTime.Now,
-                CategoryId = 2,
-                Title = "Yamato, the biggest battleship ever built"
+                ForumThreadId = 3,
+                ForumThreadCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
+                ForumThreadCreationTimeUnix = DateTime.Now,
+                ForumCategoryId = 2,
+                ForumThreadTitle = "Yamato, the biggest battleship ever built"
             };
             
             var poi = new ForumThread()
             {
-                Id = 4,
-                CreatorId = "dacf1d5f-3ae8-4b0a-bf7e-d00a633821a9",
-                CreatedAt = DateTime.Now,
-                CategoryId = 2,
-                Title = "poipoipoi",
-                IsSoftDeleted = true
+                ForumThreadId = 4,
+                ForumThreadCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
+                ForumThreadCreationTimeUnix = DateTime.Now,
+                ForumCategoryId = 2,
+                ForumThreadTitle = "poipoipoi",
+                ForumThreadIsSoftDeleted = true
+            };
+            
+            var poidachi = new ForumThread()
+            {
+                ForumThreadId = 5,
+                ForumThreadCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
+                ForumThreadCreationTimeUnix = DateTime.Now,
+                ForumCategoryId = 2,
+                ForumThreadTitle = "poipoipoi"
             };
 
             forumDbContext.ForumThread.Add(first);
             forumDbContext.ForumThread.Add(missileKnows);
             forumDbContext.ForumThread.Add(yamato);
             forumDbContext.ForumThread.Add(poi);
+            forumDbContext.ForumThread.Add(poidachi);
 
             forumDbContext.SaveChanges();
         }
 
+        //Forum Posts
         if (!forumDbContext.ForumPost.Any())
         {
             var post1 = new ForumPost()
             {
-                ThreadId = 1,
-                Id = 1,
-                Content = "This is in fact the first post",
-                CreatorId = "9c46cebe-38d8-471c-ab0a-a1df156965d8",
-                CreatedAt = DateTime.Now,
+                ForumThreadId = 1,
+                ForumPostId = 1,
+                ForumPostContent = "This is in fact the first post",
+                ForumPostCreatorId = "9c46cebe-38d8-471c-ab0a-a1df156965d8",
+                ForumPostCreationTimeUnix = DateTime.Now,
             };
             var post2 = new ForumPost()
             {
-                ThreadId = 1,
-                Id = 2,
-                Content = "This is the second post",
-                CreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
-                CreatedAt = DateTime.Now,
+                ForumThreadId = 1,
+                ForumPostId = 2,
+                ForumPostContent = "This is the second post",
+                ForumPostCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
+                ForumPostCreationTimeUnix = DateTime.Now,
             };
             var post3 = new ForumPost()
             {
-                ThreadId = 1,
-                Id = 3,
-                Content = "This is the third post",
-                CreatorId = "1f03d161-afc3-4507-9d6e-cdb55417b4ca",
-                CreatedAt = DateTime.Now,
-                IsSoftDeleted = true
+                ForumThreadId = 1,
+                ForumPostId = 3,
+                ForumPostContent = "This is the third post",
+                ForumPostCreatorId = "1f03d161-afc3-4507-9d6e-cdb55417b4ca",
+                ForumPostCreationTimeUnix = DateTime.Now,
+                ForumPostIsSoftDeleted = true
             };
             
             //Thread 2
             var post4 = new ForumPost()
             {
-                ThreadId = 2,
-                Id = 4,
-                Content = "ThemissileknowswhereitisatalltimesItknowsthisbecauseitknowswhereitisntBysubtractingwhereitisfromwhereitisntorwhereitisntfromwhereitiswhicheverisgreateritobtainsadifferenceordeviationTheguidancesubsystemusesdeviationstogeneratecorrectivecommandstodrivethemissilefromapositionwhereitistoapositionwhereitisntandarrivingatapositionwhereitwasntitnowisConsequentlythepositionwhereitisisnowthepositionthatitwasntanditfollowsthatthepositionthatitwasisnowthepositionthatitisntIntheeventthatthepositionthatitisinisnotthepositionthatitwasntthesystemhasacquiredavariationthevariationbeingthedifferencebetweenwherethemissileisandwhereitwasntIfvariationisconsideredtobeasignificantfactorittoomaybecorrectedbytheGEAHoweverthemissilemustalsoknowwhereitwasThemissileguidancecomputerscenarioworksasfollowsBecauseavariationhasmodifiedsomeoftheinformationthemissilehasobtaineditisnotsurejustwhereitisHoweveritissurewhereitisntwithinreasonanditknowswhereitwasItnowsubtractswhereitshouldbefromwhereitwasntorviceversaandbydifferentiatingthisfromthealgebraicsumofwhereitshouldntbeandwhereitwasitisabletoobtainthedeviationanditsvariationwhichiscallederror",
-                CreatorId = "264cc5d0-3fb6-471c-a45e-296d46c71efa",
-                CreatedAt = DateTime.Now,
+                ForumThreadId = 2,
+                ForumPostId = 4,
+                ForumPostContent = "ThemissileknowswhereitisatalltimesItknowsthisbecauseitknowswhereitisntBysubtractingwhereitisfromwhereitisntorwhereitisntfromwhereitiswhicheverisgreateritobtainsadifferenceordeviationTheguidancesubsystemusesdeviationstogeneratecorrectivecommandstodrivethemissilefromapositionwhereitistoapositionwhereitisntandarrivingatapositionwhereitwasntitnowisConsequentlythepositionwhereitisisnowthepositionthatitwasntanditfollowsthatthepositionthatitwasisnowthepositionthatitisntIntheeventthatthepositionthatitisinisnotthepositionthatitwasntthesystemhasacquiredavariationthevariationbeingthedifferencebetweenwherethemissileisandwhereitwasntIfvariationisconsideredtobeasignificantfactorittoomaybecorrectedbytheGEAHoweverthemissilemustalsoknowwhereitwasThemissileguidancecomputerscenarioworksasfollowsBecauseavariationhasmodifiedsomeoftheinformationthemissilehasobtaineditisnotsurejustwhereitisHoweveritissurewhereitisntwithinreasonanditknowswhereitwasItnowsubtractswhereitshouldbefromwhereitwasntorviceversaandbydifferentiatingthisfromthealgebraicsumofwhereitshouldntbeandwhereitwasitisabletoobtainthedeviationanditsvariationwhichiscallederror",
+                ForumPostCreatorId = "264cc5d0-3fb6-471c-a45e-296d46c71efa",
+                ForumPostCreationTimeUnix = DateTime.Now,
             };
             var post5 = new ForumPost()
             {
-                ThreadId = 2,
-                Id = 5,
-                Content = "Really? A great wall of China??",
-                CreatorId = "9c46cebe-38d8-471c-ab0a-a1df156965d8",
-                CreatedAt = DateTime.Now,
+                ForumThreadId = 2,
+                ForumPostId = 5,
+                ForumPostContent = "Really? A great wall of China??",
+                ForumPostCreatorId = "9c46cebe-38d8-471c-ab0a-a1df156965d8",
+                ForumPostCreationTimeUnix = DateTime.Now,
             };
             
             //Thread 3
             var post6 = new ForumPost()
             {
-                ThreadId = 3,
-                Id = 6,
-                Content = "![Yamato](https://upload.wikimedia.org/wikipedia/commons/e/e0/Yamato_sea_trials_2.jpg)",
-                CreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
-                CreatedAt = DateTime.Now,
+                ForumThreadId = 3,
+                ForumPostId = 6,
+                ForumPostContent = "![Yamato](https://upload.wikimedia.org/wikipedia/commons/e/e0/Yamato_sea_trials_2.jpg)",
+                ForumPostCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
+                ForumPostCreationTimeUnix = DateTime.Now,
             };
             
             var post7 = new ForumPost()
             {
-                ThreadId = 3,
-                Id = 7,
-                Content = "46cm guns, they're big",
-                CreatorId = "1f03d161-afc3-4507-9d6e-cdb55417b4ca",
-                CreatedAt = DateTime.Now,
+                ForumThreadId = 3,
+                ForumPostId = 7,
+                ForumPostContent = "46cm guns, they're big",
+                ForumPostCreatorId = "1f03d161-afc3-4507-9d6e-cdb55417b4ca",
+                ForumPostCreationTimeUnix = DateTime.Now,
             };
             
             //Thread 4
             var post8 = new ForumPost()
             {
-                ThreadId = 4,
-                Id = 8,
-                Content = "Poi~",
-                CreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
-                CreatedAt = DateTime.Now,
+                ForumThreadId = 4,
+                ForumPostId = 8,
+                ForumPostContent = "Poi~",
+                ForumPostCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
+                ForumPostCreationTimeUnix = DateTime.Now,
+                ForumPostIsSoftDeleted = true
             };
+            //Thread 5
+            var post9 = new ForumPost()
+            {
+                ForumThreadId = 5,
+                ForumPostId = 9,
+                ForumPostContent = "Poi~",
+                ForumPostCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
+                ForumPostCreationTimeUnix = DateTime.Now,
+            };
+            
             forumDbContext.ForumPost.Add(post1);
             forumDbContext.ForumPost.Add(post2);
             forumDbContext.ForumPost.Add(post3);
@@ -285,10 +311,12 @@ public class InitDb
             forumDbContext.ForumPost.Add(post6);
             forumDbContext.ForumPost.Add(post7);
             forumDbContext.ForumPost.Add(post8);
+            forumDbContext.ForumPost.Add(post9);
 
             forumDbContext.SaveChanges();
         }
 
+        //Wall posts
         if (!forumDbContext.WallPost.Any())
         {
             var wall1 = new WallPost()
@@ -323,6 +351,7 @@ public class InitDb
             forumDbContext.SaveChanges();
         }
 
+        //Wall Posts Replies
         if (!forumDbContext.WallPostReply.Any())
         {
             var reply1 = new WallPostReply()
@@ -337,16 +366,14 @@ public class InitDb
             {
                 Id = 1,
                 AuthorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
-                WallPostId = 2,
+                WallPostId = 1,
                 Content = "Hi :)",
                 CreatedAt = DateTime.Now
             };
             
             forumDbContext.WallPostReply.Add(reply1);
-            forumDbContext.WallPostReply.Add(reply1);
+            forumDbContext.WallPostReply.Add(reply2);
             forumDbContext.SaveChanges();
         }
-        
     }
-    
 }
