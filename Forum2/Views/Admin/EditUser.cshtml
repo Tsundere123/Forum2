@@ -16,17 +16,17 @@
         <div class="col-md-9">
             <form asp-controller="Admin" asp-action="EditUser">
                 <h3>User Details</h3>
-                <div class="form-group">
+                <div class="form-group mb-2">
                     <label asp-for="User.DisplayName">User name</label><span class="text-danger">*</span>
                     <input asp-for="User.DisplayName" class="form-control" required="required"/>
-                    <span asp-validation-for="User.DisplayName" class="text-danger"></span>
+                    <span asp-validation-for="User.DisplayName" class="invalid-feedback"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-2">
                     <label asp-for="User.Avatar">Avatar URL</label><span class="text-danger">*</span>
                     <input asp-for="User.Avatar" class="form-control" required="required"/>
-                    <span asp-validation-for="User.Avatar" class="text-danger"></span>
+                    <span asp-validation-for="User.Avatar" class="invalid-feedback"></span>
                 </div>
-                <h3 class="mt-2">Roles</h3>
+                <h3>Roles</h3>
                 <div class="form-group">
                     <select class="form-select" name="UserRoles" multiple>
                         @foreach(var role in Model.Roles)
@@ -43,3 +43,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
