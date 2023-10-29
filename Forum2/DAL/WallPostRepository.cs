@@ -76,4 +76,26 @@ public class WallPostRepository : IWallPostRepository
             return false;
         }
     }
+
+    public async Task<IEnumerable<WallPost>> GetAllByCreator(string wallPostCreatorId)
+    {
+        List<WallPost> returnList = new List<WallPost>();
+        try
+        {
+            var list = _db.WallPost.ToListAsync();
+            foreach (var wallPost in list.Result)
+            {
+                if (wallPost.AuthorId == wallPostCreatorId)
+                {
+                    returnList.Add(wallPost);
+                }
+            }
+            return returnList;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[WallPostReplyRepository] WallPostReply GetAllByWallPostId failed, error message: {E}", e.Message);
+            return null;
+        }
+    }
 }

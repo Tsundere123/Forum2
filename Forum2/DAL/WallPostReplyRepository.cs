@@ -1,4 +1,5 @@
-﻿using Forum2.Models;
+﻿using System.Collections;
+using Forum2.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum2.DAL;
@@ -61,6 +62,28 @@ public class WallPostReplyRepository : IWallPostReplyRepository
         {
             _logger.LogError(e, "[WallPostReplyRepository] WallPostReply DeleteWallPostReply failed, error message: {E}", e.Message);
             return false;
+        }
+    }
+
+    public async Task<IEnumerable<WallPostReply>> GetAllByCreator(string wallPostCreatorId)
+    {
+        List<WallPostReply> returnList = new List<WallPostReply>();
+        try
+        {
+            var list = _db.WallPostReply.ToListAsync();
+            foreach (var wallReply in list.Result)
+            {
+                if (wallReply.AuthorId == wallPostCreatorId)
+                {
+                    returnList.Add(wallReply);
+                }
+            }
+            return returnList;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "[WallPostReplyRepository] WallPostReply GetAllByWallPostId failed, error message: {E}", e.Message);
+            return null;
         }
     }
 }

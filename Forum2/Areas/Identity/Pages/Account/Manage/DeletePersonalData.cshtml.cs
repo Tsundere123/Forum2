@@ -5,11 +5,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Forum2.Controllers;
+using Forum2.DAL;
 using Forum2.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+
 
 namespace Forum2.Areas.Identity.Pages.Account.Manage
 {
@@ -18,15 +21,28 @@ namespace Forum2.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
+        private readonly IForumThreadRepository _forumThreadRepository;
+        private readonly IForumPostRepository _forumPostRepository;
+        private readonly IWallPostRepository _wallPostRepository;
+        private readonly IWallPostReplyRepository _wallPostReplyRepository;
 
         public DeletePersonalDataModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<DeletePersonalDataModel> logger)
+            ILogger<DeletePersonalDataModel> logger,
+            IForumThreadRepository forumThreadRepository,
+            IForumPostRepository forumPostRepository,
+            IWallPostRepository wallPostRepository,
+            IWallPostReplyRepository wallPostReplyRepository)
+            
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _forumPostRepository = forumPostRepository;
+            _forumThreadRepository = forumThreadRepository;
+            _wallPostRepository = wallPostRepository;
+            _wallPostReplyRepository = wallPostReplyRepository;
         }
 
         /// <summary>
@@ -86,7 +102,44 @@ namespace Forum2.Areas.Identity.Pages.Account.Manage
                     return Page();
                 }
             }
-
+            
+            //Find all threads of user
+            var threads = _forumThreadRepository.GetForumThreadsByAccountId(_userManager.GetUserAsync(User).Result.Id);
+            //Find all posts of user
+            var posts = _forumPostRepository.GetAllForumPostsByAccountId(_userManager.GetUserAsync(User).Result.Id);
+            //Find all wall posts on users profile
+            var wallPostsOnProfile = _wallPostRepository.GetAllByProfile(_userManager.GetUserAsync(User).Result.Id);
+            //Find all wall posts created by user
+            var wallPostsByCreator = _wallPostRepository.GetAllByCreator(_userManager.GetUserAsync(User).Result.Id);
+            //Find all wall replies of user
+            var wallPostReplies = _wallPostReplyRepository.GetAllByCreator(_userManager.GetUserAsync(User).Result.Id);
+            
+            //Delete
+            foreach (var threadId in threads.Result)
+            {
+                await _forumThreadRepository.DeleteForumThread(threadId.Id);
+            }
+            
+            foreach (var postId in posts.Result)
+            {
+                await _forumPostRepository.DeleteForumPost(postId.Id);
+            }
+            
+            foreach (var postId in wallPostReplies.Result)
+            {
+                await _wallPostReplyRepository.Delete(postId.Id);
+            }
+            
+            foreach (var postId in wallPostsByCreator.Result)
+            {
+                await _wallPostRepository.Delete(postId.Id);
+            }
+            
+            foreach (var postId in wallPostsOnProfile.Result)
+            {
+                await _wallPostRepository.Delete(postId.Id);
+            }
+            
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)
