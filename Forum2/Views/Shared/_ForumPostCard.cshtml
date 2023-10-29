@@ -18,14 +18,13 @@ else
         </div>
         <div class="col-md-9">
             <div class="card h-100">
-                @{
-                    if (Model.IsSoftDeleted)
-                    {
-                        <div class="card-header alert-danger">This post is soft deleted 
-                            <a class="btn btn-danger" asp-controller="ForumPost"  asp-action="UnDeleteSelectedForumPost" asp-route-forumPostId="@Model.Id">Undelete</a>
-                        </div>
-
-                    }}
+                @if (Model.IsSoftDeleted)
+                {
+                    <div class="card-header alert-danger d-flex justify-content-between align-items-center">
+                        <span>This post is soft deleted.</span>
+                        <a class="btn btn-sm btn-danger" asp-controller="ForumPost" asp-action="UnDeleteSelectedForumPost" asp-route-forumPostId="@Model.Id.ToString()">Undelete</a>
+                    </div>
+                }
                 <div id="postContent_@Model.Id.ToString()" class="card-body py-2 d-flex flex-column justify-content-between">
                     <div class="post-content">
                         @Html.Raw(Markdown.Parse(Model.Content, sanitizeHtml: true))
@@ -65,7 +64,10 @@ else
                             {
                                 <a class="btn btn-sm btn-dark" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.Id.ToString()">Edit Post</a>
                             }
-                            <a class="btn btn-sm btn-danger" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.Id.ToString()">Delete Post</a>
+                            @if (!Model.IsSoftDeleted)
+                            {
+                                <a class="btn btn-sm btn-danger" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.Id.ToString()">Delete Post</a>
+                            }
                         }
                     </div>
                 }
