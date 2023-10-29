@@ -11,6 +11,5 @@ public class ForumCategory
     public string Name { get; set; } = string.Empty;
     [Required]
     public string Description { get; set; } = string.Empty;
-    // public virtual ICollection<ForumThread>? ForumThreads{ get; set; }
     public virtual List<ForumThread>? Threads { get; set; }
 }

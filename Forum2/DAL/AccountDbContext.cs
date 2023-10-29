@@ -15,11 +15,4 @@ public class AccountDbContext : IdentityDbContext<ApplicationUser, ApplicationRo
     {
         optionsBuilder.UseLazyLoadingProxies();
     }
-    // protected override void OnModelCreating(ModelBuilder modelBuilder)
-    // {
-    //     modelBuilder.Entity<Account>()
-    //         .HasOne(o => o.AccountRoles)
-    //         .WithMany(c => c.Accounts)
-    //         .HasForeignKey(o => o.RoleId);
-    // }
 }

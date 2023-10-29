@@ -29,6 +29,7 @@ public class ForumPost
     public bool IsSoftDeleted { get; set; } = false;
     
     public string EditedBy { get; set; } = string.Empty;
+    
     // Navigation Property
     public virtual ForumThread? Thread { get; set; }
 }

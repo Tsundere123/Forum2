@@ -27,19 +27,6 @@ public class ForumThreadRepository : IForumThreadRepository
         }
     }
     
-    public async Task<IEnumerable<ForumThread>?> GetAllWithCategory()
-    {
-        try
-        {
-            return await _db.ForumThread.Include(t => t.Category).ToListAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "[ForumThreadRepository] ForumThread GetAllWithCategory failed, error message: {E}", e.Message);
-            return null;
-        }
-    }
-    
     public async Task<ForumThread?> GetForumThreadById(int id)
     {
         try

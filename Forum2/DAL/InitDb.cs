@@ -11,7 +11,6 @@ public class InitDb
         using var serviceScope = app.ApplicationServices.CreateScope();
         AccountDbContext accountDbContext = serviceScope.ServiceProvider.GetRequiredService<AccountDbContext>();
         ForumDbContext forumDbContext = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
-        // context.Database.EnsureDeleted();
         accountDbContext.Database.EnsureCreated();
         forumDbContext.Database.EnsureCreated();
 

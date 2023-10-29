@@ -154,6 +154,7 @@ public class ForumPostController : Controller
         return Forbid();
     }
     
+    
     [Authorize(Roles = "Administrator,Moderator")]
     [HttpPost]
     public async Task<IActionResult> PermaDeleteSelectedForumPostConfirmed(int forumPostId)

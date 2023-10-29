@@ -10,10 +10,4 @@ public class ProfileIndexViewModel
     public int? CurrentPage { get; set; }
     public int? TotalPages { get; set; }
     public List<WallPost>? WallPosts { get; set; }
-    
-    [DisplayName("new wall post content")] // Lowercase for validation error message
-    public string NewWallPostContent { get; set; } = string.Empty;
-    
-    [DisplayName("reply content")] // Lowercase for validation error message
-    public string NewWallPostContentReply { get; set; } = string.Empty;
 }

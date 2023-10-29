@@ -14,7 +14,6 @@ public class ForumPostRepository : IForumPostRepository
         _db = db;
         _logger = logger;
     }
-        
     
     public async Task<IEnumerable<ForumPost>?> GetAll()
     {
@@ -25,19 +24,6 @@ public class ForumPostRepository : IForumPostRepository
         catch (Exception e)
         {
             _logger.LogError(e, "[ForumPostRepository] ForumPost GetAll failed, error message: {E}", e.Message);
-            return null;
-        }
-    }
-    
-    public async Task<IEnumerable<ForumPost>?> GetAllWithThread()
-    {
-        try
-        {
-            return await _db.ForumPost.Include(p => p.Thread).ToListAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "[ForumPostRepository] ForumPost GetAllWithThread failed, error message: {E}", e.Message);
             return null;
         }
     }

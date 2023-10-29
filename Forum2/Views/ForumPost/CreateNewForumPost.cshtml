@@ -17,6 +17,7 @@
     <button type="submit" class="btn btn-secondary">Create</button>
     <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThread.Id" class="btn btn-secondary" id="cancelButton">Cancel</a>
 </form>
+
 <script>
 const easyMDE = new EasyMDE({element: document.getElementById('inputNewPostContent')});
 </script>

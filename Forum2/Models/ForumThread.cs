@@ -14,9 +14,6 @@ public class ForumThread
     [Required]
     [ForeignKey("ForumCategoryId")]
     public int CategoryId { get; set; } = default!;
-    // [Required]
-    // [ForeignKey("AccountId")]
-    // public int AccountId { get; set; }
 
     public string CreatorId { get; set; } = string.Empty;
     
@@ -30,10 +27,6 @@ public class ForumThread
 
     [Required] 
     public bool IsSoftDeleted { get; set; } = false;
-    
-    
-    // //Navigation Property
-    // public virtual Account? Account { get; set; }
     
     // //Navigation Property
     public virtual ForumCategory? Category { get; set; }
