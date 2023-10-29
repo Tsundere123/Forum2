@@ -179,7 +179,7 @@ public class InitDb
             var yamato = new ForumThread()
             {
                 ForumThreadId = 3,
-                ForumThreadCreatorId = "264cc5d0-3fb6-471c-a45e-296d46c71efa",
+                ForumThreadCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
                 ForumThreadCreationTimeUnix = DateTime.Now,
                 ForumCategoryId = 2,
                 ForumThreadTitle = "Yamato, the biggest battleship ever built"
@@ -188,17 +188,27 @@ public class InitDb
             var poi = new ForumThread()
             {
                 ForumThreadId = 4,
-                ForumThreadCreatorId = "dacf1d5f-3ae8-4b0a-bf7e-d00a633821a9",
+                ForumThreadCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
                 ForumThreadCreationTimeUnix = DateTime.Now,
                 ForumCategoryId = 2,
                 ForumThreadTitle = "poipoipoi",
                 ForumThreadIsSoftDeleted = true
+            };
+            
+            var poidachi = new ForumThread()
+            {
+                ForumThreadId = 5,
+                ForumThreadCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
+                ForumThreadCreationTimeUnix = DateTime.Now,
+                ForumCategoryId = 2,
+                ForumThreadTitle = "poipoipoi"
             };
 
             forumDbContext.ForumThread.Add(first);
             forumDbContext.ForumThread.Add(missileKnows);
             forumDbContext.ForumThread.Add(yamato);
             forumDbContext.ForumThread.Add(poi);
+            forumDbContext.ForumThread.Add(poidachi);
 
             forumDbContext.SaveChanges();
         }
@@ -277,6 +287,16 @@ public class InitDb
                 ForumPostCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
                 ForumPostCreationTimeUnix = DateTime.Now,
             };
+            //Thread 5
+            var post9 = new ForumPost()
+            {
+                ForumThreadId = 5,
+                ForumPostId = 9,
+                ForumPostContent = "Poi~",
+                ForumPostCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
+                ForumPostCreationTimeUnix = DateTime.Now,
+            };
+            
             forumDbContext.ForumPost.Add(post1);
             forumDbContext.ForumPost.Add(post2);
             forumDbContext.ForumPost.Add(post3);
@@ -285,6 +305,7 @@ public class InitDb
             forumDbContext.ForumPost.Add(post6);
             forumDbContext.ForumPost.Add(post7);
             forumDbContext.ForumPost.Add(post8);
+            forumDbContext.ForumPost.Add(post9);
 
             forumDbContext.SaveChanges();
         }
