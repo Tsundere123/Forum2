@@ -15,7 +15,7 @@
             <form asp-controller="Profile" asp-action="NewWallPost" asp-route-displayName="@Model.User.DisplayName">
                 <div class="mb-3">
                     <textarea asp-for="Content" class="form-control" rows="3" placeholder="Write something..."></textarea>
-                    <span asp-validation-for="Content" class="text-danger"></span>
+                    <span asp-validation-for="Content" class="invalid-feedback"></span>
                 </div>
                 <button type="submit" class="btn btn-primary">Post</button>
                 <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.User.DisplayName" class="btn btn-danger">Cancel</a>
@@ -23,3 +23,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

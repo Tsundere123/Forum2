@@ -87,17 +87,19 @@ public class ForumThreadController : Controller
     [Authorize]
     [HttpPost]
     [Route("/Category/{categoryId}/NewThread")]
-    public async Task<IActionResult> CreateNewForumThread(ForumCategory forumCategory,ForumThread forumThread, ForumPost forumPost)
+    public async Task<IActionResult> CreateNewForumThread(ForumThreadCreationViewModel model)
     {
+        if (!ModelState.IsValid)  return View(model);
+        
         ForumThread addThread = new ForumThread();
-        addThread.Title = forumThread.Title;
+        addThread.Title = model.ForumThread.Title;
         addThread.CreatedAt = DateTime.UtcNow;
         addThread.CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
-        addThread.CategoryId = forumCategory.Id;
+        addThread.CategoryId = model.ForumCategory.Id;
         
         await _forumThreadRepository.CreateNewForumThread(addThread);
         int forumThreadId = addThread.Id;
-        CreateNewForumPost(forumThreadId, forumPost);
+        CreateNewForumPost(forumThreadId, model.ForumPost);
         return RedirectToAction("ForumPostView", "ForumPost", new {forumThreadId});
     }
     
@@ -125,7 +127,6 @@ public class ForumThreadController : Controller
             || HttpContext.User.IsInRole("Moderator") 
             || HttpContext.User.IsInRole("Administrator"))
         {
-            if (forumThread == null) return NotFound();
             return View(forumThread);
         }
         return Forbid();
@@ -140,16 +141,14 @@ public class ForumThreadController : Controller
             || HttpContext.User.IsInRole("Moderator")
             || HttpContext.User.IsInRole("Administrator"))
         {
-            if (ModelState.IsValid)
-            {
-                forumThread.EditedAt = DateTime.Now;
-                forumThread.EditedBy = _userManager.GetUserAsync(User).Result.Id;
-                await _forumThreadRepository.UpdateForumThread(forumThread);
-                //Needed for RedirectToAction
-                var forumCategoryId = forumThread.CategoryId;
-                return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread", new { forumCategoryId });
-            }
-            return View(forumThread);
+            if (!ModelState.IsValid) return View(forumThread);
+            
+            forumThread.EditedAt = DateTime.Now;
+            forumThread.EditedBy = _userManager.GetUserAsync(User).Result.Id;
+            await _forumThreadRepository.UpdateForumThread(forumThread);
+            //Needed for RedirectToAction
+            var forumCategoryId = forumThread.CategoryId;
+            return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread", new { forumCategoryId });
         }
         return Forbid();
     }
