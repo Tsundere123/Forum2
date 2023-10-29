@@ -100,6 +100,12 @@ namespace Forum2.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsPinned")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsSoftDeleted")
                         .HasColumnType("INTEGER");
 

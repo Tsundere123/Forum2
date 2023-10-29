@@ -28,6 +28,10 @@ public class ForumThread
     [Required] 
     public bool IsSoftDeleted { get; set; } = false;
     
+    public bool IsPinned { get; set; } = false;
+    
+    public bool IsLocked { get; set; } = false;
+    
     // //Navigation Property
     public virtual ForumCategory? Category { get; set; }
     

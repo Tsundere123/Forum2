@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Forum2.Migrations
 {
     /// <inheritdoc />
-    public partial class resetMigrations : Migration
+    public partial class resetForumDbMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,7 +53,9 @@ namespace Forum2.Migrations
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     EditedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     EditedBy = table.Column<string>(type: "TEXT", nullable: false),
-                    IsSoftDeleted = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsSoftDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsPinned = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsLocked = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
