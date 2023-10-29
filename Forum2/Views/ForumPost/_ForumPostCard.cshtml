@@ -46,10 +46,17 @@ else
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <div class="card-footer py-2 px-3">
-                        <button class="btn btn-sm btn-dark d-inline" id="quoteThisPost_@Model.Id.ToString()">Quote Post</button>
+                        @if (!Model.Thread!.IsLocked)
+                        {
+                            <button class="btn btn-sm btn-dark d-inline" id="quoteThisPost_@Model.Id.ToString()">Quote Post</button>
+                        }
+                        
                         @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.CreatorId)
                         {
-                            <a class="btn btn-sm btn-dark" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.Id.ToString()">Edit Post</a>
+                            @if (!Model.Thread!.IsLocked)
+                            {
+                                <a class="btn btn-sm btn-dark" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.Id.ToString()">Edit Post</a>
+                            }
                             <a class="btn btn-sm btn-danger" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.Id.ToString()">Delete Post</a>
                         }
                     </div>
@@ -59,63 +66,66 @@ else
     </div>
 }
 
-<script>
-    //Check if create new post input box is visible, if not, enable
-    async function checkIfInputVisible()
-    {
-        if (!document.getElementById("createNewForumPost").innerHTML )
-        {
-            await $.ajax({
-                url: "/ForumPost/Create/@Model.ThreadId.ToString()",
-                success: function (html) {
-                    // Update the page with the HTML of the partial view.
-                    $("#createNewForumPost").html(html);
-                }
-            });
-        }
-    }
-    
-    async function quotePost()
-    {
+@if (SignInManager.IsSignedIn(User) && !Model.Thread!.IsLocked)
+{
+    <script>
         //Check if create new post input box is visible, if not, enable
-        await checkIfInputVisible();
-        let result = "";
-        
-        //Collects original data
-        let inputField = easyMDE.value();
-        let quotedPost = " @Model.Content ";
-        
-        let inputParsed = new DOMParser().parseFromString(inputField,"text/html");
-        let quoteParsed = new DOMParser().parseFromString(quotedPost,"text/html");
-    
-        inputParsed = inputParsed.documentElement.textContent;
-        quoteParsed = quoteParsed.documentElement.textContent;
-        
-        console.log(quoteParsed);
-       
-        // Remove newlines
-        quoteParsed = quoteParsed.replace(/\n/g, " ");
-        
-        // Remove tags
-        quoteParsed = quoteParsed.replace(/<\/?[^>]+(>|$)/g, "");
-        
-        // Add markdown blockquote 
-        quoteParsed = quoteParsed.replace(/^/gm, "> ");
-    
-        //Quote text content to be input
-        if (inputParsed.length > 0)
+        async function checkIfInputVisible()
         {
-            result += inputParsed + "\n";
+            if (!document.getElementById("createNewForumPost").innerHTML )
+            {
+                await $.ajax({
+                    url: "/ForumPost/Create/@Model.ThreadId.ToString()",
+                    success: function (html) {
+                        // Update the page with the HTML of the partial view.
+                        $("#createNewForumPost").html(html);
+                    }
+                });
+            }
         }
-        result += "Originally posted by @UserManager.FindByIdAsync(Model.CreatorId).Result.DisplayName\n";
-        result += quoteParsed;
-    
-        //Places resulting quote into input box
-        easyMDE.value(result);
         
-        //Hides button to create new post
-        document.getElementById('createNewForumPostButton').hidden = true;
-    }
-
-    $("#quoteThisPost_@Model.Id.ToString()").click(quotePost);
-</script>
+        async function quotePost()
+        {
+            //Check if create new post input box is visible, if not, enable
+            await checkIfInputVisible();
+            let result = "";
+            
+            //Collects original data
+            let inputField = easyMDE.value();
+            let quotedPost = " @Model.Content ";
+            
+            let inputParsed = new DOMParser().parseFromString(inputField,"text/html");
+            let quoteParsed = new DOMParser().parseFromString(quotedPost,"text/html");
+        
+            inputParsed = inputParsed.documentElement.textContent;
+            quoteParsed = quoteParsed.documentElement.textContent;
+            
+            console.log(quoteParsed);
+           
+            // Remove newlines
+            quoteParsed = quoteParsed.replace(/\n/g, " ");
+            
+            // Remove tags
+            quoteParsed = quoteParsed.replace(/<\/?[^>]+(>|$)/g, "");
+            
+            // Add markdown blockquote 
+            quoteParsed = quoteParsed.replace(/^/gm, "> ");
+        
+            //Quote text content to be input
+            if (inputParsed.length > 0)
+            {
+                result += inputParsed + "\n";
+            }
+            result += "Originally posted by @UserManager.FindByIdAsync(Model.CreatorId).Result.DisplayName\n";
+            result += quoteParsed;
+        
+            //Places resulting quote into input box
+            easyMDE.value(result);
+            
+            //Hides button to create new post
+            document.getElementById('createNewForumPostButton').hidden = true;
+        }
+    
+        $("#quoteThisPost_@Model.Id.ToString()").click(quotePost);
+    </script>
+}
