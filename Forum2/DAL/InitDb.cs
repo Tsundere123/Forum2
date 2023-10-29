@@ -366,7 +366,7 @@ public class InitDb
             {
                 Id = 1,
                 AuthorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
-                WallPostId = 2,
+                WallPostId = 1,
                 Content = "Hi :)",
                 CreatedAt = DateTime.Now
             };
