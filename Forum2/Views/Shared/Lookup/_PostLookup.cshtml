@@ -1,10 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Westwind.AspNetCore.Markdown
+@using System.Text.RegularExpressions
 @inject UserManager<ApplicationUser> UserManager
 
 @model ForumPost
 
 @{
     var user = UserManager.Users.FirstOrDefault(u => u.Id == Model.CreatorId);
+    
+    // Convert markdown to html
+    var content = Markdown.Parse(Model.Content, sanitizeHtml: true);
+    
+    // Remove html tags
+    content = Regex.Replace(content, "<.*?>", string.Empty);
 }
 
 <div class="d-flex">
@@ -13,16 +21,29 @@
     </a>
     <div>
         <div class="d-block">
-            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ThreadId.ToString()">@Model.Thread!.Title</a>
+            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ThreadId.ToString()">
+                @if (Model.Thread!.Title.Length > 30)
+                {
+                    @Model.Thread!.Title.Substring(0, 30)<span>...</span>
+                }
+                else
+                {
+                    @Model.Thread!.Title
+                }
+            </a>
         </div>
         <div class="d-block" style="font-size: 14px;">
-            @if (Model.Content.Length >= 20)
+            @if (content.Length == 1)
             {
-                @Model.Content.Substring(0, 20)
+                <span class="fst-italic">No content to display.</span>
+            }
+            else if (content.Length > 30)
+            {
+                @content.Substring(0, 30)<span>...</span>
             }
             else
             {
-                @Model.Content
+                @content
             }
         </div>
         <div class="d-block" style="font-size: 12px;">
