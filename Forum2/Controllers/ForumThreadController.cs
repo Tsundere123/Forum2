@@ -213,7 +213,7 @@ public class ForumThreadController : Controller
         forumThread.IsPinned = !forumThread.IsPinned;
         
         await _forumThreadRepository.UpdateForumThread(forumThread);
-        return RedirectToAction("ForumPostView", "ForumPost", new { forumThread.CategoryId });
+        return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
     }
     
     //
@@ -230,6 +230,6 @@ public class ForumThreadController : Controller
         forumThread.IsLocked = !forumThread.IsLocked;
 
         await _forumThreadRepository.UpdateForumThread(forumThread);
-        return RedirectToAction("ForumPostView", "ForumPost", new { forumThread.CategoryId });
+        return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
     }
 }
