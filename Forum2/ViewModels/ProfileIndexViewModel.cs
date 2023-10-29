@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using Forum2.Models;
+﻿using Forum2.Models;
 
 namespace Forum2.ViewModels;
 
