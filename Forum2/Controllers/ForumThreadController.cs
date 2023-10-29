@@ -1,11 +1,9 @@
-﻿using System.Net;
-using Forum2.Models;
+﻿using Forum2.Models;
 using Forum2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Forum2.DAL;
 using Microsoft.AspNetCore.Identity;
-using Forum2.Controllers;
 using Microsoft.AspNetCore.Authorization;
 
 
@@ -203,6 +201,14 @@ public class ForumThreadController : Controller
 
             forumThread.IsSoftDeleted = true;
             await UpdateForumThreadTitle(forumThread);
+            
+            //Soft deletes all forumposts as well
+            foreach (var forumPost in _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId).Result)
+            {
+                forumPost.IsSoftDeleted = true;
+                await _forumPostRepository.UpdateForumPost(forumPost);
+            }
+            
             return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
 
         }
