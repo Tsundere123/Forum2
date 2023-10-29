@@ -78,7 +78,7 @@
     </div>
 }
 
-@if (UserManager.Users.ToList() is {Count: > 0 })
+@if (UserManager.Users.Any())
 {
     <h2 class="h2 fw-normal">Latest Members</h2>
     <div class="d-flex align-items-center">
