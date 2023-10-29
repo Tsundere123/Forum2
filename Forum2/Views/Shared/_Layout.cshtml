@@ -39,7 +39,12 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-controller="ForumCategory" asp-action="ForumCategoryTable">Categories</a>
                     </li>
-                    <partial name="_AdminNavPartial"/>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                        </li>
+                    }
                 </ul>
                 <form class="d-flex" asp-controller="Search" asp-action="Index" method="get">
                     <input class="form-control form-control-sm me-2" type="text" id="query" name="query" placeholder="Search" required="required">
