@@ -181,11 +181,19 @@ public class ForumPostController : Controller
     [HttpPost]
     public async Task<IActionResult> PermaDeleteSelectedForumPostConfirmed(int forumPostId)
     {
-        //Needed for RedirectToAction
-        var forumThreadId = _forumPostRepository.GetForumPostById(forumPostId).Result.ThreadId;
+        try
+        {
+            //Needed for RedirectToAction
+            var forumThreadId = _forumPostRepository.GetForumPostById(forumPostId).Result.ThreadId;
         
-        await _forumPostRepository.DeleteForumPost(forumPostId);
-        return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
+            await _forumPostRepository.DeleteForumPost(forumPostId);
+            return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return NotFound();
+        }
     }
     
     [Authorize]

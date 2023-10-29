@@ -90,16 +90,23 @@ public class ForumThreadController : Controller
     [Route("/Category/{categoryId}/NewThread")]
     public async Task<IActionResult> CreateNewForumThread(ForumCategory forumCategory,ForumThread forumThread, ForumPost forumPost)
     {
-        ForumThread addThread = new ForumThread();
-        addThread.Title = forumThread.Title;
-        addThread.CreatedAt = DateTime.UtcNow;
-        addThread.CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
-        addThread.CategoryId = forumCategory.Id;
+        try
+        {
+            ForumThread addThread = new ForumThread();
+            addThread.Title = forumThread.Title;
+            addThread.CreatedAt = DateTime.UtcNow;
+            addThread.CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
+            addThread.CategoryId = forumCategory.Id;
         
-        await _forumThreadRepository.CreateNewForumThread(addThread);
-        int forumThreadId = addThread.Id;
-        CreateNewForumPost(forumThreadId, forumPost);
-        return RedirectToAction("ForumPostView", "ForumPost", new {forumThreadId});
+            await _forumThreadRepository.CreateNewForumThread(addThread);
+            int forumThreadId = addThread.Id;
+            CreateNewForumPost(forumThreadId, forumPost);
+            return RedirectToAction("ForumPostView", "ForumPost", new {forumThreadId});
+        }
+        catch (Exception e)
+        {
+            return NotFound();
+        }
     }
     [Authorize]
     [HttpPost]
@@ -183,6 +190,8 @@ public class ForumThreadController : Controller
     {
         //Needed for RedirectToAction
         var forumCategoryId = _forumThreadRepository.GetForumThreadById(forumThreadId).Result.CategoryId;
+        if (forumCategoryId == null) return NotFound();
+        
         await _forumThreadRepository.DeleteForumThread(forumThreadId);
         return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
     }
@@ -216,5 +225,4 @@ public class ForumThreadController : Controller
         }
         return Forbid();
     }
-    
 }
