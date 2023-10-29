@@ -56,24 +56,16 @@ public class AdminController : Controller
     {
         if (!ModelState.IsValid) return View(role);
 
-        try
-        {
-            role.Id = Guid.NewGuid().ToString();
-            if (role.Name != null) role.NormalizedName = role.Name.ToUpper();
+        role.Id = Guid.NewGuid().ToString();
+        if (role.Name != null) role.NormalizedName = role.Name.ToUpper();
 
-            var result = await _roleManager.CreateAsync(role);
-            if (result.Succeeded)
-            {
-                return RedirectToAction(nameof(Roles));
-            }
+        var result = await _roleManager.CreateAsync(role);
+        if (result.Succeeded)
+        { 
+            return RedirectToAction(nameof(Roles));
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-
-        return View(role);
+        
+        return BadRequest();
     }
 
     [HttpGet]
@@ -90,30 +82,22 @@ public class AdminController : Controller
     {
         if (!ModelState.IsValid) return View(role);
 
-        try
-        {
-            var roleToUpdate = await _roleManager.FindByIdAsync(id);
-            if (!roleToUpdate.IsFixed)
-            {
-                roleToUpdate.Name = role.Name;
-                roleToUpdate.NormalizedName = role.Name.ToUpper();
-            }
-
-            roleToUpdate.Color = role.Color;
-
-            var result = await _roleManager.UpdateAsync(roleToUpdate);
-            if (result.Succeeded)
-            {
-                return RedirectToAction(nameof(Roles));
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
+        var roleToUpdate = await _roleManager.FindByIdAsync(id);
+        if (!roleToUpdate.IsFixed)
+        { 
+            roleToUpdate.Name = role.Name; 
+            roleToUpdate.NormalizedName = role.Name.ToUpper();
         }
 
-        return View(role);
+        roleToUpdate.Color = role.Color;
+
+        var result = await _roleManager.UpdateAsync(roleToUpdate);
+        if (result.Succeeded)
+        { 
+            return RedirectToAction(nameof(Roles));
+        }
+
+        return BadRequest();
     }
 
     [HttpGet]
@@ -128,25 +112,17 @@ public class AdminController : Controller
     [Route("/Admin/Roles/Delete/{id}")]
     public async Task<IActionResult> DeleteRole(string id, ApplicationRole role)
     {
-        try
-        {
-            var roleToDelete = await _roleManager.FindByIdAsync(id);
-            if (!roleToDelete.IsFixed)
-            {
-                var result = await _roleManager.DeleteAsync(roleToDelete);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction(nameof(Roles));
-                }
+        var roleToDelete = await _roleManager.FindByIdAsync(id);
+        if (!roleToDelete.IsFixed)
+        { 
+            var result = await _roleManager.DeleteAsync(roleToDelete);
+            if (result.Succeeded)
+            { 
+                return RedirectToAction(nameof(Roles));
             }
+        }
 
-            return BadRequest();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        return BadRequest();
     }
     
     //
@@ -182,6 +158,8 @@ public class AdminController : Controller
     public async Task<IActionResult> EditUser(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
+        if (user == null) return NotFound();
+        
         var roles = await _roleManager.Roles.ToListAsync();
         var userRoles = await _userManager.GetRolesAsync(user);
         var viewModel = new EditUserViewModel
@@ -199,40 +177,33 @@ public class AdminController : Controller
     {
         if (!ModelState.IsValid) return View(viewModel);
 
-        try
-        {
-            // User
-            var user = await _userManager.FindByIdAsync(id);
+        // User
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null) return NotFound();
             
-            if (viewModel.User != null)
-            {
-                user.DisplayName = viewModel.User.DisplayName;
-                user.Avatar = viewModel.User.Avatar;
-            }
-
-            var resultUser = await _userManager.UpdateAsync(user);
-            if (!resultUser.Succeeded) return View(viewModel);
-
-            // Roles
-            var userRoles = await _userManager.GetRolesAsync(user);
-            // Prevent a null reference exception if the user is assigned 0 roles
-            viewModel.UserRoles ??= new List<string>();
-            
-            var rolesToRemove = userRoles.Except(viewModel.UserRoles).ToList();
-            var rolesToAdd = viewModel.UserRoles.Except(userRoles).ToList();
-            
-            var resultRemoveRoles = await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
-            var resultAddRoles = await _userManager.AddToRolesAsync(user, rolesToAdd);
-            
-            if (!resultRemoveRoles.Succeeded || !resultAddRoles.Succeeded) return View(viewModel);
-
-            return RedirectToAction(nameof(Users));
+        if (viewModel.User != null)
+        { 
+            user.DisplayName = viewModel.User.DisplayName; 
+            user.Avatar = viewModel.User.Avatar;
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+
+        var resultUser = await _userManager.UpdateAsync(user);
+        if (!resultUser.Succeeded) return BadRequest();
+
+        // Roles
+        var userRoles = await _userManager.GetRolesAsync(user);
+        // Prevent a null reference exception if the user is assigned 0 roles
+        viewModel.UserRoles ??= new List<string>();
+            
+        var rolesToRemove = userRoles.Except(viewModel.UserRoles).ToList();
+        var rolesToAdd = viewModel.UserRoles.Except(userRoles).ToList();
+            
+        var resultRemoveRoles = await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+        var resultAddRoles = await _userManager.AddToRolesAsync(user, rolesToAdd);
+            
+        if (!resultRemoveRoles.Succeeded || !resultAddRoles.Succeeded) return View(viewModel);
+
+        return RedirectToAction(nameof(Users));
     }
     
     //
@@ -259,16 +230,10 @@ public class AdminController : Controller
     {
         if (!ModelState.IsValid) return View(category);
 
-        try
-        {
-            await _forumCategoryRepository.CreateForumCategory(category);
-            return RedirectToAction(nameof(Categories));
-        } 
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        var result = await _forumCategoryRepository.CreateForumCategory(category);
+        if (result) return RedirectToAction(nameof(Categories));
+        
+        return BadRequest();
     }
 
     [HttpGet]
@@ -285,17 +250,11 @@ public class AdminController : Controller
     {
         if (!ModelState.IsValid) return View(category);
 
-        try
-        {
-            category.Id = id;
-            await _forumCategoryRepository.UpdateForumCategory(category);
-            return RedirectToAction(nameof(Categories));
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        category.Id = id;
+        var result = await _forumCategoryRepository.UpdateForumCategory(category);
+        if (result) return RedirectToAction(nameof(Categories));
+
+        return BadRequest();
     }
 
     [HttpGet]
@@ -303,6 +262,8 @@ public class AdminController : Controller
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var category = await _forumCategoryRepository.GetForumCategoryById(id);
+        if (category == null) return NotFound();
+        
         return View(category);
     }
 
@@ -310,18 +271,12 @@ public class AdminController : Controller
     [Route("/Admin/Categories/Delete/{id}")]
     public async Task<IActionResult> DeleteCategory(int id, ForumCategory category)
     {
-        try
-        {
-            var categoryToDelete = await _forumCategoryRepository.GetForumCategoryById(id);
-            if (categoryToDelete == null) return NotFound();
+        var categoryToDelete = await _forumCategoryRepository.GetForumCategoryById(id);
+        if (categoryToDelete == null) return NotFound();
             
-            await _forumCategoryRepository.DeleteForumCategory(categoryToDelete);
-            return RedirectToAction(nameof(Categories));
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        var result = await _forumCategoryRepository.DeleteForumCategory(categoryToDelete);
+        if (result) return RedirectToAction(nameof(Categories));
+        
+        return BadRequest();
     }
 }
