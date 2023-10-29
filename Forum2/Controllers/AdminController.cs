@@ -81,6 +81,10 @@ public class AdminController : Controller
     public async Task<IActionResult> EditRole(string id)
     {
         var role = await _roleManager.FindByIdAsync(id);
+        if (role == null)
+        {
+            return NotFound();
+        }
         return View(role);
     }
 
@@ -93,6 +97,10 @@ public class AdminController : Controller
         try
         {
             var roleToUpdate = await _roleManager.FindByIdAsync(id);
+            if (roleToUpdate == null)
+            {
+                return NotFound();
+            }
             if (!roleToUpdate.IsFixed)
             {
                 roleToUpdate.Name = role.Name;
@@ -121,6 +129,10 @@ public class AdminController : Controller
     public async Task<IActionResult> DeleteRole(string id)
     {
         var role = await _roleManager.FindByIdAsync(id);
+        if (role == null)
+        {
+            return NotFound();
+        }
         return View(role);
     }
 
@@ -131,6 +143,10 @@ public class AdminController : Controller
         try
         {
             var roleToDelete = await _roleManager.FindByIdAsync(id);
+            if (roleToDelete == null)
+            {
+                return NotFound();
+            }
             if (!roleToDelete.IsFixed)
             {
                 var result = await _roleManager.DeleteAsync(roleToDelete);
@@ -182,6 +198,10 @@ public class AdminController : Controller
     public async Task<IActionResult> EditUser(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
         var roles = await _roleManager.Roles.ToListAsync();
         var userRoles = await _userManager.GetRolesAsync(user);
         var viewModel = new EditUserViewModel
@@ -243,6 +263,10 @@ public class AdminController : Controller
     public async Task<IActionResult> Categories()
     {
         var categories = await _forumCategoryRepository.GetAll();
+        if (categories == null)
+        {
+            return NotFound();
+        }
         return View(categories);
     }
     
@@ -276,6 +300,10 @@ public class AdminController : Controller
     public async Task<IActionResult> EditCategory(int id)
     {
         var category = await _forumCategoryRepository.GetForumCategoryById(id);
+        if (category == null)
+        {
+            return NotFound();
+        }
         return View(category);
     }
 
@@ -293,8 +321,7 @@ public class AdminController : Controller
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            return NotFound();
         }
     }
 
@@ -303,6 +330,10 @@ public class AdminController : Controller
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var category = await _forumCategoryRepository.GetForumCategoryById(id);
+        if (category == null)
+        {
+            return NotFound();
+        }
         return View(category);
     }
 
@@ -320,8 +351,7 @@ public class AdminController : Controller
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            return NotFound();
         }
     }
 }

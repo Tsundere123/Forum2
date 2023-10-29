@@ -92,8 +92,7 @@ public class ForumPostController : Controller
         var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId);
         var forumPostsCount = forumPosts.Count();
         var totalPages = (int)Math.Ceiling((double)forumPostsCount / PageSize);
-
-        //Needed for RedirectToAction
+        
         return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId, page = totalPages});
     }
 
@@ -114,6 +113,7 @@ public class ForumPostController : Controller
         }
         return Forbid();
     }
+    
     [Authorize]
     [HttpPost]
     [Route("/ForumPost/Update/{forumPostId}")]
@@ -177,6 +177,7 @@ public class ForumPostController : Controller
         {
             //Needed for RedirectToAction
             var forumThreadId = forumPost.ThreadId;
+            
             if (forumPost == null) return NotFound();
             // forumPost.ForumPostContent = "This post has been deleted";
             forumPost.IsSoftDeleted = true;
