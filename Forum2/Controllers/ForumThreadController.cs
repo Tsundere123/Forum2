@@ -121,7 +121,7 @@ public class ForumThreadController : Controller
     public async Task<IActionResult> UpdateForumThreadTitle(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
-        if (forumThread == null) return NotFound();
+        if (forumThread == null || forumThread.IsLocked) return NotFound();
         
         if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
             || HttpContext.User.IsInRole("Moderator") 
@@ -137,6 +137,9 @@ public class ForumThreadController : Controller
     [Route("ForumThread/Update/{forumThreadId}")]
     public async Task<IActionResult> UpdateForumThreadTitle(ForumThread forumThread)
     {
+        var forumThreadExists = await _forumThreadRepository.GetForumThreadById(forumThread.Id);
+        if (forumThreadExists == null || forumThreadExists.IsLocked) return NotFound();
+        
         if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
             || HttpContext.User.IsInRole("Moderator")
             || HttpContext.User.IsInRole("Administrator"))

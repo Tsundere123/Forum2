@@ -46,9 +46,12 @@
         @if (User.IsInRole("Administrator") || (User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.CurrentForumThread.CreatorId))
         {
             <div>
-                <a class="btn btn-sm btn-dark" asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@Model.CurrentForumThread.Id.ToString()">
-                    Edit Thread
-                </a>
+                @if (!Model.CurrentForumThread.IsLocked)
+                {
+                    <a class="btn btn-sm btn-dark" asp-controller="ForumThread" asp-action="UpdateForumThreadTitle" asp-route-forumThreadId="@Model.CurrentForumThread.Id.ToString()">
+                        Edit Thread
+                    </a>
+                }
                 <a class="btn btn-sm btn-danger" asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@Model.CurrentForumThread.Id.ToString()">
                     Delete Thread
                 </a>
