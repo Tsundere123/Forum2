@@ -1,4 +1,7 @@
 ﻿@model ForumThread
+@{
+    ViewData["Title"] = "Update Thread";
+}
 
 <form asp-controller="ForumThread" asp-action="UpdateForumThreadTitle">
     <input type="hidden" asp-for="Id">

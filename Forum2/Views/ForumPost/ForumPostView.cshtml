@@ -3,6 +3,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @model ForumPostViewModel
 @{
+    ViewData["Title"] = Model.CurrentForumThread.Title;
     var currentThreadCreator = UserManager.FindByIdAsync(Model.CurrentForumThread.CreatorId).Result;
 }
 
