@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections;
+using System.Net;
 using Forum2.Models;
 using Forum2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -186,10 +187,17 @@ public class ForumThreadController : Controller
 
             forumThread.ForumThreadIsSoftDeleted = true;
             await UpdateForumThreadTitle(forumThread);
+            
+            //Soft deletes all forumposts as well
+            foreach (var forumPost in _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId).Result)
+            {
+                forumPost.ForumPostIsSoftDeleted = true;
+                await _forumPostRepository.UpdateForumPost(forumPost);
+            }
+            
             return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
 
         }
         return Forbid();
     }
-    
 }

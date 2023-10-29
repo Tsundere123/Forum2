@@ -58,13 +58,16 @@
             <div id="latest_posts">
                 @foreach (var post in Model.ForumPosts)
                 {
-                    <div>
-                        <div class="card">
-                            <div class="card-body">
-                                <partial name="Lookup/_PostLookup" model="post"/>
+                    if (!post.ForumPostIsSoftDeleted)
+                    {
+                        <div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <partial name="Lookup/_PostLookup" model="post"/>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
             </div>
         </div>

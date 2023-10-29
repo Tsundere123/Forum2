@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Forum2.Controllers
 @inject UserManager<ApplicationUser> UserManager
 
 @model ForumPost
@@ -16,14 +17,20 @@
             <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ForumThreadId.ToString()">@Model.ForumThread!.ForumThreadTitle</a>
         </div>
         <div class="d-block" style="font-size: 14px;">
-            @if (Model.ForumPostContent.Length >= 20)
-            {
-                @Model.ForumPostContent.Substring(0, 20)
+            @{
+                if(!Model.ForumPostIsSoftDeleted)
+                {
+                    @if (Model.ForumPostContent.Length >= 20)
+                    {
+                        @Model.ForumPostContent.Substring(0, 20)
+                    }
+                    else
+                    {
+                        @Model.ForumPostContent
+                    }
+                }
             }
-            else
-            {
-                @Model.ForumPostContent
-            }
+
         </div>
         <div class="d-block" style="font-size: 12px;">
             <span class="me-1">
