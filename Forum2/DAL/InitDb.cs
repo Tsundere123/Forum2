@@ -15,6 +15,7 @@ public class InitDb
         accountDbContext.Database.EnsureCreated();
         forumDbContext.Database.EnsureCreated();
 
+        //Account Roles
         if (!accountDbContext.Roles.Any())
         {
             accountDbContext.Roles.Add(new ApplicationRole
@@ -36,6 +37,7 @@ public class InitDb
             accountDbContext.SaveChanges();
         }
 
+        //User accounts
         if (!accountDbContext.Users.Any())
         {
             var admin = new ApplicationUser
@@ -125,6 +127,7 @@ public class InitDb
             accountDbContext.SaveChanges();
         }
 
+        //Forum categories
         if (!forumDbContext.ForumCategory.Any())
         {
             var missiles = new ForumCategory()
@@ -155,6 +158,7 @@ public class InitDb
             forumDbContext.SaveChanges();
         }
 
+        //Forum Threads
         if (!forumDbContext.ForumThread.Any())
         {
             var first = new ForumThread()
@@ -213,6 +217,7 @@ public class InitDb
             forumDbContext.SaveChanges();
         }
 
+        //Forum Posts
         if (!forumDbContext.ForumPost.Any())
         {
             var post1 = new ForumPost()
@@ -310,6 +315,7 @@ public class InitDb
             forumDbContext.SaveChanges();
         }
 
+        //Wall posts
         if (!forumDbContext.WallPost.Any())
         {
             var wall1 = new WallPost()
@@ -344,6 +350,7 @@ public class InitDb
             forumDbContext.SaveChanges();
         }
 
+        //Wall Posts Replies
         if (!forumDbContext.WallPostReply.Any())
         {
             var reply1 = new WallPostReply()
@@ -367,7 +374,5 @@ public class InitDb
             forumDbContext.WallPostReply.Add(reply1);
             forumDbContext.SaveChanges();
         }
-        
     }
-    
 }
