@@ -291,6 +291,7 @@ public class InitDb
                 ForumPostContent = "Poi~",
                 ForumPostCreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
                 ForumPostCreationTimeUnix = DateTime.Now,
+                ForumPostIsSoftDeleted = true
             };
             //Thread 5
             var post9 = new ForumPost()
@@ -371,7 +372,7 @@ public class InitDb
             };
             
             forumDbContext.WallPostReply.Add(reply1);
-            forumDbContext.WallPostReply.Add(reply1);
+            forumDbContext.WallPostReply.Add(reply2);
             forumDbContext.SaveChanges();
         }
     }
