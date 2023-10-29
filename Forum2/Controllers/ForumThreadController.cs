@@ -92,7 +92,11 @@ public class ForumThreadController : Controller
     [Route("/Category/{categoryId}/NewThread")]
     public async Task<IActionResult> CreateNewForumThread(ForumThreadCreationViewModel model)
     {
-        if (!ModelState.IsValid)  return View(model);
+        // Remove validation for fields that are not relevant for this view
+        ModelState.Remove("ForumCategory.Description");
+        ModelState.Remove("ForumPost.CreatorId");
+        
+        if (!ModelState.IsValid) return View(model);
         
         ForumThread addThread = new ForumThread();
         addThread.Title = model.ForumThread.Title;
