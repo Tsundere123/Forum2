@@ -78,37 +78,45 @@
     </div>
 }
 
-<h2 class="h2 fw-normal">Latest Members</h2>
-<div class="d-flex align-items-center">
-    <div>
-        <button class="rounded-circle btn btn-sm btn-outline-dark d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" id="lm_prev">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
-              <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
-            </svg>
-        </button>
-    </div>
-    <div class="flex-grow-1" style="min-width: 0;">
-        <div id="new_members">
-            @foreach (var member in latestMembers)
-            {
-                <div>
-                    <div class="card">
-                        <div class="card-body">
-                            <partial name="Lookup/_UserLookup" model="member"/>
+@if (UserManager.Users.ToList() is {Count: > 0 })
+{
+    <h2 class="h2 fw-normal">Latest Members</h2>
+    <div class="d-flex align-items-center">
+        <div>
+            <button class="rounded-circle btn btn-sm btn-outline-dark d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" id="lm_prev">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                    <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="flex-grow-1" style="min-width: 0;">
+            <div id="new_members">
+                @foreach (var member in latestMembers)
+                {
+                    <div>
+                        <div class="card">
+                            <div class="card-body">
+                                <partial name="Lookup/_UserLookup" model="member"/>
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
+        </div>
+        <div>
+            <button class="rounded-circle btn btn-sm btn-outline-dark d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" id="lm_next">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                    <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                </svg>
+            </button>
         </div>
     </div>
-    <div>
-        <button class="rounded-circle btn btn-sm btn-outline-dark d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" id="lm_next">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-              <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-            </svg>
-        </button>
-    </div>
-</div>
+}
+else
+{
+    <p>You have deleted all users :(</p>
+    <a asp-area="Identity" asp-page="/Account/Register">Register new account</a>
+}
 
 <script src="~/lib/tiny-slider/tiny-slider.js"></script>
 <script type="text/javascript">
