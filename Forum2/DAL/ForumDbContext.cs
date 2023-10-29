@@ -22,17 +22,4 @@ public class ForumDbContext : DbContext
     {
         optionsBuilder.UseLazyLoadingProxies();
     }
-
-
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     optionsBuilder.UseLazyLoadingProxies();
-    // }
-    // protected override void OnModelCreating(ModelBuilder modelBuilder)
-    // {
-    //     modelBuilder.Entity<Account>()
-    //         .HasOne(o => o.AccountRoles)
-    //         .WithMany(c => c.Accounts)
-    //         .HasForeignKey(o => o.RoleId);
-    // }
 }

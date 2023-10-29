@@ -5,7 +5,6 @@ namespace Forum2.DAL;
 public interface IForumPostRepository
 {
     Task<IEnumerable<ForumPost>?> GetAll();
-    Task<IEnumerable<ForumPost>?> GetAllWithThread();
     Task<ForumPost?> GetForumPostById(int id);
     Task<IEnumerable<ForumPost>?> GetAllForumPostsByThreadId(int threadId);
     Task<IEnumerable<ForumPost>?> GetAllForumPostsByAccountId(string accountId);

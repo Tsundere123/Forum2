@@ -31,9 +31,6 @@ public class ForumPostController : Controller
     public async Task<IActionResult> ForumPostView(int forumThreadId, int? page)
     {
         var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId);
-        var forumCategory = await _forumCategoryRepository.GetForumCategoryById(_forumThreadRepository.GetForumThreadById(forumThreadId).Result.CategoryId);
-        
-        
         var currentForumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
         if (currentForumThread.IsSoftDeleted)
         {
@@ -48,34 +45,29 @@ public class ForumPostController : Controller
         var currentPage = page ?? 1;
         
         forumPosts = forumPosts.Skip((currentPage - 1) * PageSize).Take(PageSize);
-        
-        var accounts = await _userManager.Users.ToListAsync();
         var forumPostViewModel = new ForumPostViewModel
         {
-            ForumCategory = forumCategory,
             CurrentForumThread = currentForumThread,
             ForumPosts = forumPosts,
-            Accounts = accounts,
             CurrentPage = currentPage,
             TotalPages = totalPages
         };
         
         return View(forumPostViewModel);
     }
+    
     [Authorize]
     [HttpGet]
     [Route("/ForumPost/Create/{forumThreadId}")]
     public async Task<IActionResult> CreateNewForumPost(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
-        var accounts = await _userManager.Users.ToListAsync();
         var forumPost = new ForumPost();
         forumPost.ThreadId = forumThread.Id;
         var viewModel = new ForumPostCreationViewModel
         {
             ForumThread = forumThread,
-            ForumPost = forumPost,
-            Accounts = accounts
+            ForumPost = forumPost
         };
         return PartialView(viewModel);
     }
@@ -153,6 +145,7 @@ public class ForumPostController : Controller
 
         return Forbid();
     }
+    
     
     [Authorize(Roles = "Administrator,Moderator")]
     [HttpPost]

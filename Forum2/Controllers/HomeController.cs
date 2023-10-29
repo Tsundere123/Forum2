@@ -29,6 +29,7 @@ public class HomeController : Controller
             .OrderByDescending(t => t.CreatedAt).Take(5);
         
         var latestPosts = (posts ?? Array.Empty<ForumPost>())
+            .Where(p => p.IsSoftDeleted == false)
             .OrderByDescending(p => p.CreatedAt).Take(5);
 
         var model = new HomeViewModel

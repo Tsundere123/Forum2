@@ -24,20 +24,7 @@ public class ForumThreadController : Controller
         _userManager = userManager;
         _forumPostRepository = forumPostRepository;
     }
-    [HttpGet]
-    public async Task<IActionResult> ForumThreadTable()
-    {
-        var forumThreads = await _forumThreadRepository.GetAll();
-        var forumCategories = await _forumCategoryRepository.GetAll();
-        var accounts = await _userManager.Users.ToListAsync();
-        var forumListViewModel = new ForumListViewModel
-        {
-            ForumCategories = forumCategories,
-            ForumThreads = forumThreads,
-            Accounts = accounts,
-        };
-        return View(forumListViewModel);
-    }
+
     [HttpGet]
     [Route("/Category/{forumCategoryId}/{page?}")]
     public async Task<IActionResult> ForumThreadOfCategoryTable(int forumCategoryId, int? page)
@@ -68,7 +55,6 @@ public class ForumThreadController : Controller
         {
             ForumCategory = forumCategory,
             ForumThreads = forumThreadsOfCategory,
-            Accounts = accounts,
             CurrentPage = currentPage,
             TotalPages = totalPages
         };
@@ -81,13 +67,11 @@ public class ForumThreadController : Controller
     public async Task<IActionResult> CreateNewForumThread(int categoryId)
     {
         var forumCategory = await _forumCategoryRepository.GetForumCategoryById(categoryId);
-        var accounts = await _userManager.Users.ToListAsync();
         var forumThread = new ForumThread();
         var viewModel = new ForumThreadCreationViewModel
         {
             ForumCategory = forumCategory,
             ForumThread = forumThread,
-            Accounts = accounts
         };
         return View(viewModel);
     }

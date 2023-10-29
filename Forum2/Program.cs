@@ -28,7 +28,6 @@ builder.Services.AddDbContext<ForumDbContext>(options =>
 builder.Services.AddScoped<IForumCategoryRepository, ForumCategoryRepository>();
 builder.Services.AddScoped<IForumThreadRepository, ForumThreadRepository>();
 builder.Services.AddScoped<IForumPostRepository, ForumPostRepository>();
-
 builder.Services.AddScoped<IWallPostRepository, WallPostRepository>();
 builder.Services.AddScoped<IWallPostReplyRepository, WallPostReplyRepository>();
 

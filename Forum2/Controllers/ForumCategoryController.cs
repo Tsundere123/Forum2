@@ -24,8 +24,7 @@ public class ForumCategoryController : Controller
         var forumCategoriesListViewModel = new ForumCategoryViewModel
         {
             ForumCategories = forumCategories,
-            ForumThreads = forumThreads,
-            CurrentViewName = "ForumCategoryTable"
+            ForumThreads = forumThreads
         };
         return View(forumCategoriesListViewModel);
     }

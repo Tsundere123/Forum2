@@ -7,7 +7,7 @@ public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddDbContext<AccountDbContext>(options => options.UseSqlite("ForumDbContextConnection"));
+        services.AddDbContext<AccountDbContext>(options => options.UseSqlite("AccountDbContextConnection"));
         services.AddDbContext<ForumDbContext>(options => options.UseSqlite("ForumDbContextConnection"));
     }
 }

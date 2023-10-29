@@ -21,5 +21,6 @@ public class WallPostReply
     [ForeignKey("Id")]
     public int WallPostId { get; set; }
     
+    //Navigational property
     public virtual WallPost WallPost { get; set; }
 }
