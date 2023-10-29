@@ -55,6 +55,13 @@ public class AdminController : Controller
     public async Task<IActionResult> NewRole(ApplicationRole role)
     {
         if (!ModelState.IsValid) return View(role);
+        
+        var roleExists = await _roleManager.RoleExistsAsync(role.Name);
+        if (roleExists)
+        {
+            ModelState.AddModelError("Name", "Role already exists");
+            return View(role);
+        }
 
         role.Id = Guid.NewGuid().ToString();
         if (role.Name != null) role.NormalizedName = role.Name.ToUpper();
