@@ -11,7 +11,7 @@
     <div class="form-group">
         <label asp-for="ForumPost.Content">Post content</label>
         <textarea rows="8" asp-for="ForumPost.Content" id="inputNewPostContent" class="form-control"></textarea>
-        <span asp-validation-for="ForumPost.Content" class="text-danger"></span>
+        <span asp-validation-for="ForumPost.Content" class="invalid-feedback"></span>
     </div>
         
     <button type="submit" class="btn btn-secondary">Create</button>
