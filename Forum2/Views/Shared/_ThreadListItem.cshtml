@@ -12,7 +12,10 @@
         @{
             if (Model.IsSoftDeleted)
             {
-                <div class="card-header alert-danger">This thread is soft deleted</div>
+                <div class="card-header alert-danger">This thread is soft deleted 
+                    <a class="btn btn-danger" asp-controller="ForumThread" asp-action="UnDeleteSelectedForumThread" asp-route-forumThreadId="@Model.Id">Undelete</a>
+                </div>
+                
             }
         }
         <li class="list-group-item px-0">

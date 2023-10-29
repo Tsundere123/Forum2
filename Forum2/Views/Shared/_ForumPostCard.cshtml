@@ -21,7 +21,10 @@ else
                 @{
                     if (Model.IsSoftDeleted)
                     {
-                        <div class="card-header alert-danger">This post is soft deleted</div>
+                        <div class="card-header alert-danger">This post is soft deleted 
+                            <a class="btn btn-danger" asp-controller="ForumPost"  asp-action="UnDeleteSelectedForumPost" asp-route-forumPostId="@Model.Id">Undelete</a>
+                        </div>
+
                     }}
                 <div id="postContent_@Model.Id.ToString()" class="card-body py-2 d-flex flex-column justify-content-between">
                     <div class="post-content">

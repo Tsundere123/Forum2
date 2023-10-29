@@ -1,0 +1,29 @@
+﻿@model ForumThread
+
+@{
+    ViewBag.Title = "Undelete";
+}
+
+<h2>Undelete thread</h2>
+
+<dl class="row">
+    <dt class="col-sm-2">Thread Id</dt>
+    <dd class="col-sm-10">@Model.Id</dd>
+        
+    <dt class="col-sm-2">Thread Name</dt>
+    <dd class="col-sm-10">@Model.Title</dd>
+        
+    <dt class="col-sm-2">Creator Id</dt>
+    <dd class="col-sm-10">@Model.CreatorId</dd>
+        
+    <dt class="col-sm-2">Category Id</dt>
+    <dd class="col-sm-10">@Model.CategoryId</dd>
+        
+    <dt class="col-sm-2">Creation time</dt>
+    <dd class="col-sm-10">@Model.CreatedAt</dd>
+    
+    <form asp-controller="ForumThread" asp-action="UnSoftDeleteSelectedForumThreadConfirmed" asp-route-forumThreadId="@Model.Id" method="post">
+        <button type="submit" class="btn btn-danger">Undelete</button>
+    </form>
+    <a asp-controller="ForumThread" asp-action="ForumThreadOfCategoryTable" asp-route-forumCategoryId="@Model.CategoryId" class="btn btn-secondary">Cancel</a>
+</dl>
