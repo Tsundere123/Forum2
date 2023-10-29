@@ -121,7 +121,10 @@ public class ForumPostController : Controller
     [Route("/ForumPost/Update/{forumPostId}")]
     public async Task<IActionResult> UpdateForumPostContent(int forumPostId, ForumPost forumPost)
     {
-        if (forumPost == null || forumPost.Thread.IsLocked) return BadRequest();
+        if (forumPost == null) return NotFound();
+
+        if (_forumThreadRepository.GetForumThreadById(forumPost.ThreadId).Result.IsLocked) return BadRequest();
+       
         
         if (_userManager.GetUserAsync(User).Result.Id == forumPost.CreatorId
             || HttpContext.User.IsInRole("Moderator") 
