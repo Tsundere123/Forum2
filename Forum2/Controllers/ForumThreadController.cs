@@ -34,11 +34,15 @@ public class ForumThreadController : Controller
         var accounts = await _userManager.Users.ToListAsync();
         
         // Remove soft deleted threads
-        forumThreads = forumThreads.Where(x => x.IsSoftDeleted == false).ToList();
+        forumThreads = forumThreads.Where(x => x.IsSoftDeleted == false);
+        
+        // Pinned threads
+        var pinnedThreads = forumThreads.Where(t => t.IsPinned).ToList();
         
         // Sort threads by last post
         var sortedThreads = forumThreads
-            .Select(t => new 
+            .Where(t => t.IsPinned == false)
+            .Select(t => new
             {
                 ForumThread = t,
                 LastPost = t.Posts.Any() ? t.Posts.Max(p => p.CreatedAt) : t.CreatedAt
@@ -49,11 +53,12 @@ public class ForumThreadController : Controller
         var perPage = 10;
         var totalPages = (int)Math.Ceiling((double)sortedThreads.Count() / perPage);
         var currentPage = page ?? 1;
-        var forumThreadsOfCategory = sortedThreads.Skip((currentPage - 1) * perPage).Take(perPage);
+        var forumThreadsOfCategory = sortedThreads.Skip((currentPage - 1) * perPage).Take(perPage).ToList();
         
         var forumThreadOfCategoryViewModel = new ForumThreadOfCategoryViewModel
         {
             ForumCategory = forumCategory,
+            PinnedThreads = pinnedThreads,
             ForumThreads = forumThreadsOfCategory,
             CurrentPage = currentPage,
             TotalPages = totalPages
@@ -199,4 +204,37 @@ public class ForumThreadController : Controller
         return Forbid();
     }
     
+    //
+    // Pin Thread Toggle
+    //
+    [HttpPost]
+    [Authorize(Roles = "Administrator,Moderator")]
+    [Route("/ForumThread/Pin/{forumThreadId}")]
+    public async Task<IActionResult> TogglePinSelectedForumThread(int forumThreadId)
+    {
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        if (forumThread == null) return NotFound();
+        
+        forumThread.IsPinned = !forumThread.IsPinned;
+        
+        await _forumThreadRepository.UpdateForumThread(forumThread);
+        return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
+    }
+    
+    //
+    // Lock Thread Toggle
+    //
+    [HttpPost]
+    [Authorize(Roles = "Administrator,Moderator")]
+    [Route("/ForumThread/Lock/{forumThreadId}")]
+    public async Task<IActionResult> ToggleLockSelectedForumThread(int forumThreadId)
+    {
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        if (forumThread == null) return NotFound();
+        
+        forumThread.IsLocked = !forumThread.IsLocked;
+
+        await _forumThreadRepository.UpdateForumThread(forumThread);
+        return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
+    }
 }

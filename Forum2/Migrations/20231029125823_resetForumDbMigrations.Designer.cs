@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum2.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    [Migration("20231028182839_resetMigrations")]
-    partial class resetMigrations
+    [Migration("20231029125823_resetForumDbMigrations")]
+    partial class resetForumDbMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,6 +102,12 @@ namespace Forum2.Migrations
                     b.Property<string>("EditedBy")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsPinned")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsSoftDeleted")
                         .HasColumnType("INTEGER");

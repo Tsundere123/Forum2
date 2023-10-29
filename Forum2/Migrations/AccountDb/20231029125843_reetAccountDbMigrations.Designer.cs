@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum2.Migrations.AccountDb
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20231028183015_resetMigrations")]
-    partial class resetMigrations
+    [Migration("20231029125843_reetAccountDbMigrations")]
+    partial class reetAccountDbMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

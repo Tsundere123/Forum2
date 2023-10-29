@@ -62,6 +62,8 @@ public class ForumPostController : Controller
     public async Task<IActionResult> CreateNewForumPost(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        if (forumThread.IsLocked) return BadRequest();
+        
         var forumPost = new ForumPost();
         forumPost.ThreadId = forumThread.Id;
         var viewModel = new ForumPostCreationViewModel
@@ -76,6 +78,9 @@ public class ForumPostController : Controller
     [Route("/ForumPost/Create/{forumThreadId}")]
     public async Task<IActionResult> CreateNewForumPost(int forumThreadId, ForumPost forumPost)
     {
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        if (forumThread.IsLocked) return BadRequest();
+        
         ForumPost addPost = new ForumPost();
         addPost.Content = forumPost.Content;
         addPost.ThreadId = forumPost.ThreadId;
@@ -98,6 +103,8 @@ public class ForumPostController : Controller
     public async Task<IActionResult> UpdateForumPostContent(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
+        if (forumPost.Thread.IsLocked) return BadRequest();
+        
         if (_userManager.GetUserAsync(User).Result.Id == forumPost.CreatorId
             || HttpContext.User.IsInRole("Moderator") 
             || HttpContext.User.IsInRole("Administrator"))
@@ -112,6 +119,8 @@ public class ForumPostController : Controller
     [Route("/ForumPost/Update/{forumPostId}")]
     public async Task<IActionResult> UpdateForumPostContent(int forumPostId, ForumPost forumPost)
     {
+        if (forumPost.Thread.IsLocked) return BadRequest();
+        
         if (_userManager.GetUserAsync(User).Result.Id == forumPost.CreatorId
             || HttpContext.User.IsInRole("Moderator") 
             || HttpContext.User.IsInRole("Administrator"))

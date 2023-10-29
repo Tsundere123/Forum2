@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Forum2.Migrations.AccountDb
 {
     /// <inheritdoc />
-    public partial class resetMigrations : Migration
+    public partial class reetAccountDbMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
