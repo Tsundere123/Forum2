@@ -199,4 +199,37 @@ public class ForumThreadController : Controller
         return Forbid();
     }
     
+    //
+    // Pin Thread Toggle
+    //
+    [HttpPost]
+    [Authorize(Roles = "Administrator,Moderator")]
+    [Route("/ForumThread/Pin/{forumThreadId}")]
+    public async Task<IActionResult> TogglePinSelectedForumThread(int forumThreadId)
+    {
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        if (forumThread == null) return NotFound();
+        
+        forumThread.IsPinned = !forumThread.IsPinned;
+        
+        await _forumThreadRepository.UpdateForumThread(forumThread);
+        return RedirectToAction("ForumPostView", "ForumPost", new { forumThread.CategoryId });
+    }
+    
+    //
+    // Lock Thread Toggle
+    //
+    [HttpPost]
+    [Authorize(Roles = "Administrator,Moderator")]
+    [Route("/ForumThread/Lock/{forumThreadId}")]
+    public async Task<IActionResult> ToggleLockSelectedForumThread(int forumThreadId)
+    {
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        if (forumThread == null) return NotFound();
+        
+        forumThread.IsLocked = !forumThread.IsLocked;
+
+        await _forumThreadRepository.UpdateForumThread(forumThread);
+        return RedirectToAction("ForumPostView", "ForumPost", new { forumThread.CategoryId });
+    }
 }
