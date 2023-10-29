@@ -63,6 +63,7 @@ public class ProfileController : Controller
     // GET new wall post form
     [HttpGet]
     [Route("New")]
+    [Authorize]
     public Task<IActionResult> NewWallPost(string displayName)
     {
         if (string.IsNullOrEmpty(displayName)) return Task.FromResult<IActionResult>(NotFound());
@@ -80,6 +81,7 @@ public class ProfileController : Controller
     // POST new wall post
     [HttpPost]
     [Route("New")]
+    [Authorize]
     public async Task<IActionResult> NewWallPost(string displayName, ProfileNewWallPostViewModel model)
     {
         if (string.IsNullOrEmpty(displayName)) return NotFound();
@@ -113,6 +115,7 @@ public class ProfileController : Controller
     // GET reply to wall post form
     [HttpGet]
     [Route("Reply/{id}")]
+    [Authorize]
     public async Task<IActionResult> ReplyWallPost(string displayName, int id)
     {
         if (string.IsNullOrEmpty(displayName)) return NotFound();
@@ -134,6 +137,7 @@ public class ProfileController : Controller
     // POST reply to wall post
     [HttpPost]
     [Route("Reply/{id}")]
+    [Authorize]
     public async Task<IActionResult> ReplyWallPost(string displayName, int id, ProfileReplyWallPostViewModel model)
     {
         if (string.IsNullOrEmpty(displayName)) return NotFound();
@@ -171,6 +175,7 @@ public class ProfileController : Controller
     [HttpGet]
     [Authorize]
     [Route("/Profile/{displayName}/Delete/{id}")]
+    [Authorize]
     public async Task<IActionResult> DeleteWallPost(string displayName, int id)
     {
         if (string.IsNullOrEmpty(displayName)) return NotFound();
@@ -195,6 +200,7 @@ public class ProfileController : Controller
     [HttpGet]
     [Authorize]
     [Route("/Profile/{displayName}/DeleteReply/{id}")]
+    [Authorize]
     public async Task<IActionResult> DeleteWallPostReply(string displayName, int id)
     {
         if (string.IsNullOrEmpty(displayName)) return NotFound();
