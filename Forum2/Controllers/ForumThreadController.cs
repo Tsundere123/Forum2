@@ -33,9 +33,12 @@ public class ForumThreadController : Controller
         if (forumCategory == null) return NotFound();
         
         var forumThreads = await _forumThreadRepository.GetForumThreadsByCategoryId(forumCategoryId);
-        
-        // Remove soft deleted threads
-        forumThreads = forumThreads.Where(x => x.IsSoftDeleted == false);
+
+        if (!User.IsInRole("Administrator"))
+        {
+            // Remove soft deleted threads
+            forumThreads = forumThreads.Where(x => x.IsSoftDeleted == false);
+        }
         
         // Pinned threads
         var pinnedThreads = forumThreads.Where(t => t.IsPinned).ToList();
@@ -247,4 +250,5 @@ public class ForumThreadController : Controller
         await _forumThreadRepository.UpdateForumThread(forumThread);
         return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
     }
+    
 }

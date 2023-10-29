@@ -22,4 +22,15 @@
             Categories
         </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentRoute is "Deleted Threads"? "active" : "")" asp-controller="Admin" asp-action="ViewAllSoftDeletedThreads">
+            Deleted threads
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentRoute is "Deleted Posts"? "active" : "")" asp-controller="Admin" asp-action="ViewAllSoftDeletedPosts">
+            Deleted posts
+        </a>
+    </li>
+
 </ul>
