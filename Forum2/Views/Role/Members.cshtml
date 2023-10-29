@@ -16,11 +16,13 @@
     {
         <li class="list-group-item px-0">
             <div class="d-flex align-items-center gap-2">
-                <img src="~/avatars/@user.Avatar" alt="@user.DisplayName" height="32" width="32" class="rounded"/>
+                <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">
+                    <img src="~/avatars/@user.Avatar" alt="@user.DisplayName" height="32" width="32" class="rounded"/>
+                </a>
                 <div>
                     <div>
-                        
-                        <a class="link-dark text-decoration-none" asp-controller="Profile" asp-action="Index" asp-route-roleName="@user.DisplayName">
+
+                        <a class="link-dark text-decoration-none" asp-controller="Profile" asp-action="Index" asp-route-displayName="@user.DisplayName">
                             @user.DisplayName
                         </a>
                     </div>
