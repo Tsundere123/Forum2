@@ -30,10 +30,7 @@ public class ForumThreadController : Controller
     public async Task<IActionResult> ForumThreadOfCategoryTable(int forumCategoryId, int? page)
     {
         var forumCategory = await _forumCategoryRepository.GetForumCategoryById(forumCategoryId);
-        if (forumCategory == null)
-        {
-            return NotFound();
-        }
+        if (forumCategory == null) return NotFound();
         
         var forumThreads = await _forumThreadRepository.GetForumThreadsByCategoryId(forumCategoryId);
         
@@ -76,10 +73,8 @@ public class ForumThreadController : Controller
     public async Task<IActionResult> CreateNewForumThread(int categoryId)
     {
         var forumCategory = await _forumCategoryRepository.GetForumCategoryById(categoryId);
-        if (forumCategory == null)
-        {
-            return NotFound();
-        }
+        if (forumCategory == null) return NotFound();
+        
         var forumThread = new ForumThread();
         var viewModel = new ForumThreadCreationViewModel
         {
@@ -105,6 +100,7 @@ public class ForumThreadController : Controller
         CreateNewForumPost(forumThreadId, forumPost);
         return RedirectToAction("ForumPostView", "ForumPost", new {forumThreadId});
     }
+    
     [Authorize]
     [HttpPost]
     public async void CreateNewForumPost(int threadId,ForumPost forumPost)
@@ -116,16 +112,14 @@ public class ForumThreadController : Controller
         addPost.Content = forumPost.Content;
         await _forumPostRepository.CreateNewForumPost(addPost);
     }
+    
     [Authorize]
     [HttpGet]
     [Route("ForumThread/Update/{forumThreadId}")]
     public async Task<IActionResult> UpdateForumThreadTitle(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
-        if (forumThread == null)
-        {
-            return NotFound();
-        }
+        if (forumThread == null) return NotFound();
         
         if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
             || HttpContext.User.IsInRole("Moderator") 
@@ -166,10 +160,8 @@ public class ForumThreadController : Controller
     public async Task<IActionResult> DeleteSelectedForumThread(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
-        if (forumThread == null)
-        {
-            return NotFound();
-        }
+        if (forumThread == null) return NotFound();
+
         
         if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
             || HttpContext.User.IsInRole("Moderator")

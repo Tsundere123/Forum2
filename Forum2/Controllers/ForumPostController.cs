@@ -32,12 +32,12 @@ public class ForumPostController : Controller
     {
         var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId);
         var currentForumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        
+        if (currentForumThread == null || forumPosts == null) return NotFound();
+        
         if (currentForumThread.IsSoftDeleted)
         {
-            if (!HttpContext.User.IsInRole("Moderator") && !HttpContext.User.IsInRole("Administrator"))
-            {
-                return NotFound();
-            }
+            if (!HttpContext.User.IsInRole("Moderator") && !HttpContext.User.IsInRole("Administrator")) return NotFound();
         }
         
         var forumPostsCount = forumPosts.Count();
@@ -62,7 +62,8 @@ public class ForumPostController : Controller
     public async Task<IActionResult> CreateNewForumPost(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
-        if (forumThread.IsLocked) return BadRequest();
+
+        if (forumThread == null || forumThread.IsLocked) return BadRequest();
         
         var forumPost = new ForumPost();
         forumPost.ThreadId = forumThread.Id;
@@ -79,7 +80,8 @@ public class ForumPostController : Controller
     public async Task<IActionResult> CreateNewForumPost(int forumThreadId, ForumPost forumPost)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
-        if (forumThread.IsLocked) return BadRequest();
+        
+        if (forumThread == null || forumThread.IsLocked) return BadRequest();
         
         ForumPost addPost = new ForumPost();
         addPost.Content = forumPost.Content;
@@ -102,7 +104,7 @@ public class ForumPostController : Controller
     public async Task<IActionResult> UpdateForumPostContent(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
-        if (forumPost.Thread.IsLocked) return BadRequest();
+        if (forumPost == null || forumPost.Thread.IsLocked) return BadRequest();
         
         if (_userManager.GetUserAsync(User).Result.Id == forumPost.CreatorId
             || HttpContext.User.IsInRole("Moderator") 
@@ -119,7 +121,7 @@ public class ForumPostController : Controller
     [Route("/ForumPost/Update/{forumPostId}")]
     public async Task<IActionResult> UpdateForumPostContent(int forumPostId, ForumPost forumPost)
     {
-        if (forumPost.Thread.IsLocked) return BadRequest();
+        if (forumPost == null || forumPost.Thread.IsLocked) return BadRequest();
         
         if (_userManager.GetUserAsync(User).Result.Id == forumPost.CreatorId
             || HttpContext.User.IsInRole("Moderator") 
@@ -144,6 +146,8 @@ public class ForumPostController : Controller
     public async Task<IActionResult> DeleteSelectedForumPost(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
+        if (forumPost == null) return NotFound();
+        
         if (_userManager.GetUserAsync(User).Result.Id == forumPost.CreatorId
             || HttpContext.User.IsInRole("Moderator")
             || HttpContext.User.IsInRole("Administrator"))
@@ -162,6 +166,7 @@ public class ForumPostController : Controller
     {
         //Needed for RedirectToAction
         var forumThreadId = _forumPostRepository.GetForumPostById(forumPostId).Result.ThreadId;
+        if (forumThreadId == 0) return BadRequest();
         await _forumPostRepository.DeleteForumPost(forumPostId);
         return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
     }
@@ -171,6 +176,7 @@ public class ForumPostController : Controller
     public async Task<IActionResult> SoftDeleteSelectedForumPostContent(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
+        if (forumPost == null) return BadRequest();
         if (_userManager.GetUserAsync(User).Result.Id == forumPost.CreatorId
             || HttpContext.User.IsInRole("Moderator") 
             || HttpContext.User.IsInRole("Administrator"))
