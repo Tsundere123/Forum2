@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
 
 @model HomeViewModel
 
@@ -9,18 +10,20 @@
 }
 
 @* Hero Section based on https://getbootstrap.com/docs/5.1/examples/heroes/ *@
-<div class="my-3 py-3 my-md-5 py-md-5">
-    <h1 class="display-5 fw-bold">Forum2</h1>
-    <div class="col-lg-6">
-        <p class="lead mb-4">
-            Join Forum2 today and become part of our community! Share your thoughts and experiences with others, solve
-            challenges, and make new connections. Don't miss out on the opportunity to make your voice heard. Sign up 
-            now and start exploring
-        </p>
+@if (!SignInManager.IsSignedIn(User)) {
+    <div class="my-3 py-3 my-md-5 py-md-5">
+        <h1 class="display-5 fw-bold">Forum2</h1>
+        <div class="col-lg-6">
+            <p class="lead mb-4">
+                Join Forum2 today and become part of our community! Share your thoughts and experiences with others, solve
+                challenges, and make new connections. Don't miss out on the opportunity to make your voice heard. Sign up 
+                now and start exploring
+            </p>
+        </div>
+        <a class="btn btn-primary btn-lg" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="btn btn-outline-dark btn-lg" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </div>
-    <a class="btn btn-primary btn-lg" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    <a class="btn btn-outline-dark btn-lg" asp-area="Identity" asp-page="/Account/Login">Login</a>
-</div>
+}
 
 @* Threads Slider *@
 @if (Model.ForumThreads is {Count: > 0 })
