@@ -3,9 +3,6 @@
     ViewData["Title"] = "Edit Post";
 }
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
-
 <h1 class="h2 fw-normal">Edit Post</h1>
 
 <form asp-controller="ForumPost" asp-action="UpdateForumPostContent">
@@ -23,6 +20,10 @@
     </div>
 </form>
 
-<script>
-const easyMDE = new EasyMDE({element: document.getElementById('editForumPost')});
-</script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_EditorScriptsPartial" />
+    <script>
+        const easyMDE = new EasyMDE({element: document.getElementById('editForumPost')});
+    </script>
+}

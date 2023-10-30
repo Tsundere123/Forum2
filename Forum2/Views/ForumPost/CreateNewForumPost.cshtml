@@ -3,9 +3,6 @@
     ViewData["Title"] = "New Post";
 }
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
-
 <form asp-controller="ForumPost" asp-action="CreateNewForumPost" asp-route-forumThreadId="@Model.ForumThread.Id.ToString()">
     <input type="hidden" asp-for="ForumPost.ThreadId">
     <div class="form-group">
@@ -21,5 +18,5 @@
 </form>
 
 <script>
-const easyMDE = new EasyMDE({element: document.getElementById('inputNewPostContent')});
+        const easyMDE = new EasyMDE({element: document.getElementById('inputNewPostContent')});
 </script>

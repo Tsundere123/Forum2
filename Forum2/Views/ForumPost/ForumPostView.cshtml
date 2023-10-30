@@ -149,24 +149,26 @@
 @if (SignInManager.IsSignedIn(User) && !Model.CurrentForumThread.IsLocked)
 {
     <div id="createNewForumPost"></div>
-
-    <script src="~/lib/easymde/easymde.min.js"></script>
-    <script>
-        $("#cancelButton").click($("createNewForumPost").empty);
-        
-        $(document).ready(function () {
-            $("#createNewForumPostButton").click(function () {
-                // Make an Ajax call to render the partial view.
-                $.ajax({
-                    url: "/ForumPost/Create/@Model.CurrentForumThread.Id.ToString()",
-                    success: function (html) {
-                        // Update the page with the HTML of the partial view.
-                        $("#createNewForumPost").html(html);
-                    }
-                });
-                document.getElementById('createNewForumPostButton').hidden = true;
-            });
-        });
-    </script>
     
+    @section Scripts {
+        <partial name="_EditorScriptsPartial" />
+        
+            <script>
+                $("#cancelButton").click($("createNewForumPost").empty);
+                
+                $(document).ready(function () {
+                    $("#createNewForumPostButton").click(function () {
+                        // Make an Ajax call to render the partial view.
+                        $.ajax({
+                            url: "/ForumPost/Create/@Model.CurrentForumThread.Id.ToString()",
+                            success: function (html) {
+                                // Update the page with the HTML of the partial view.
+                                $("#createNewForumPost").html(html);
+                            }
+                        });
+                        document.getElementById('createNewForumPostButton').hidden = true;
+                    });
+                });
+            </script>
+    }
 }
