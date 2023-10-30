@@ -206,12 +206,24 @@ public class InitDb
                 CategoryId = 2,
                 Title = "poipoipoi"
             };
+            
+            var rules = new ForumThread()
+            {
+                Id = 6,
+                CreatorId = "9c46cebe-38d8-471c-ab0a-a1df156965d8",
+                CreatedAt = DateTime.Now,
+                CategoryId = 2,
+                Title = "Rules",
+                IsPinned = true,
+                IsLocked = true
+            };
 
             forumDbContext.ForumThread.Add(first);
             forumDbContext.ForumThread.Add(missileKnows);
             forumDbContext.ForumThread.Add(yamato);
             forumDbContext.ForumThread.Add(poi);
             forumDbContext.ForumThread.Add(poidachi);
+            forumDbContext.ForumThread.Add(rules);
 
             forumDbContext.SaveChanges();
         }
@@ -292,6 +304,7 @@ public class InitDb
                 CreatedAt = DateTime.Now,
                 IsSoftDeleted = true
             };
+            
             //Thread 5
             var post9 = new ForumPost()
             {
@@ -299,6 +312,16 @@ public class InitDb
                 Id = 9,
                 Content = "Poi~",
                 CreatorId = "ed8baa38-e5ee-4b93-8c50-0ecfe2726c2f",
+                CreatedAt = DateTime.Now,
+            };
+            
+            //Thread Rules
+            var rules = new ForumPost()
+            {
+                ThreadId = 6,
+                Id = 10,
+                Content = "Rules: Donacdum",
+                CreatorId = "9c46cebe-38d8-471c-ab0a-a1df156965d8",
                 CreatedAt = DateTime.Now,
             };
             
@@ -311,6 +334,7 @@ public class InitDb
             forumDbContext.ForumPost.Add(post7);
             forumDbContext.ForumPost.Add(post8);
             forumDbContext.ForumPost.Add(post9);
+            forumDbContext.ForumPost.Add(rules);
 
             forumDbContext.SaveChanges();
         }
