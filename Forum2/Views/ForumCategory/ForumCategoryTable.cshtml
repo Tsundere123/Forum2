@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
-@model ForumCategoryViewModel
+@model IEnumerable<ForumCategory>
 @{
     ViewData["Title"] = "Categories";
 }
@@ -8,7 +8,7 @@
 <h1 class="h2 fw-normal">Categories</h1>
 
 <ul class="list-group list-group-flush">
-    @foreach (var category in Model.ForumCategories)
+    @foreach (var category in Model)
     {
         var lastThread = category.Threads?.LastOrDefault(t => t.IsSoftDeleted == false);
         <li class="list-group-item px-0">

@@ -24,7 +24,7 @@ public class AdminControllerTests
         
         mockRoleManager.Setup(x => x.CreateAsync(It.IsAny<ApplicationRole>()))
             .ReturnsAsync(IdentityResult.Success);
-        var controller = new AdminController(mockRoleManager.Object, null, null);
+        var controller = new AdminController(mockRoleManager.Object, null, null,null,null);
         
         
         // Act
@@ -47,7 +47,7 @@ public class AdminControllerTests
         
         mockRoleManager.Setup(x => x.CreateAsync(It.IsAny<ApplicationRole>()))
             .ReturnsAsync(IdentityResult.Failed());
-        var controller = new AdminController(mockRoleManager.Object, null, null);
+        var controller = new AdminController(mockRoleManager.Object, null, null, null, null);
         
         // Act
         var result = await controller.NewRole(newRole);
