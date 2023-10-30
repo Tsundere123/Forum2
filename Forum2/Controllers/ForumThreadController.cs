@@ -114,10 +114,16 @@ public class ForumThreadController : Controller
             CategoryId = model.ForumCategory.Id
         };
 
-        await _forumThreadRepository.CreateNewForumThread(addThread);
-        var forumThreadId = addThread.Id;
-        CreateNewForumPost(forumThreadId, model.ForumPost);
-        return RedirectToAction("ForumPostView", "ForumPost", new {forumThreadId});
+        var result = await _forumThreadRepository.CreateNewForumThread(addThread);
+
+        if (result)
+        {
+            var forumThreadId = addThread.Id;
+            CreateNewForumPost(forumThreadId, model.ForumPost);
+            return RedirectToAction("ForumPostView", "ForumPost", new {forumThreadId});
+        }
+
+        return StatusCode(500);
     }
     
     [Authorize]
@@ -174,10 +180,16 @@ public class ForumThreadController : Controller
         forumThreadExists.Title = forumThread.Title;
         forumThreadExists.EditedAt = DateTime.Now;
         forumThreadExists.EditedBy = _userManager.GetUserAsync(User).Result.Id;
-        await _forumThreadRepository.UpdateForumThread(forumThreadExists);
-        //Needed for RedirectToAction
-        var forumCategoryId = forumThread.CategoryId;
-        return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread", new { forumCategoryId });
+        
+        var result = await _forumThreadRepository.UpdateForumThread(forumThreadExists);
+        if (result)
+        {
+            //Needed for RedirectToAction
+            var forumCategoryId = forumThread.CategoryId;
+            return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread", new { forumCategoryId });
+        }
+
+        return StatusCode(500);
     }
     
     [Authorize]
@@ -207,8 +219,10 @@ public class ForumThreadController : Controller
         if (forumThread == null) return BadRequest();
         
         var forumCategoryId = forumThread.CategoryId;
-        await _forumThreadRepository.DeleteForumThread(forumThreadId);
-        return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
+        
+        var result = await _forumThreadRepository.DeleteForumThread(forumThreadId);
+        if (result) return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
+        return StatusCode(500);
     }
 
     [Authorize]
@@ -226,13 +240,17 @@ public class ForumThreadController : Controller
             && !HttpContext.User.IsInRole("Administrator")) return Forbid();
         
         if (forumThread == null) return NotFound();
+        
         forumThread.IsSoftDeleted = true;
-        await UpdateForumThreadTitle(forumThread);
+        var result = await _forumThreadRepository.UpdateForumThread(forumThread);
+        if (!result) return StatusCode(500);
             
         //Soft deletes all forum posts as well
         foreach (var forumPost in forumPosts)
         {
             forumPost.IsSoftDeleted = true;
+            
+            // Not checking if soft deleting post is successful. Just continue to next post.
             await _forumPostRepository.UpdateForumPost(forumPost);
         }
         //Needed for RedirectToAction
@@ -249,7 +267,6 @@ public class ForumThreadController : Controller
         if (forumThread == null) return NotFound();
 
         return View(forumThread);
-
     }
     
     [Authorize(Roles = "Administrator")]
@@ -258,23 +275,26 @@ public class ForumThreadController : Controller
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
         if (forumThread == null) return NotFound();
+        
         forumThread.IsSoftDeleted = false;
-        await UpdateForumThreadTitle(forumThread);
+        var result = await _forumThreadRepository.UpdateForumThread(forumThread);
+        if (!result) return StatusCode(500);
         
         //Un soft deletes all forum posts as well
         var forumPosts = _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId).Result;
         if (forumPosts != null)
+        {
             foreach (var forumPost in forumPosts)
             {
                 forumPost.IsSoftDeleted = false;
-                await _forumPostRepository.UpdateForumPost(forumPost);
-                
-                //Needed for RedirectToAction
-                var forumCategoryId = forumThread.CategoryId;
-                return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
+                var resultPost = await _forumPostRepository.UpdateForumPost(forumPost);
+                if (!resultPost) return StatusCode(500);
             }
-
-        return BadRequest();
+        }
+        
+        //Needed for RedirectToAction
+        var forumCategoryId = forumThread.CategoryId;
+        return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
     }
     
     //
@@ -290,8 +310,9 @@ public class ForumThreadController : Controller
         
         forumThread.IsPinned = !forumThread.IsPinned;
         
-        await _forumThreadRepository.UpdateForumThread(forumThread);
-        return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
+        var result = await _forumThreadRepository.UpdateForumThread(forumThread);
+        if (result) return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
+        return StatusCode(500);
     }
     
     //
@@ -307,8 +328,9 @@ public class ForumThreadController : Controller
         
         forumThread.IsLocked = !forumThread.IsLocked;
 
-        await _forumThreadRepository.UpdateForumThread(forumThread);
-        return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
+        var result = await _forumThreadRepository.UpdateForumThread(forumThread);
+        if (result) return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
+        return StatusCode(500);
     }
     
 }

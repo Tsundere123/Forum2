@@ -57,9 +57,9 @@
                                             </span>
                                             @if (User.IsInRole("Moderator") || User.IsInRole("Administrator") || currentUser.Id == poster.Id || currentUser.Id == Model.User.Id)
                                             {
-                                                <span>
-                                                    <a class="text-danger" asp-controller="Profile" asp-action="DeleteWallPost" asp-route-displayName="@Model.User.DisplayName" asp-route-id="@post.Id.ToString()">Delete</a>
-                                                </span>
+                                                <form class="d-inline" asp-controller="Profile" asp-action="DeleteWallPost" asp-route-displayName="@Model.User.DisplayName" asp-route-id="@post.Id.ToString()" method="post">
+                                                    <button type="submit" class="delete-wallpost text-danger text-decoration-underline">Delete</button>
+                                                </form>
                                             }
                                         }
                                     </div>
@@ -89,9 +89,9 @@
                                                         </span>
                                                         @if (SignInManager.IsSignedIn(User) && (User.IsInRole("Moderator") || User.IsInRole("Administrator") || currentUser.Id == replier.Id || currentUser.Id == Model.User.Id))
                                                         {
-                                                            <span>
-                                                                <a class="text-danger" asp-controller="Profile" asp-action="DeleteWallPostReply" asp-route-displayName="@Model.User.DisplayName" asp-route-id="@reply.Id.ToString()">Delete</a>
-                                                            </span>
+                                                            <form class="d-inline" asp-controller="Profile" asp-action="DeleteWallPostReply" asp-route-displayName="@Model.User.DisplayName" asp-route-id="@reply.Id.ToString()" method="post">
+                                                                <button type="submit" class="delete-wallpost text-danger text-decoration-underline">Delete</button>
+                                                            </form>
                                                         }
                                                     </div>
                                                 </div>

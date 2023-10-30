@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ILogger = Castle.Core.Logging.ILogger;
 
 namespace Forum2.Controllers;
 
@@ -16,15 +17,18 @@ public class AdminController : Controller
     private readonly IForumCategoryRepository _forumCategoryRepository;
     private readonly IForumThreadRepository _forumThreadRepository;
     private readonly IForumPostRepository _forumPostRepository;
+    private readonly ILogger<AdminController> _logger;
     
     public AdminController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, 
-        IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository, IForumPostRepository forumPostRepository)
+        IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository, 
+        IForumPostRepository forumPostRepository, ILogger<AdminController> logger)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _forumCategoryRepository = forumCategoryRepository;
         _forumThreadRepository = forumThreadRepository;
         _forumPostRepository = forumPostRepository;
+        _logger = logger;
     }
     
     //
@@ -76,7 +80,8 @@ public class AdminController : Controller
             return RedirectToAction(nameof(Roles));
         }
         
-        return BadRequest();
+        _logger.LogError("[AdminController] Unknown error creating role: {R})", role.Name);
+        return StatusCode(500);
     }
 
     [HttpGet]
@@ -118,8 +123,9 @@ public class AdminController : Controller
         { 
             return RedirectToAction(nameof(Roles));
         }
-
-        return BadRequest();
+        
+        _logger.LogError("[AdminController] Unknown error updating role: {R})", role.Name);
+        return StatusCode(500);
     }
 
     [HttpGet]
@@ -146,6 +152,9 @@ public class AdminController : Controller
             { 
                 return RedirectToAction(nameof(Roles));
             }
+            
+            _logger.LogError("[AdminController] Unknown error deleting role: {R})", role.Name);
+            return StatusCode(500);
         }
 
         return BadRequest();
@@ -240,10 +249,7 @@ public class AdminController : Controller
     public async Task<IActionResult> Categories()
     {
         var categories = await _forumCategoryRepository.GetAll();
-        if (categories == null)
-        {
-            return NotFound();
-        }
+        if (categories == null) return NotFound();
         return View(categories);
     }
     
@@ -263,7 +269,7 @@ public class AdminController : Controller
         var result = await _forumCategoryRepository.CreateForumCategory(category);
         if (result) return RedirectToAction(nameof(Categories));
         
-        return BadRequest();
+        return StatusCode(500);
     }
 
     [HttpGet]
@@ -271,10 +277,7 @@ public class AdminController : Controller
     public async Task<IActionResult> EditCategory(int id)
     {
         var category = await _forumCategoryRepository.GetForumCategoryById(id);
-        if (category == null)
-        {
-            return NotFound();
-        }
+        if (category == null) return NotFound();
         return View(category);
     }
 
@@ -288,7 +291,7 @@ public class AdminController : Controller
         var result = await _forumCategoryRepository.UpdateForumCategory(category);
         if (result) return RedirectToAction(nameof(Categories));
 
-        return BadRequest();
+        return StatusCode(500);
     }
 
     [HttpGet]
@@ -310,8 +313,7 @@ public class AdminController : Controller
             
         var result = await _forumCategoryRepository.DeleteForumCategory(categoryToDelete);
         if (result) return RedirectToAction(nameof(Categories));
-        
-        return BadRequest();
+        return StatusCode(500);
     }
     
     [HttpGet]
