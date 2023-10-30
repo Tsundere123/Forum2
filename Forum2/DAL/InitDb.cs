@@ -1,8 +1,8 @@
-﻿using System.Security.Claims;
+﻿using Forum2.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Forum2.Models;
+
+namespace Forum2.DAL;
 
 public class InitDb
 {

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Forum2.Models;
+﻿using Forum2.Models;
 
 namespace Forum2.DAL;
 

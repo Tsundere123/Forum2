@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Forum2.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Forum2.Models;
+namespace Forum2.DAL;
 
 public class ForumDbContext : DbContext
 {

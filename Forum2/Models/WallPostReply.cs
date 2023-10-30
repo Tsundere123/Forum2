@@ -22,5 +22,5 @@ public class WallPostReply
     public int WallPostId { get; set; }
     
     //Navigational property
-    public virtual WallPost WallPost { get; set; }
+    public virtual WallPost WallPost { get; set; } = default!;
 }

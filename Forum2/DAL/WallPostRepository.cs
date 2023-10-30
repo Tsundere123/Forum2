@@ -82,8 +82,8 @@ public class WallPostRepository : IWallPostRepository
         List<WallPost> returnList = new List<WallPost>();
         try
         {
-            var list = _db.WallPost.ToListAsync();
-            foreach (var wallPost in list.Result)
+            var list = await _db.WallPost.ToListAsync();
+            foreach (var wallPost in list)
             {
                 if (wallPost.AuthorId == wallPostCreatorId)
                 {

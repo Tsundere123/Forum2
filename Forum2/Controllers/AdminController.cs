@@ -318,15 +318,9 @@ public class AdminController : Controller
     [Route("/ForumThread/Admin/Threads")]
     public async Task<IActionResult> ViewAllSoftDeletedThreads()
     {
-        List<ForumThread> allSoftDeletedThreads = new List<ForumThread>();
-        var allThreads = _forumThreadRepository.GetAll();
-        foreach (var thread in allThreads.Result)
-        {
-            if (thread.IsSoftDeleted)
-            {
-                allSoftDeletedThreads.Add(thread);
-            }
-        }
+        var allThreads = await _forumThreadRepository.GetAll();
+        if (allThreads == null) return View(new List<ForumThread>());
+        var allSoftDeletedThreads = allThreads.Where(thread => thread.IsSoftDeleted).ToList();
 
         return View(allSoftDeletedThreads);
     }
@@ -335,15 +329,9 @@ public class AdminController : Controller
     [Route("/ForumThread/Admin/Posts")]
     public async Task<IActionResult> ViewAllSoftDeletedPosts()
     {
-        List<ForumPost> allSoftDeletedPosts = new List<ForumPost>();
-        var allPosts = _forumPostRepository.GetAll();
-        foreach (var post in allPosts.Result)
-        {
-            if (post.IsSoftDeleted)
-            {
-                allSoftDeletedPosts.Add(post);
-            }
-        }
+        var allPosts = await _forumPostRepository.GetAll();
+        if (allPosts == null) return View(new List<ForumPost>());
+        var allSoftDeletedPosts = allPosts.Where(post => post.IsSoftDeleted).ToList();
 
         return View(allSoftDeletedPosts);
     }

@@ -3,8 +3,8 @@
 @model ForumThread
 @{
     var creator = UserManager.FindByIdAsync(Model.CreatorId).Result;
-    var lastUndeletedPost = Model.Posts.LastOrDefault(p => p.IsSoftDeleted == false);
-    var lastPostForced = Model.Posts.LastOrDefault();
+    var lastUndeletedPost = Model.Posts!.LastOrDefault(p => p.IsSoftDeleted == false);
+    var lastPostForced = Model.Posts!.LastOrDefault();
 }
 
 <li class="list-group-item px-0">
@@ -57,7 +57,6 @@
         <div class="col-md-3">
             @if (Model.Posts is { Count: > 0} && lastUndeletedPost is null)
             {
-                var poster = UserManager.FindByIdAsync(lastPostForced.CreatorId).Result;
                 <div class="d-flex align-items-center gap-2" style="font-size: 12px;">
                     <div class="bg-dark text-light rounded d-flex justify-content-center align-items-center" style="width: 32px; height: 32px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">

@@ -4,31 +4,36 @@
     Layout = "_AdminLayout";
 }
 
-<form asp-controller="Admin" asp-action="EditUser">
-    <h3>User Details</h3>
-    <div class="form-group mb-2">
-        <label asp-for="User.DisplayName">Username</label><span class="text-danger">*</span>
-        <input asp-for="User.DisplayName" class="form-control" required="required"/>
-        <span asp-validation-for="User.DisplayName" class="invalid-feedback"></span>
-    </div>
-    <div class="form-group mb-2">
-        <label asp-for="User.Avatar"></label><span class="text-danger">*</span>
-        <input asp-for="User.Avatar" class="form-control" required="required"/>
-        <span asp-validation-for="User.Avatar" class="invalid-feedback"></span>
-    </div>
+@{
+    if (Model.Roles != null || Model.User != null)
+    {
+        <form asp-controller="Admin" asp-action="EditUser">
+            <h3>User Details</h3>
+            <div class="form-group mb-2">
+                <label asp-for="User!.DisplayName">Username</label><span class="text-danger">*</span>
+                <input asp-for="User!.DisplayName" class="form-control" required="required"/>
+                <span asp-validation-for="User!.DisplayName" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="User!.Avatar"></label><span class="text-danger">*</span>
+                <input asp-for="User!.Avatar" class="form-control" required="required"/>
+                <span asp-validation-for="User!.Avatar" class="invalid-feedback"></span>
+            </div>
 
-    <h3>Roles</h3>
-    <div class="form-group mb-2">
-        <select class="form-select" name="UserRoles" multiple>
-            @foreach (var role in Model.Roles)
-            {
-                <option value="@role.Name" selected="@(Model.UserRoles.Contains(role.Name))">@role.Name</option>
-            }
-        </select>
-    </div>
+            <h3>Roles</h3>
+            <div class="form-group mb-2">
+                <select class="form-select" name="UserRoles" multiple>
+                    @foreach (var role in Model.Roles!)
+                    {
+                        <option value="@role.Name" selected="@(Model.UserRoles!.Contains(role.Name))">@role.Name</option>
+                    }
+                </select>
+            </div>
     
-    <div>
-        <button type="submit" class="btn btn-sm btn-success">Edit</button>
-        <a asp-controller="Admin" asp-action="Users" class="btn btn-sm btn-danger">Back</a>
-    </div>
-</form>
+            <div>
+                <button type="submit" class="btn btn-sm btn-success">Edit</button>
+                <a asp-controller="Admin" asp-action="Users" class="btn btn-sm btn-danger">Back</a>
+            </div>
+        </form>
+    }
+}
