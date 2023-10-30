@@ -3,9 +3,6 @@
     ViewData["Title"] = "New Thread";
 }
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
-
 <h1 class="h2 fw-normal">New thread in @Model.ForumCategory.Name</h1>
 <form asp-controller="ForumThread" asp-action="CreateNewForumThread">
     <input type="hidden" asp-for="ForumCategory.Id">
@@ -30,6 +27,7 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <partial name="_EditorScriptsPartial" />
     <script>
         const easyMDE = new EasyMDE({element: document.getElementById('inputNewPostContent')});
     </script>
