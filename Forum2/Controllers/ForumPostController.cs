@@ -83,31 +83,39 @@ public class ForumPostController : Controller
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
         
         if (forumThread == null || forumThread.IsLocked) return BadRequest();
-        
-        var addPost = new ForumPost
-        {
-            Content = forumPost.Content,
-            ThreadId = forumPost.ThreadId,
-            CreatedAt = DateTime.UtcNow,
-            CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id
-        };
-        
-        var result = await _forumPostRepository.CreateNewForumPost(addPost);
 
-        if (result)
+        // If post has no content, redirect to thread.
+        if (forumPost.Content.IsNullOrEmpty())
         {
-            // Get last page
-            var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId);
-            if (forumPosts != null)
-            {
-                var forumPostsCount = forumPosts.Count();
-                var totalPages = (int)Math.Ceiling((double)forumPostsCount / PageSize);
-        
-                return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId, page = totalPages});
-            }
-            return NotFound();
+            return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
         }
+        else
+        {
+            var addPost = new ForumPost
+            {
+                Content = forumPost.Content,
+                ThreadId = forumPost.ThreadId,
+                CreatedAt = DateTime.UtcNow,
+                CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id
+            };
+        
+            var result = await _forumPostRepository.CreateNewForumPost(addPost);
 
+            if (result)
+            {
+                // Get last page
+                var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId);
+                if (forumPosts != null)
+                {
+                    var forumPostsCount = forumPosts.Count();
+                    var totalPages = (int)Math.Ceiling((double)forumPostsCount / PageSize);
+        
+                    return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId, page = totalPages});
+                }
+                return NotFound();
+            }
+        }
+        
         return StatusCode(500);
     }
 
