@@ -8,6 +8,21 @@
     var latestMembers = UserManager.Users.OrderByDescending(u => u.CreatedAt).Take(5);
 }
 
+@* Hero Section based on https://getbootstrap.com/docs/5.1/examples/heroes/ *@
+<div class="my-3 py-3 my-md-5 py-md-5">
+    <h1 class="display-5 fw-bold">Forum2</h1>
+    <div class="col-lg-6">
+        <p class="lead mb-4">
+            Join Forum2 today and become part of our community! Share your thoughts and experiences with others, solve
+            challenges, and make new connections. Don't miss out on the opportunity to make your voice heard. Sign up 
+            now and start exploring
+        </p>
+    </div>
+    <a class="btn btn-primary btn-lg" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    <a class="btn btn-outline-dark btn-lg" asp-area="Identity" asp-page="/Account/Login">Login</a>
+</div>
+
+@* Threads Slider *@
 @if (Model.ForumThreads is {Count: > 0 })
 {
     <h2 class="h2 fw-normal">Latest Threads</h2>
@@ -43,6 +58,7 @@
     </div>
 }
 
+@* Posts Slider *@
 @if (Model.ForumPosts is {Count: > 0 })
 {
     <h2 class="h2 fw-normal">Latest Posts</h2>
@@ -78,6 +94,7 @@
     </div>
 }
 
+@* Users Slider *@
 @if (UserManager.Users.Any())
 {
     <h2 class="h2 fw-normal">Latest Members</h2>
@@ -121,84 +138,40 @@ else
 
 <script src="~/lib/tiny-slider/tiny-slider.js"></script>
 <script type="text/javascript">
-    // Latest Threads slider
-    const slider_threads = tns({
-        container: '#latest_threads',
-        prevButton: '#lt_prev',
-        nextButton: '#lt_next',
-        slideBy: 'page',
-        autoplay: false,
-        controls: true,
-        controlsPosition: 'bottom',
-        nav: true,
-        navPosition: 'bottom',
-        mouseDrag: true,
-        loop: false,
-        items: 1,
-        edgePadding: 10,
-        gutter: 10,
-        responsive: {
-            768: {
-                edgePadding: 20,
-                items: 2
-            },
-            992: {
-                items: 3
+    function slider(container, prev, next) {
+        return tns({
+            container: container,
+            prevButton: prev,
+            nextButton: next,
+            slideBy: 'page',
+            autoplay: false,
+            controls: true,
+            controlsPosition: 'bottom',
+            nav: true,
+            navPosition: 'bottom',
+            mouseDrag: true,
+            loop: false,
+            items: 1,
+            edgePadding: 10,
+            gutter: 10,
+            responsive: {
+                768: {
+                    edgePadding: 20,
+                    items: 2
+                },
+                992: {
+                    items: 3
+                }
             }
-        }
-    });
+        });
+    }
+    
+    // Latest Threads slider
+    const slider_threads = slider('#latest_threads', '#lt_prev', '#lt_next');
     
     // Latest Posts slider
-    const slider_posts = tns({
-        container: '#latest_posts',
-        prevButton: '#lp_prev',
-        nextButton: '#lp_next',
-        slideBy: 'page',
-        autoplay: false,
-        controls: true,
-        controlsPosition: 'bottom',
-        nav: true,
-        navPosition: 'bottom',
-        mouseDrag: true,
-        loop: false,
-        items: 1,
-        edgePadding: 10,
-        gutter: 10,
-        responsive: {
-            768: {
-                edgePadding: 20,
-                items: 2
-            },
-            992: {
-                items: 3
-            }
-        }
-    });
+    const slider_posts = slider('#latest_posts', '#lp_prev', '#lp_next');
     
     // Latest Member slider
-    const slider_members = tns({
-        container: '#new_members',
-        prevButton: '#lm_prev',
-        nextButton: '#lm_next',
-        slideBy: 'page',
-        autoplay: false,
-        controls: true,
-        controlsPosition: 'bottom',
-        nav: true,
-        navPosition: 'bottom',
-        mouseDrag: true,
-        loop: false,
-        items: 1,
-        edgePadding: 10,
-        gutter: 10,
-        responsive: {
-            768: {
-                edgePadding: 20,
-                items: 2
-            },
-            992: {
-                items: 3
-            }
-        }
-    });
+    const slider_members = slider('#new_members', '#lm_prev', '#lm_next');
 </script>
