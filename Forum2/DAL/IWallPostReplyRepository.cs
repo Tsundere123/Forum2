@@ -8,5 +8,5 @@ public interface IWallPostReplyRepository
     
     Task<bool> Create(WallPostReply wallPostReply);
     Task<bool> Delete(int wallPostReplyId);
-    Task<IEnumerable<WallPostReply>> GetAllByCreator(string wallPostCreatorId);
+    Task<IEnumerable<WallPostReply>?> GetAllByCreator(string wallPostCreatorId);
 }

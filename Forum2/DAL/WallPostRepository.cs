@@ -77,7 +77,7 @@ public class WallPostRepository : IWallPostRepository
         }
     }
 
-    public async Task<IEnumerable<WallPost>> GetAllByCreator(string wallPostCreatorId)
+    public async Task<IEnumerable<WallPost>?> GetAllByCreator(string wallPostCreatorId)
     {
         List<WallPost> returnList = new List<WallPost>();
         try

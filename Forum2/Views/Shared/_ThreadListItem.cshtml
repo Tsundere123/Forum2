@@ -51,7 +51,7 @@
         </div>
         <div class="col-md-2">
             <div style="font-size: 14px;">
-                <span class="fw-bold">@Model.Posts.Count.ToString()</span> Posts
+                <span class="fw-bold">@Model.Posts?.Count.ToString()</span> Posts
             </div>
         </div>
         <div class="col-md-3">
@@ -69,7 +69,7 @@
                             Post deleted
                         </div>
                         <div>
-                            @lastPostForced.CreatedAt.ToString("g");
+                            @lastPostForced?.CreatedAt.ToString("g");
                         </div>
                     </div>
                 </div>
