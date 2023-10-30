@@ -48,3 +48,14 @@ body {
 .tns-nav > .tns-nav-active {
     background: #212529;
 }
+
+/* Wallpost */
+.delete-wallpost {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}

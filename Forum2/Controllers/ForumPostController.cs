@@ -74,6 +74,7 @@ public class ForumPostController : Controller
         };
         return PartialView(viewModel);
     }
+    
     [Authorize]
     [HttpPost]
     [Route("/ForumPost/Create/{forumThreadId}")]
@@ -82,27 +83,40 @@ public class ForumPostController : Controller
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
         
         if (forumThread == null || forumThread.IsLocked) return BadRequest();
-        
-        var addPost = new ForumPost
-        {
-            Content = forumPost.Content,
-            ThreadId = forumPost.ThreadId,
-            CreatedAt = DateTime.UtcNow,
-            CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id
-        };
-        await _forumPostRepository.CreateNewForumPost(addPost);
-        
-        // Get last page
-        var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId);
-        if (forumPosts != null)
-        {
-            var forumPostsCount = forumPosts.Count();
-            var totalPages = (int)Math.Ceiling((double)forumPostsCount / PageSize);
-        
-            return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId, page = totalPages});
-        }
 
-        return NotFound();
+        // If post has no content, redirect to thread.
+        if (forumPost.Content.IsNullOrEmpty())
+        {
+            return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
+        }
+        else
+        {
+            var addPost = new ForumPost
+            {
+                Content = forumPost.Content,
+                ThreadId = forumPost.ThreadId,
+                CreatedAt = DateTime.UtcNow,
+                CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id
+            };
+        
+            var result = await _forumPostRepository.CreateNewForumPost(addPost);
+
+            if (result)
+            {
+                // Get last page
+                var forumPosts = await _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId);
+                if (forumPosts != null)
+                {
+                    var forumPostsCount = forumPosts.Count();
+                    var totalPages = (int)Math.Ceiling((double)forumPostsCount / PageSize);
+        
+                    return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId, page = totalPages});
+                }
+                return NotFound();
+            }
+        }
+        
+        return StatusCode(500);
     }
 
     [Authorize]
@@ -142,11 +156,17 @@ public class ForumPostController : Controller
             }
             forumPost.EditedAt = DateTime.Now;
             forumPost.EditedBy = _userManager.GetUserAsync(User).Result.Id;
-            await _forumPostRepository.UpdateForumPost(forumPost);
             
-            //Needed for RedirectToAction
-            var forumThreadId = forumPost.ThreadId;
-            return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
+            var result = await _forumPostRepository.UpdateForumPost(forumPost);
+
+            if (result)
+            {
+                //Needed for RedirectToAction
+                var forumThreadId = forumPost.ThreadId;
+                return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
+            }
+
+            return StatusCode(500);
         }
         return Forbid();
     }
@@ -178,8 +198,12 @@ public class ForumPostController : Controller
         if (forumPost != null)
         {
             var forumThreadId = forumPost.ThreadId;
-            await _forumPostRepository.DeleteForumPost(forumPostId);
-            return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
+            
+            var result = await _forumPostRepository.DeleteForumPost(forumPostId);
+
+            if (result) return RedirectToAction("ForumPostView", "ForumPost",new {forumThreadId});
+
+            return StatusCode(500);
         }
 
         return BadRequest();

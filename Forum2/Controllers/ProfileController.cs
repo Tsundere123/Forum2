@@ -107,7 +107,7 @@ public class ProfileController : Controller
         };
         
         var result = await _forumWallPostRepository.Create(wallPost);
-        if (!result) return BadRequest();
+        if (!result) return StatusCode(500);
         
         return RedirectToAction("Index", new {displayName});
     }
@@ -166,13 +166,13 @@ public class ProfileController : Controller
         };
         
         var result = await _forumWallPostReplyRepository.Create(wallPostReply);
-        if (!result) return BadRequest();
+        if (!result) return StatusCode(500);
         
         return RedirectToAction("Index", new {displayName});
     }
 
-    // GET delete wall post
-    [HttpGet]
+    // POST delete wall post
+    [HttpPost]
     [Authorize]
     [Route("/Profile/{displayName}/Delete/{id}")]
     [Authorize]
@@ -193,11 +193,11 @@ public class ProfileController : Controller
             return RedirectToAction("Index", new {displayName});
         }
 
-        return BadRequest();
+        return StatusCode(500);
     }
 
-    // GET delete wall post reply
-    [HttpGet]
+    // POST delete wall post reply
+    [HttpPost]
     [Authorize]
     [Route("/Profile/{displayName}/DeleteReply/{id}")]
     [Authorize]
@@ -218,7 +218,7 @@ public class ProfileController : Controller
             return RedirectToAction("Index", new {displayName});
         }
         
-        return BadRequest();
+        return StatusCode(500);
     }
     
     //

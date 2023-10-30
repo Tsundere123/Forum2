@@ -11,6 +11,7 @@ public class ForumCategoryController : Controller
     {
         _forumCategoryRepository = forumCategoryRepository;
     }
+    
     [Route("/Category")]
     public async Task<IActionResult> ForumCategoryTable()
     {

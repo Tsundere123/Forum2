@@ -1,0 +1,13 @@
+﻿@page
+@{
+    Layout = "_Layout";
+    ViewData["title"] = "Internal Server Error";
+}
+
+<div class="alert alert-danger">
+    <h4 class="alert-heading">@ViewData["Title"]</h4>
+    <p class="pb-0 mb-0">
+        An unexpected error occurred while processing your request. The error has been logged, but may be temporary. You
+        can try again later.
+    </p>
+</div>
