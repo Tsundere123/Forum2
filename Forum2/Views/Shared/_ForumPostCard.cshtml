@@ -13,10 +13,10 @@
 else
 {
     <div class="row mb-4">
-        <div class="col-md-3 mb-2 mb-md-0">
+        <div class="col-lg-3 mb-2 mb-lg-0">
             <partial name="_Profile" model="UserManager.FindByIdAsync(Model.CreatorId).Result"/>
         </div>
-        <div class="col-md-9">
+        <div class="col-lg-9">
             <div class="card h-100">
                 @if (Model.IsSoftDeleted)
                 {
