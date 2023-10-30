@@ -101,14 +101,18 @@ public class AdminController : Controller
         if (!ModelState.IsValid) return View(role);
 
         var roleToUpdate = await _roleManager.FindByIdAsync(id);
-        var roleWithName = await _roleManager.FindByNameAsync(role.Name);
-        
-        if (roleWithName != null && roleWithName.Id != roleToUpdate.Id)
+
+        if (role.Name != null)
         {
-            ModelState.AddModelError("Name", "Role already exists with that name");
-            return View(role);
-        }
+            var roleWithName = await _roleManager.FindByNameAsync(role.Name);
         
+            if (roleWithName != null && roleWithName.Id != roleToUpdate.Id)
+            {
+                ModelState.AddModelError("Name", "Role already exists with that name");
+                return View(role);
+            }
+        }
+
         if (!roleToUpdate.IsFixed)
         { 
             roleToUpdate.Name = role.Name; 
@@ -122,8 +126,6 @@ public class AdminController : Controller
         { 
             return RedirectToAction(nameof(Roles));
         }
-        
-        Console.Write(result.Errors);
         
         _logger.LogError("[AdminController] Unknown error updating role: {R})", role.Name);
         return StatusCode(500);
