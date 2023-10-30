@@ -118,10 +118,10 @@ namespace Forum2.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 // Check if DisplayName is already taken
-                var displayNameTaken = _userManager.Users.Any(u => u.DisplayName == Input.DisplayName);
+                var displayNameTaken = _userManager.Users.Any(u => u.DisplayName.ToUpper() == Input.DisplayName.ToUpper());
                 if (displayNameTaken)
                 {
-                    ModelState.AddModelError(string.Empty, "The name is already in use.");
+                    ModelState.AddModelError(string.Empty, "The username is already in use.");
                     return Page();
                 }
                 
