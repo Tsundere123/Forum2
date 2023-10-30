@@ -13,11 +13,13 @@ public class RoleController : Controller
         _roleManager = roleManager;
     }
 
+    [HttpGet]
     public IActionResult List()
     {
         return View();
     }
     
+    [HttpGet]
     [Route("Role/Members/{roleName}")]
     public IActionResult Members(string roleName)
     {

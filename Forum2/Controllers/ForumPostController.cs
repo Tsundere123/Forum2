@@ -22,6 +22,10 @@ public class ForumPostController : Controller
     }
 
     private const int PageSize = 10;
+    
+    //
+    // View Posts
+    //
 
     [HttpGet]
     [Route("/ForumPost/{forumThreadId}/{page?}")]
@@ -37,12 +41,14 @@ public class ForumPostController : Controller
             if (!HttpContext.User.IsInRole("Moderator") && !HttpContext.User.IsInRole("Administrator")) return NotFound();
         }
 
+        // Prepare pagination
         var postList = forumPosts.ToList();
         var forumPostsCount = postList.Count;
         var totalPages = (int)Math.Ceiling((double)forumPostsCount / PageSize);
         var currentPage = page ?? 1;
         
         forumPosts = postList.Skip((currentPage - 1) * PageSize).Take(PageSize);
+        
         var forumPostViewModel = new ForumPostViewModel
         {
             CurrentForumThread = currentForumThread,
@@ -54,8 +60,12 @@ public class ForumPostController : Controller
         return View(forumPostViewModel);
     }
     
-    [Authorize]
+    //
+    // Create Post
+    //
+    
     [HttpGet]
+    [Authorize]
     [Route("/ForumPost/Create/{forumThreadId}")]
     public async Task<IActionResult> CreateNewForumPost(int forumThreadId)
     {
@@ -67,16 +77,18 @@ public class ForumPostController : Controller
         {
             ThreadId = forumThread.Id
         };
+        
         var viewModel = new ForumPostCreationViewModel
         {
             ForumThread = forumThread,
             ForumPost = forumPost
         };
+        
         return PartialView(viewModel);
     }
     
-    [Authorize]
     [HttpPost]
+    [Authorize]
     [Route("/ForumPost/Create/{forumThreadId}")]
     public async Task<IActionResult> CreateNewForumPost(int forumThreadId, ForumPost forumPost)
     {
@@ -118,9 +130,13 @@ public class ForumPostController : Controller
         
         return StatusCode(500);
     }
-
-    [Authorize]
+    
+    //
+    // Update Post
+    //
+    
     [HttpGet]
+    [Authorize]
     [Route("/ForumPost/Update/{forumPostId}")]
     public async Task<IActionResult> UpdateForumPostContent(int forumPostId)
     {
@@ -137,8 +153,8 @@ public class ForumPostController : Controller
         return Forbid();
     }
     
-    [Authorize]
     [HttpPost]
+    [Authorize]
     [Route("/ForumPost/Update/{forumPostId}")]
     public async Task<IActionResult> UpdateForumPostContent(int forumPostId, ForumPost forumPost)
     {
@@ -171,8 +187,12 @@ public class ForumPostController : Controller
         return Forbid();
     }
     
-    [Authorize]
+    //
+    // Delete Post
+    //
+    
     [HttpGet]
+    [Authorize]
     [Route("/ForumPost/Delete/{forumPostId}")]
     public async Task<IActionResult> DeleteSelectedForumPost(int forumPostId)
     {
@@ -188,9 +208,8 @@ public class ForumPostController : Controller
         return Forbid();
     }
     
-    
-    [Authorize(Roles = "Administrator,Moderator")]
     [HttpPost]
+    [Authorize(Roles = "Administrator,Moderator")]
     public async Task<IActionResult> PermaDeleteSelectedForumPostConfirmed(int forumPostId)
     {
         //Needed for RedirectToAction
@@ -209,8 +228,8 @@ public class ForumPostController : Controller
         return BadRequest();
     }
     
-    [Authorize]
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> SoftDeleteSelectedForumPostContent(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
@@ -228,8 +247,8 @@ public class ForumPostController : Controller
         return Forbid();
     }
     
-    [Authorize(Roles = "Administrator")]
     [HttpGet]
+    [Authorize(Roles = "Administrator")]
     [Route("/ForumPost/Undelete/{forumPostId}")]
     public async Task<IActionResult> UnDeleteSelectedForumPost(int forumPostId)
     {
@@ -239,8 +258,8 @@ public class ForumPostController : Controller
         return View(forumPost);
     }
     
-    [Authorize(Roles="Administrator")]
     [HttpPost]
+    [Authorize(Roles="Administrator")]
     public async Task<IActionResult> UnSoftDeleteSelectedForumPostContent(int forumPostId)
     {
         var forumPost = await _forumPostRepository.GetForumPostById(forumPostId);
