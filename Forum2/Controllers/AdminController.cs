@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ILogger = Castle.Core.Logging.ILogger;
-
 namespace Forum2.Controllers;
 
 [Authorize(Roles = "Administrator")]
@@ -101,15 +99,16 @@ public class AdminController : Controller
     public async Task<IActionResult> EditRole(string id, ApplicationRole role)
     {
         if (!ModelState.IsValid) return View(role);
+
+        var roleToUpdate = await _roleManager.FindByIdAsync(id);
+        var roleWithName = await _roleManager.FindByNameAsync(role.Name);
         
-        var roleNameInUse = await _roleManager.RoleExistsAsync(role.Name);
-        if (roleNameInUse)
+        if (roleWithName != null && roleWithName.Id != roleToUpdate.Id)
         {
             ModelState.AddModelError("Name", "Role already exists with that name");
             return View(role);
         }
-
-        var roleToUpdate = await _roleManager.FindByIdAsync(id);
+        
         if (!roleToUpdate.IsFixed)
         { 
             roleToUpdate.Name = role.Name; 
@@ -123,6 +122,8 @@ public class AdminController : Controller
         { 
             return RedirectToAction(nameof(Roles));
         }
+        
+        Console.Write(result.Errors);
         
         _logger.LogError("[AdminController] Unknown error updating role: {R})", role.Name);
         return StatusCode(500);
