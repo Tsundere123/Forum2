@@ -34,10 +34,20 @@
                 </div>
                 <div class="col-md-2">
                     <div style="font-size: 14px;">
-                        <span class="fw-bold">@category.Threads!.Count.ToString()</span> Threads
+                        @* Counts non soft deleted threads *@
+                        @{
+                            var list = category.Threads;
+                            if (list == null) return;
+                            var count = 0;
+                            foreach (var thread in list)
+                            {
+                                if (!thread.IsSoftDeleted) count++;
+                            }
+                        }
+                        <span class="fw-bold">@count</span> Threads
                     </div>
                     <div style="font-size: 14px;">
-                        <span class="fw-bold">@category.Threads.Sum(t => t.Posts!.Count).ToString()</span> Posts
+                        <span class="fw-bold">@category.Threads!.Sum(t => t.Posts!.Count).ToString()</span> Posts
                     </div>
                 </div>
                 <div class="col-md-3">
