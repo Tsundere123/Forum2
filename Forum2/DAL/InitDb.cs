@@ -22,7 +22,7 @@ public class InitDb
                 Id = Guid.NewGuid().ToString(), 
                 Name = "Administrator", 
                 NormalizedName = "ADMINISTRATOR", 
-                Color = "#FF0000", 
+                Color = "#dc3545", 
                 IsFixed = true
             });
             accountDbContext.Roles.Add(new ApplicationRole
@@ -30,7 +30,7 @@ public class InitDb
                 Id = Guid.NewGuid().ToString(),
                 Name = "Moderator",
                 NormalizedName = "MODERATOR",
-                Color = "#0000FF",
+                Color = "#0d6efd",
                 IsFixed = true
             });
             accountDbContext.SaveChanges();
