@@ -236,10 +236,11 @@ public class ProfileController : Controller
         if (user == null) return NotFound();
         
         var threads = await _forumThreadRepository.GetForumThreadsByAccountId(user.Id);
-        var threadsCount = (threads ?? Array.Empty<ForumThread>()).Count();
+        var orderedThreads = (threads ?? Array.Empty<ForumThread>()).OrderByDescending(x => x.CreatedAt).ToList();
+        var threadsCount = orderedThreads.Count;
         var totalPages = (int) Math.Ceiling((double) threadsCount / CountPerPage);
         var currentPage = page ?? 1;
-        var threadsToShow = (threads ?? Array.Empty<ForumThread>()).Skip((currentPage - 1) * CountPerPage).Take(CountPerPage).ToList();
+        var threadsToShow = orderedThreads.Skip((currentPage - 1) * CountPerPage).Take(CountPerPage).ToList();
         
         var model = new ProfileThreadsViewModel
         {
@@ -267,10 +268,11 @@ public class ProfileController : Controller
         if (user == null) return NotFound();
         
         var posts = await _forumPostRepository.GetAllForumPostsByAccountId(user.Id);
-        var postsCount = (posts ?? Array.Empty<ForumPost>()).Count();
+        var orderedPosts = (posts ?? Array.Empty<ForumPost>()).OrderByDescending(x => x.CreatedAt).ToList();
+        var postsCount = orderedPosts.Count;
         var totalPages = (int) Math.Ceiling((double) postsCount / CountPerPage);
         var currentPage = page ?? 1;
-        var postsToShow = (posts ?? Array.Empty<ForumPost>()).Skip((currentPage - 1) * CountPerPage).Take(CountPerPage).ToList();
+        var postsToShow = orderedPosts.Skip((currentPage - 1) * CountPerPage).Take(CountPerPage).ToList();
         
         var model = new ProfilePostsViewModel
         {
