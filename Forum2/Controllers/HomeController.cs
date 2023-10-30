@@ -19,6 +19,7 @@ public class HomeController : Controller
         _forumPostRepository = forumPostRepository;
     }
 
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         var threads = await _forumThreadRepository.GetAll();
@@ -41,6 +42,7 @@ public class HomeController : Controller
         return View(model);
     }
 
+    [HttpGet]
     public IActionResult Privacy()
     {
         return View();

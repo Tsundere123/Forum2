@@ -12,6 +12,7 @@ public class ForumCategoryController : Controller
         _forumCategoryRepository = forumCategoryRepository;
     }
     
+    [HttpGet]
     [Route("/Category")]
     public async Task<IActionResult> ForumCategoryTable()
     {
