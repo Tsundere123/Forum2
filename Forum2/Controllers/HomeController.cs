@@ -8,13 +8,11 @@ namespace Forum2.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
     private readonly IForumThreadRepository _forumThreadRepository;
     private readonly IForumPostRepository _forumPostRepository;
 
-    public HomeController(ILogger<HomeController> logger, IForumThreadRepository forumThreadRepository, IForumPostRepository forumPostRepository)
+    public HomeController(IForumThreadRepository forumThreadRepository, IForumPostRepository forumPostRepository)
     {
-        _logger = logger;
         _forumThreadRepository = forumThreadRepository;
         _forumPostRepository = forumPostRepository;
     }
