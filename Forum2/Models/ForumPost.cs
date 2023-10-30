@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Forum2.Models;
@@ -11,7 +10,7 @@ public class ForumPost
 
     [Required]
     [ForeignKey("Id")]
-    public int ThreadId { get; set; } = default!;
+    public int ThreadId { get; set; }
     
     [Required]
     [ForeignKey("Id")]
@@ -26,10 +25,10 @@ public class ForumPost
     public DateTime EditedAt { get; set; } = DateTime.MinValue;
 
     [Required] 
-    public bool IsSoftDeleted { get; set; } = false;
+    public bool IsSoftDeleted { get; set; }
     
     public string EditedBy { get; set; } = string.Empty;
     
     // Navigation Property
-    public virtual ForumThread? Thread { get; set; }
+    public virtual ForumThread Thread { get; set; } = default!;
 }

@@ -28,7 +28,7 @@
                                     <img src="~/avatars/@Model.User.Avatar" alt="@Model.User.DisplayName" height="48" width="48" class="me-2" />
                                     <div>
                                         <div class="d-block">
-                                            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@post.Thread!.Id">
+                                            <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@post.Thread.Id">
                                                 @post.Thread.Title
                                             </a>
                                         </div>

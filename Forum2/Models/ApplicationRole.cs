@@ -5,5 +5,5 @@ namespace Forum2.Models;
 public class ApplicationRole : IdentityRole<string>
 {
     public string? Color { get; set; } = string.Empty;
-    public bool IsFixed { get; set; } = false;
+    public bool IsFixed { get; set; }
 }

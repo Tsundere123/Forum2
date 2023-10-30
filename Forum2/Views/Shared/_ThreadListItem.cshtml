@@ -3,118 +3,111 @@
 @model ForumThread
 @{
     var creator = UserManager.FindByIdAsync(Model.CreatorId).Result;
-    var lastUndeletedPost = Model.Posts.LastOrDefault(p => p.IsSoftDeleted == false);
-    var lastPostForced = Model.Posts.LastOrDefault();
+    var lastUndeletedPost = Model.Posts!.LastOrDefault(p => p.IsSoftDeleted == false);
+    var lastPostForced = Model.Posts!.LastOrDefault();
 }
 
-<div class="card">
-    <div class="card-body">
-        @{
-            if (Model.IsSoftDeleted)
-            {
-                <div class="card-header alert-danger">This thread is soft deleted 
-                    <a class="btn btn-danger" asp-controller="ForumThread" asp-action="UnDeleteSelectedForumThread" asp-route-forumThreadId="@Model.Id">Undelete</a>
-                </div>
-                
-            }
-        }
-        <li class="list-group-item px-0">
-            <div class="row">
-                <div class="col-md-7">
-                    <div class="d-flex align-items-center gap-2">
-                        <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@creator.DisplayName">
-                            <img src="~/avatars/@creator.Avatar" alt="@creator.DisplayName" width="36" height="36" class="rounded"/>
-                        </a>
-                        <div>
-                            <a class="fw-bold text-decoration-none link-dark" asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.Id.ToString()">
-                                <div class="d-flex gap-1 align-items-center">
-                                    @if (Model.IsPinned)
-                                    {
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-angle-fill text-secondary" viewBox="0 0 16 16">
-                                            <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146z"/>
-                                        </svg>
-                                    }
-                                    @if (Model.IsLocked)
-                                    {
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill text-secondary" viewBox="0 0 16 16">
-                                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
-                                        </svg>
-                                    }
-                                    <span>@Model.Title</span>
-                                </div>
-                            </a>
-                            <div style="font-size: 12px;">
-                                By
-                                <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@creator.DisplayName" class="link-dark text-decoration-none">
-                                    @creator.DisplayName
-                                </a>
-                                on @Model.CreatedAt.ToString("g")
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div style="font-size: 14px;">
-                        <span class="fw-bold">@Model.Posts.Count.ToString()</span> Posts
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    @if (Model.Posts is { Count: > 0} && lastUndeletedPost is null)
-                    {
-                        var poster = UserManager.FindByIdAsync(lastPostForced.CreatorId).Result;
-                        <div class="d-flex align-items-center gap-2" style="font-size: 12px;">
-                            <div class="bg-dark text-light rounded d-flex justify-content-center align-items-center" style="width: 32px; height: 32px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+<li class="list-group-item px-0">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="d-flex align-items-center gap-2">
+                <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@creator.DisplayName">
+                    <img src="~/avatars/@creator.Avatar" alt="@creator.DisplayName" width="36" height="36" class="rounded"/>
+                </a>
+                <div>
+                    <a class="fw-bold text-decoration-none link-dark" asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.Id.ToString()">
+                        <div class="d-flex gap-1 align-items-center">
+                            @if (Model.IsPinned)
+                            {
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-angle-fill text-secondary" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-placement="top" title="Pinned">
+                                    <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146z"/>
+                                </svg>
+                            }
+                            @if (Model.IsLocked)
+                            {
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill text-secondary" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-placement="top" title="Locked">
+                                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                                </svg>
+                            }
+                            @if (Model.IsSoftDeleted)
+                            {
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill text-danger" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-placement="top" title="Soft Deleted">
                                     <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
                                     <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
                                 </svg>
-                            </div>
-                            <div>
-                                <div>
-                                    Post deleted
-                                </div>
-                                <div>
-                                    @lastPostForced.CreatedAt.ToString("g");
-                                </div>
-                            </div>
+                            }
+                            <span>@Model.Title</span>
                         </div>
-                    }
-                    else if (lastUndeletedPost is null)
-                    {
-                        <div class="d-flex gap-2" style="font-size: 12px;">
-                            <div class="bg-dark text-light rounded d-flex justify-content-center align-items-center" style="width: 32px; height: 32px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <div>
-                                    No posts
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        var poster = UserManager.FindByIdAsync(lastUndeletedPost.CreatorId).Result;
-                        <div class="d-flex align-items-center gap-2" style="font-size: 12px;">
-                            <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@poster.DisplayName">
-                                <img src="~/avatars/@poster.Avatar" alt="@poster.DisplayName" width="32" height="32" class="rounded"/>
-                            </a>
-                            <div>
-                                <div>
-                                    <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@poster.DisplayName" class="link-dark text-decoration-none">
-                                        @poster.DisplayName
-                                    </a>
-                                </div>
-                                <div>
-                                    @lastUndeletedPost.CreatedAt.ToString("g");
-                                </div>
-                            </div>
-                        </div>
-                    }
+                    </a>
+                    <div style="font-size: 12px;">
+                        By
+                        <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@creator.DisplayName" class="link-dark text-decoration-none">
+                            @creator.DisplayName
+                        </a>
+                        on @Model.CreatedAt.ToString("g")
+                    </div>
                 </div>
             </div>
-        </li>
+        </div>
+        <div class="col-md-2">
+            <div style="font-size: 14px;">
+                <span class="fw-bold">@Model.Posts?.Count.ToString()</span> Posts
+            </div>
+        </div>
+        <div class="col-md-3">
+            @if (Model.Posts is { Count: > 0} && lastUndeletedPost is null)
+            {
+                <div class="d-flex align-items-center gap-2" style="font-size: 12px;">
+                    <div class="bg-dark text-light rounded d-flex justify-content-center align-items-center" style="width: 32px; height: 32px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+                            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
+                            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div>
+                            Post deleted
+                        </div>
+                        <div>
+                            @lastPostForced?.CreatedAt.ToString("g");
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (lastUndeletedPost is null)
+            {
+                <div class="d-flex gap-2" style="font-size: 12px;">
+                    <div class="bg-dark text-light rounded d-flex justify-content-center align-items-center" style="width: 32px; height: 32px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div>
+                            No posts
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                var poster = UserManager.FindByIdAsync(lastUndeletedPost.CreatorId).Result;
+                <div class="d-flex align-items-center gap-2" style="font-size: 12px;">
+                    <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@poster.DisplayName">
+                        <img src="~/avatars/@poster.Avatar" alt="@poster.DisplayName" width="32" height="32" class="rounded"/>
+                    </a>
+                    <div>
+                        <div>
+                            <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@poster.DisplayName" class="link-dark text-decoration-none">
+                                @poster.DisplayName
+                            </a>
+                        </div>
+                        <div>
+                            @lastUndeletedPost.CreatedAt.ToString("g");
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
-</div>
+</li>

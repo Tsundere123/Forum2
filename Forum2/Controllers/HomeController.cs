@@ -8,17 +8,16 @@ namespace Forum2.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
     private readonly IForumThreadRepository _forumThreadRepository;
     private readonly IForumPostRepository _forumPostRepository;
 
-    public HomeController(ILogger<HomeController> logger, IForumThreadRepository forumThreadRepository, IForumPostRepository forumPostRepository)
+    public HomeController(IForumThreadRepository forumThreadRepository, IForumPostRepository forumPostRepository)
     {
-        _logger = logger;
         _forumThreadRepository = forumThreadRepository;
         _forumPostRepository = forumPostRepository;
     }
 
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         var threads = await _forumThreadRepository.GetAll();
@@ -41,6 +40,7 @@ public class HomeController : Controller
         return View(model);
     }
 
+    [HttpGet]
     public IActionResult Privacy()
     {
         return View();

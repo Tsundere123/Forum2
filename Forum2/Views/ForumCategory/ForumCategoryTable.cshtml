@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
-@model ForumCategoryViewModel
+@model IEnumerable<ForumCategory>
 @{
     ViewData["Title"] = "Categories";
 }
@@ -8,7 +8,7 @@
 <h1 class="h2 fw-normal">Categories</h1>
 
 <ul class="list-group list-group-flush">
-    @foreach (var category in Model.ForumCategories)
+    @foreach (var category in Model)
     {
         var lastThread = category.Threads?.LastOrDefault(t => t.IsSoftDeleted == false);
         <li class="list-group-item px-0">
@@ -34,10 +34,20 @@
                 </div>
                 <div class="col-md-2">
                     <div style="font-size: 14px;">
-                        <span class="fw-bold">@category.Threads!.Count.ToString()</span> Threads
+                        @* Counts non soft deleted threads *@
+                        @{
+                            var list = category.Threads;
+                            if (list == null) return;
+                            var count = 0;
+                            foreach (var thread in list)
+                            {
+                                if (!thread.IsSoftDeleted) count++;
+                            }
+                        }
+                        <span class="fw-bold">@count</span> Threads
                     </div>
                     <div style="font-size: 14px;">
-                        <span class="fw-bold">@category.Threads.Sum(t => t.Posts!.Count).ToString()</span> Posts
+                        <span class="fw-bold">@category.Threads!.Sum(t => t.Posts!.Count).ToString()</span> Posts
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -58,7 +68,7 @@
                     }
                     else
                     {
-                        var lastPost = lastThread.Posts.LastOrDefault(p => p.IsSoftDeleted == false);
+                        var lastPost = lastThread.Posts!.LastOrDefault(p => p.IsSoftDeleted == false);
                         if (lastPost is null)
                         {
                             <div style="font-size: 14px;">

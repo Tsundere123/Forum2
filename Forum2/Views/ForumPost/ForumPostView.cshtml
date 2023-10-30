@@ -10,14 +10,21 @@
 <div class="d-flex gap-2 align-items-center">
     @if (Model.CurrentForumThread.IsPinned)
     {
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pin-angle-fill text-secondary" viewBox="0 0 16 16">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pin-angle-fill text-secondary" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-placement="right" title="Pinned">
             <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146z"/>
         </svg>
     }
     @if (Model.CurrentForumThread.IsLocked)
     {
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-lock-fill text-secondary" viewBox="0 0 16 16">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-lock-fill text-secondary" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-placement="right" title="Locked">
             <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+        </svg>
+    }
+    @if (Model.CurrentForumThread.IsSoftDeleted)
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-slash-fill text-danger" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-placement="right" title="Soft Deleted">
+            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
+            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
         </svg>
     }
     <h1 class="h2 fw-normal">@Model.CurrentForumThread.Title</h1>
@@ -52,9 +59,18 @@
                         Edit Thread
                     </a>
                 }
-                <a class="btn btn-sm btn-danger" asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@Model.CurrentForumThread.Id.ToString()">
-                    Delete Thread
-                </a>
+                @if (Model.CurrentForumThread.IsSoftDeleted)
+                {
+                    <a class="btn btn-sm btn-danger" asp-controller="ForumThread" asp-action="UnDeleteSelectedForumThread" asp-route-forumThreadId="@Model.CurrentForumThread.Id.ToString()">
+                        Undelete Thread
+                    </a>
+                }
+                else
+                {
+                    <a class="btn btn-sm btn-danger" asp-controller="ForumThread" asp-action="DeleteSelectedForumThread" asp-route-forumThreadId="@Model.CurrentForumThread.Id.ToString()">
+                        Delete Thread
+                    </a>
+                }
                 @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
                 {
                     var pinIcon = Model.CurrentForumThread.IsPinned ? "Unpin" : "Pin";
@@ -95,7 +111,7 @@
                         <a class="page-link">Previous</a>
                     </li>
                 }
-                @for (int i = 1; i <= Model.TotalPages; i++)
+                @for (var i = 1; i <= Model.TotalPages; i++)
                 {
                     if (i == Model.CurrentPage)
                     {
@@ -133,24 +149,26 @@
 @if (SignInManager.IsSignedIn(User) && !Model.CurrentForumThread.IsLocked)
 {
     <div id="createNewForumPost"></div>
-
-    <script src="~/lib/easymde/easymde.min.js"></script>
-    <script>
-        $("#cancelButton").click($("createNewForumPost").empty);
-        
-        $(document).ready(function () {
-            $("#createNewForumPostButton").click(function () {
-                // Make an Ajax call to render the partial view.
-                $.ajax({
-                    url: "/ForumPost/Create/@Model.CurrentForumThread.Id.ToString()",
-                    success: function (html) {
-                        // Update the page with the HTML of the partial view.
-                        $("#createNewForumPost").html(html);
-                    }
-                });
-                document.getElementById('createNewForumPostButton').hidden = true;
-            });
-        });
-    </script>
     
+    @section Scripts {
+        <partial name="_EditorScriptsPartial" />
+        
+            <script>
+                $("#cancelButton").click($("createNewForumPost").empty);
+                
+                $(document).ready(function () {
+                    $("#createNewForumPostButton").click(function () {
+                        // Make an Ajax call to render the partial view.
+                        $.ajax({
+                            url: "/ForumPost/Create/@Model.CurrentForumThread.Id.ToString()",
+                            success: function (html) {
+                                // Update the page with the HTML of the partial view.
+                                $("#createNewForumPost").html(html);
+                            }
+                        });
+                        document.getElementById('createNewForumPostButton').hidden = true;
+                    });
+                });
+            </script>
+    }
 }

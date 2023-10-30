@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Forum2.Models;
+﻿using Forum2.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum2.DAL;
@@ -65,13 +64,13 @@ public class WallPostReplyRepository : IWallPostReplyRepository
         }
     }
 
-    public async Task<IEnumerable<WallPostReply>> GetAllByCreator(string wallPostCreatorId)
+    public async Task<IEnumerable<WallPostReply>?> GetAllByCreator(string wallPostCreatorId)
     {
         List<WallPostReply> returnList = new List<WallPostReply>();
         try
         {
-            var list = _db.WallPostReply.ToListAsync();
-            foreach (var wallReply in list.Result)
+            var list = await _db.WallPostReply.ToListAsync();
+            foreach (var wallReply in list)
             {
                 if (wallReply.AuthorId == wallPostCreatorId)
                 {

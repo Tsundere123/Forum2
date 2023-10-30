@@ -13,7 +13,7 @@ public class ForumThread
     
     [Required]
     [ForeignKey("ForumCategoryId")]
-    public int CategoryId { get; set; } = default!;
+    public int CategoryId { get; set; }
 
     public string CreatorId { get; set; } = string.Empty;
     
@@ -26,11 +26,11 @@ public class ForumThread
     public string EditedBy { get; set; } = string.Empty;
 
     [Required] 
-    public bool IsSoftDeleted { get; set; } = false;
+    public bool IsSoftDeleted { get; set; }
     
-    public bool IsPinned { get; set; } = false;
+    public bool IsPinned { get; set; }
     
-    public bool IsLocked { get; set; } = false;
+    public bool IsLocked { get; set; }
     
     // //Navigation Property
     public virtual ForumCategory? Category { get; set; }

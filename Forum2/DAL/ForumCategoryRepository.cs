@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Forum2.Models;
-using Forum2.ViewModels;
 
 namespace Forum2.DAL;
 

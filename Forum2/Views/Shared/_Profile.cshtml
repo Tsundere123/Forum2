@@ -11,12 +11,12 @@
 
 <div class="card">
     <div class="card-body">
-        <div class="text-center d-flex d-md-block align-items-center">
+        <div class="text-center d-flex d-lg-block align-items-center">
             <a asp-controller="Profile"
                asp-action="Index"
                asp-route-displayName="@Model.DisplayName">
-                <img class="rounded d-none d-md-block mx-auto" height="128" width="128" src="~/avatars/@Model.Avatar" alt="@Model.DisplayName"/>
-                <img class="rounded d-block d-md-none me-3" height="32" width="32" src="~/avatars/@Model.Avatar" alt="@Model.DisplayName"/>
+                <img class="rounded d-none d-lg-block mx-auto" height="128" width="128" src="~/avatars/@Model.Avatar" alt="@Model.DisplayName"/>
+                <img class="rounded d-block d-lg-none me-3" height="32" width="32" src="~/avatars/@Model.Avatar" alt="@Model.DisplayName"/>
             </a>
             <div>
                 <a asp-controller="Profile" asp-action="Index" asp-route-displayName="@Model.DisplayName" class="link-dark text-decoration-none">
@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-    <div class="card-footer py-1 py-md-2">
+    <div class="card-footer py-1 py-lg-2">
         <div class="d-flex gap-2 justify-content-md-between" style="font-size:14px;">
             <span>Joined</span>
             <span>@Model.CreatedAt.ToString("d")</span>

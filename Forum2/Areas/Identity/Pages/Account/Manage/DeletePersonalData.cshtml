@@ -8,9 +8,7 @@
 <h3 class="h3 fw-normal">@ViewData["Title"]</h3>
 
 <div class="alert alert-warning" role="alert">
-    <p>
         <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-    </p>
 </div>
 
 <div>
@@ -18,8 +16,8 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @if (Model.RequirePassword)
         {
-            <div class="form-floating">
-                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
+            <div class="form-floating mb-2">
+                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" placeholder="Password" aria-required="true" />
                 <label asp-for="Input.Password" class="form-label"></label>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>

@@ -77,13 +77,13 @@ public class WallPostRepository : IWallPostRepository
         }
     }
 
-    public async Task<IEnumerable<WallPost>> GetAllByCreator(string wallPostCreatorId)
+    public async Task<IEnumerable<WallPost>?> GetAllByCreator(string wallPostCreatorId)
     {
         List<WallPost> returnList = new List<WallPost>();
         try
         {
-            var list = _db.WallPost.ToListAsync();
-            foreach (var wallPost in list.Result)
+            var list = await _db.WallPost.ToListAsync();
+            foreach (var wallPost in list)
             {
                 if (wallPost.AuthorId == wallPostCreatorId)
                 {

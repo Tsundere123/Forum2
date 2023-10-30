@@ -13,19 +13,18 @@
 else
 {
     <div class="row mb-4">
-        <div class="col-md-3 mb-2 mb-md-0">
+        <div class="col-lg-3 mb-2 mb-lg-0">
             <partial name="_Profile" model="UserManager.FindByIdAsync(Model.CreatorId).Result"/>
         </div>
-        <div class="col-md-9">
+        <div class="col-lg-9">
             <div class="card h-100">
-                @{
-                    if (Model.IsSoftDeleted)
-                    {
-                        <div class="card-header alert-danger">This post is soft deleted 
-                            <a class="btn btn-danger" asp-controller="ForumPost"  asp-action="UnDeleteSelectedForumPost" asp-route-forumPostId="@Model.Id">Undelete</a>
-                        </div>
-
-                    }}
+                @if (Model.IsSoftDeleted)
+                {
+                    <div class="card-header alert-danger d-flex justify-content-between align-items-center">
+                        <span>This post is soft deleted.</span>
+                        <a class="btn btn-sm btn-danger" asp-controller="ForumPost" asp-action="UnDeleteSelectedForumPost" asp-route-forumPostId="@Model.Id.ToString()">Undelete</a>
+                    </div>
+                }
                 <div id="postContent_@Model.Id.ToString()" class="card-body py-2 d-flex flex-column justify-content-between">
                     <div class="post-content">
                         @Html.Raw(Markdown.Parse(Model.Content, sanitizeHtml: true))
@@ -54,18 +53,21 @@ else
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <div class="card-footer py-2 px-3">
-                        @if (!Model.Thread!.IsLocked)
+                        @if (!Model.Thread.IsLocked)
                         {
                             <button class="btn btn-sm btn-dark d-inline" id="quoteThisPost_@Model.Id.ToString()">Quote Post</button>
                         }
 
                         @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.CreatorId)
                         {
-                            @if (!Model.Thread!.IsLocked)
+                            @if (!Model.Thread.IsLocked)
                             {
                                 <a class="btn btn-sm btn-dark" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.Id.ToString()">Edit Post</a>
                             }
-                            <a class="btn btn-sm btn-danger" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.Id.ToString()">Delete Post</a>
+                            @if (!Model.IsSoftDeleted)
+                            {
+                                <a class="btn btn-sm btn-danger" asp-controller="ForumPost" asp-action="DeleteSelectedForumPost" asp-route-forumPostId="@Model.Id.ToString()">Delete Post</a>
+                            }
                         }
                     </div>
                 }
@@ -74,10 +76,10 @@ else
     </div>
 }
 
-@if (SignInManager.IsSignedIn(User) && !Model.Thread!.IsLocked)
+@if (SignInManager.IsSignedIn(User) && !Model.Thread.IsLocked)
 {
     <script>
-        //Check if create new post input box is visible, if not, enable
+        @* If input box is not visible, it will be created *@
         async function checkIfInputVisible()
         {
             if (!document.getElementById("createNewForumPost").innerHTML )
@@ -92,45 +94,23 @@ else
             }
         }
         
+        @* Quote handler *@
         async function quotePost()
         {
-            //Check if create new post input box is visible, if not, enable
             await checkIfInputVisible();
+            
             let result = "";
             
-            //Collects original data
-            let inputField = easyMDE.value();
-            let quotedPost = " @Model.Content ";
-            
-            let inputParsed = new DOMParser().parseFromString(inputField,"text/html");
-            let quoteParsed = new DOMParser().parseFromString(quotedPost,"text/html");
-        
-            inputParsed = inputParsed.documentElement.textContent;
-            quoteParsed = quoteParsed.documentElement.textContent;
-            
-            console.log(quoteParsed);
+            const inputField = handleQuoteNewPost(easyMDE.value());
+            const quotedPost = parseQuoteIn(" @Model.Content ");
            
-            // Remove newlines
-            quoteParsed = quoteParsed.replace(/\n/g, " ");
-            
-            // Remove tags
-            quoteParsed = quoteParsed.replace(/<\/?[^>]+(>|$)/g, "");
-            
-            // Add markdown blockquote 
-            quoteParsed = quoteParsed.replace(/^/gm, "> ");
-        
-            //Quote text content to be input
-            if (inputParsed.length > 0)
-            {
-                result += inputParsed + "\n";
-            }
+            result += inputField;
             result += "Originally posted by @UserManager.FindByIdAsync(Model.CreatorId).Result.DisplayName\n";
-            result += quoteParsed;
+            result += quotedPost;
         
-            //Places resulting quote into input box
             easyMDE.value(result);
             
-            //Hides button to create new post
+            @* Hides button to create new post *@
             document.getElementById('createNewForumPostButton').hidden = true;
         }
     

@@ -1,26 +1,19 @@
 ﻿@model List<ForumThread>
-
 @{
-    ViewData["Title"] = "Deleted Threads";
+    ViewData["Title"] = "Soft Deleted Threads";
+    Layout = "_AdminLayout";
 }
 
-<h1>Admin Panel</h1>
-
-
-<div>
-    <h2>Soft deleted threads</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3 mb-2 mb-md-0">
-            <partial name="_AdminNavListPartial" />
-        </div>
-        <div class="col-md-9">
-            @foreach(var thread in Model)
-            {
-                <partial  name="_ThreadListItem" model="thread"/>
-            }
-        </div>
-    </div>
-</div>
+@if (Model is {Count: < 1})
+{
+    <div class="alert alert-info">There are no soft deleted threads.</div>
+}
+else
+{
+    foreach(var thread in Model)
+    {
+        <partial  name="_ThreadListItem" model="thread"/>
+    }
+}
 
 

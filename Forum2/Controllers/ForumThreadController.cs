@@ -1,11 +1,10 @@
 ﻿using Forum2.Models;
 using Forum2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Forum2.DAL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.IdentityModel.Tokens;
 
 namespace Forum2.Controllers;
 
@@ -24,6 +23,10 @@ public class ForumThreadController : Controller
         _userManager = userManager;
         _forumPostRepository = forumPostRepository;
     }
+    
+    //
+    // View Threads
+    //
 
     [HttpGet]
     [Route("/Category/{forumCategoryId}/{page?}")]
@@ -33,6 +36,7 @@ public class ForumThreadController : Controller
         if (forumCategory == null) return NotFound();
         
         var forumThreads = await _forumThreadRepository.GetForumThreadsByCategoryId(forumCategoryId);
+        if (forumThreads == null) return NotFound();
 
         if (!User.IsInRole("Administrator"))
         {
@@ -41,23 +45,27 @@ public class ForumThreadController : Controller
         }
         
         // Pinned threads
-        var pinnedThreads = forumThreads.Where(t => t.IsPinned).ToList();
+        var threadList = forumThreads.ToList();
+        var pinnedThreads = threadList.Where(t => t.IsPinned).ToList();
         
         // Sort threads by last post
-        var sortedThreads = forumThreads
+        var sortedThreads = threadList
             .Where(t => t.IsPinned == false)
             .Select(t => new
             {
                 ForumThread = t,
-                LastPost = t.Posts.Any() ? t.Posts.Max(p => p.CreatedAt) : t.CreatedAt
+                LastPost = t.Posts!.Any() ? t.Posts!.Max(p => p.CreatedAt) : t.CreatedAt
             })
             .OrderByDescending(t => t.LastPost)
             .Select(t => t.ForumThread);
 
-        var perPage = 10;
-        var totalPages = (int)Math.Ceiling((double)sortedThreads.Count() / perPage);
+        // Prepare pagination
+        const int perPage = 10;
+        var pageList = sortedThreads.ToList();
+        var totalPages = (int)Math.Ceiling((double)pageList.Count / perPage);
         var currentPage = page ?? 1;
-        var forumThreadsOfCategory = sortedThreads.Skip((currentPage - 1) * perPage).Take(perPage).ToList();
+        
+        var forumThreadsOfCategory = pageList.Skip((currentPage - 1) * perPage).Take(perPage).ToList();
         
         var forumThreadOfCategoryViewModel = new ForumThreadOfCategoryViewModel
         {
@@ -67,11 +75,16 @@ public class ForumThreadController : Controller
             CurrentPage = currentPage,
             TotalPages = totalPages
         };
+        
         return View(forumThreadOfCategoryViewModel);
     }
-
-    [Authorize]
+    
+    //
+    // Create Thread
+    //
+    
     [HttpGet]
+    [Authorize]
     [Route("/Category/{categoryId}/NewThread")]
     public async Task<IActionResult> CreateNewForumThread(int categoryId)
     {
@@ -87,45 +100,59 @@ public class ForumThreadController : Controller
         return View(viewModel);
     }
     
-    [Authorize]
     [HttpPost]
+    [Authorize]
     [Route("/Category/{categoryId}/NewThread")]
-    public async Task<IActionResult> CreateNewForumThread(ForumThreadCreationViewModel model)
+    public async Task<IActionResult> CreateNewForumThread(int categoryId,ForumThreadCreationViewModel model)
     {
-        if (!ModelState.IsValid)  return View(model);
+        if (model.ForumThread.Title.IsNullOrEmpty())
+        {
+            ModelState.AddModelError("ForumThread.Title","Cannot have empty title");
+            return View(model);
+        }
+        if (model.ForumPost.Content.IsNullOrEmpty())
+        {
+            ModelState.AddModelError("ForumPost.Content","Cannot have empty post");
+            return View(model);
+        }
         
-        ForumThread addThread = new ForumThread();
-        addThread.Title = model.ForumThread.Title;
-        addThread.CreatedAt = DateTime.UtcNow;
-        addThread.CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
-        addThread.CategoryId = model.ForumCategory.Id;
-        
-        await _forumThreadRepository.CreateNewForumThread(addThread);
-        int forumThreadId = addThread.Id;
-        CreateNewForumPost(forumThreadId, model.ForumPost);
-        return RedirectToAction("ForumPostView", "ForumPost", new {forumThreadId});
+        var addThread = new ForumThread
+        {
+            Title = model.ForumThread.Title,
+            CreatedAt = DateTime.UtcNow,
+            CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id,
+            CategoryId = model.ForumCategory.Id
+        };
+
+        var resultThread = await _forumThreadRepository.CreateNewForumThread(addThread);
+
+        model.ForumPost.ThreadId = addThread.Id;
+        model.ForumPost.CreatorId = addThread.CreatorId;
+        model.ForumPost.CreatedAt = DateTime.UtcNow;
+        var resultPost = await _forumPostRepository.CreateNewForumPost(model.ForumPost);
+
+        if (resultThread && resultPost)
+        {
+            var forumThreadId = addThread.Id;
+            return RedirectToAction("ForumPostView", "ForumPost", new {forumThreadId});
+        }
+
+        return StatusCode(500);
     }
     
-    [Authorize]
-    [HttpPost]
-    public async void CreateNewForumPost(int threadId,ForumPost forumPost)
-    {
-        ForumPost addPost = new ForumPost();
-        addPost.CreatorId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
-        addPost.CreatedAt = DateTime.UtcNow;
-        addPost.ThreadId = threadId;
-        addPost.Content = forumPost.Content;
-        await _forumPostRepository.CreateNewForumPost(addPost);
-    }
+    //
+    // Update Thread Title
+    //
     
-    [Authorize]
     [HttpGet]
+    [Authorize]
     [Route("ForumThread/Update/{forumThreadId}")]
     public async Task<IActionResult> UpdateForumThreadTitle(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
         if (forumThread == null || forumThread.IsLocked) return NotFound();
         
+        // Authenticate (Creator, Moderator, Administrator)
         if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
             || HttpContext.User.IsInRole("Moderator") 
             || HttpContext.User.IsInRole("Administrator"))
@@ -134,132 +161,154 @@ public class ForumThreadController : Controller
         }
         return Forbid();
     }
-
-    [Authorize]
+    
     [HttpPost]
+    [Authorize]
     [Route("ForumThread/Update/{forumThreadId}")]
     public async Task<IActionResult> UpdateForumThreadTitle(ForumThread forumThread)
     {
         var forumThreadExists = await _forumThreadRepository.GetForumThreadById(forumThread.Id);
         if (forumThreadExists == null || forumThreadExists.IsLocked) return NotFound();
+
+        // Authenticate (Creator, Moderator, Administrator)
+        if (_userManager.GetUserAsync(User).Result.Id != forumThread.CreatorId
+            && !HttpContext.User.IsInRole("Moderator")
+            && !HttpContext.User.IsInRole("Administrator")) return Forbid();
         
-        if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
-            || HttpContext.User.IsInRole("Moderator")
-            || HttpContext.User.IsInRole("Administrator"))
+        if (forumThread.Title.IsNullOrEmpty())
         {
-            if (!ModelState.IsValid) return View(forumThread);
-            
-            forumThread.EditedAt = DateTime.Now;
-            forumThread.EditedBy = _userManager.GetUserAsync(User).Result.Id;
-            await _forumThreadRepository.UpdateForumThread(forumThread);
-            //Needed for RedirectToAction
+            ModelState.AddModelError("Title","Title cannot be empty");
+            return View(forumThread);
+        }
+
+        forumThreadExists.Title = forumThread.Title;
+        forumThreadExists.EditedAt = DateTime.Now;
+        forumThreadExists.EditedBy = _userManager.GetUserAsync(User).Result.Id;
+        
+        var result = await _forumThreadRepository.UpdateForumThread(forumThreadExists);
+        if (result)
+        {
+            // Needed for RedirectToAction
             var forumCategoryId = forumThread.CategoryId;
             return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread", new { forumCategoryId });
         }
-        return Forbid();
+
+        return StatusCode(500);
     }
     
-    [Authorize]
+    //
+    // Delete Thread
+    //
+    
     [HttpGet]
+    [Authorize]
     [Route("ForumThread/Delete/{forumThreadId}")]
     public async Task<IActionResult> DeleteSelectedForumThread(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
         if (forumThread == null) return NotFound();
-
         
+        // Authenticate (Creator, Moderator, Administrator)
         if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
             || HttpContext.User.IsInRole("Moderator")
             || HttpContext.User.IsInRole("Administrator"))
         {
-            if (forumThread == null) return NotFound();
             return View(forumThread);
         }
         return Forbid();
     }
     
-    [Authorize(Roles = "Administrator,Moderator")]
     [HttpPost]
+    [Authorize(Roles = "Administrator,Moderator")]
     public async Task<IActionResult> PermaDeleteSelectedForumThreadConfirmed(int forumThreadId)
     {
         //Needed for RedirectToAction
-        var forumCategoryId = _forumThreadRepository.GetForumThreadById(forumThreadId).Result.CategoryId;
-        if (forumCategoryId == null) return NotFound();
+        var forumThread = _forumThreadRepository.GetForumThreadById(forumThreadId).Result;
+        if (forumThread == null) return BadRequest();
         
-        await _forumThreadRepository.DeleteForumThread(forumThreadId);
-        return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
-    }
-
-    [Authorize]
-    [HttpPost]
-    public async Task<IActionResult> SoftDeleteSelectedForumThreadConfirmed(int forumThreadId)
-    {
-        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
-        if (_userManager.GetUserAsync(User).Result.Id == forumThread.CreatorId
-            || HttpContext.User.IsInRole("Moderator")
-            || HttpContext.User.IsInRole("Administrator"))
-        {
-            //Needed for RedirectToAction
-            var forumCategoryId = forumThread.CategoryId;
+        var forumCategoryId = forumThread.CategoryId;
         
-            if (forumThread == null) return NotFound();
-
-            forumThread.IsSoftDeleted = true;
-            await UpdateForumThreadTitle(forumThread);
-            
-            //Soft deletes all forumposts as well
-            foreach (var forumPost in _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId).Result)
-            {
-                forumPost.IsSoftDeleted = true;
-                await _forumPostRepository.UpdateForumPost(forumPost);
-            }
-            
-            return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
-
-        }
-        return Forbid();
+        var result = await _forumThreadRepository.DeleteForumThread(forumThreadId);
+        if (result) return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
+        return StatusCode(500);
     }
     
-    [Authorize(Roles = "Administrator")]
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> SoftDeleteSelectedForumThreadConfirmed(int forumThreadId)
+    {
+        var forumPosts = _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId).Result;
+        if (forumPosts == null) return NotFound();
+        
+        var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
+        
+        // Authenticate (Creator, Moderator, Administrator)
+        if (_userManager.GetUserAsync(User).Result.Id != forumThread?.CreatorId
+            && !HttpContext.User.IsInRole("Moderator")
+            && !HttpContext.User.IsInRole("Administrator")) return Forbid();
+        
+        if (forumThread == null) return NotFound();
+        
+        forumThread.IsSoftDeleted = true;
+        var result = await _forumThreadRepository.UpdateForumThread(forumThread);
+        if (!result) return StatusCode(500);
+            
+        // Soft deletes all forum posts as well
+        foreach (var forumPost in forumPosts)
+        {
+            forumPost.IsSoftDeleted = true;
+            
+            // Not checking if soft deleting post is successful. Just continue to next post.
+            await _forumPostRepository.UpdateForumPost(forumPost);
+        }
+        // Needed for RedirectToAction
+        var forumCategoryId = forumThread.CategoryId;
+        return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
+    }
+    
     [HttpGet]
+    [Authorize(Roles = "Administrator")]
     [Route("ForumThread/Undelete/{forumThreadId}")]
     public async Task<IActionResult> UnDeleteSelectedForumThread(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
         if (forumThread == null) return NotFound();
 
-
-        if (forumThread == null) return NotFound();
         return View(forumThread);
-
     }
     
-    [Authorize(Roles = "Administrator")]
     [HttpPost]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> UnSoftDeleteSelectedForumThreadConfirmed(int forumThreadId)
     {
         var forumThread = await _forumThreadRepository.GetForumThreadById(forumThreadId);
-            //Needed for RedirectToAction
-            var forumCategoryId = forumThread.CategoryId;
+        if (forumThread == null) return NotFound();
         
-            if (forumThread == null) return NotFound();
-
-            forumThread.IsSoftDeleted = false;
-            await UpdateForumThreadTitle(forumThread);
-            
-            //Unsoft deletes all forumposts as well
-            foreach (var forumPost in _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId).Result)
+        forumThread.IsSoftDeleted = false;
+        var result = await _forumThreadRepository.UpdateForumThread(forumThread);
+        if (!result) return StatusCode(500);
+        
+        //Un soft deletes all forum posts as well
+        var forumPosts = _forumPostRepository.GetAllForumPostsByThreadId(forumThreadId).Result;
+        if (forumPosts != null)
+        {
+            foreach (var forumPost in forumPosts)
             {
                 forumPost.IsSoftDeleted = false;
-                await _forumPostRepository.UpdateForumPost(forumPost);
+                var resultPost = await _forumPostRepository.UpdateForumPost(forumPost);
+                if (!resultPost) return StatusCode(500);
             }
-            
-            return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
+        }
+        
+        //Needed for RedirectToAction
+        var forumCategoryId = forumThread.CategoryId;
+        return RedirectToAction("ForumThreadOfCategoryTable", "ForumThread",new { forumCategoryId});
     }
     
     //
     // Pin Thread Toggle
     //
+    
     [HttpPost]
     [Authorize(Roles = "Administrator,Moderator")]
     [Route("/ForumThread/Pin/{forumThreadId}")]
@@ -270,13 +319,15 @@ public class ForumThreadController : Controller
         
         forumThread.IsPinned = !forumThread.IsPinned;
         
-        await _forumThreadRepository.UpdateForumThread(forumThread);
-        return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
+        var result = await _forumThreadRepository.UpdateForumThread(forumThread);
+        if (result) return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
+        return StatusCode(500);
     }
     
     //
     // Lock Thread Toggle
     //
+    
     [HttpPost]
     [Authorize(Roles = "Administrator,Moderator")]
     [Route("/ForumThread/Lock/{forumThreadId}")]
@@ -287,8 +338,9 @@ public class ForumThreadController : Controller
         
         forumThread.IsLocked = !forumThread.IsLocked;
 
-        await _forumThreadRepository.UpdateForumThread(forumThread);
-        return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
+        var result = await _forumThreadRepository.UpdateForumThread(forumThread);
+        if (result) return RedirectToAction("ForumPostView", "ForumPost", new { forumThreadId });
+        return StatusCode(500);
     }
     
 }

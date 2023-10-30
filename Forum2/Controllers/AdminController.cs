@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace Forum2.Controllers;
 
 [Authorize(Roles = "Administrator")]
@@ -16,15 +15,18 @@ public class AdminController : Controller
     private readonly IForumCategoryRepository _forumCategoryRepository;
     private readonly IForumThreadRepository _forumThreadRepository;
     private readonly IForumPostRepository _forumPostRepository;
+    private readonly ILogger<AdminController> _logger;
     
     public AdminController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, 
-        IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository, IForumPostRepository forumPostRepository)
+        IForumCategoryRepository forumCategoryRepository, IForumThreadRepository forumThreadRepository, 
+        IForumPostRepository forumPostRepository, ILogger<AdminController> logger)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _forumCategoryRepository = forumCategoryRepository;
         _forumThreadRepository = forumThreadRepository;
         _forumPostRepository = forumPostRepository;
+        _logger = logger;
     }
     
     //
@@ -76,7 +78,8 @@ public class AdminController : Controller
             return RedirectToAction(nameof(Roles));
         }
         
-        return BadRequest();
+        _logger.LogError("[AdminController] Unknown error creating role: {R})", role.Name);
+        return StatusCode(500);
     }
 
     [HttpGet]
@@ -98,6 +101,18 @@ public class AdminController : Controller
         if (!ModelState.IsValid) return View(role);
 
         var roleToUpdate = await _roleManager.FindByIdAsync(id);
+
+        if (role.Name != null)
+        {
+            var roleWithName = await _roleManager.FindByNameAsync(role.Name);
+        
+            if (roleWithName != null && roleWithName.Id != roleToUpdate.Id)
+            {
+                ModelState.AddModelError("Name", "Role already exists with that name");
+                return View(role);
+            }
+        }
+
         if (!roleToUpdate.IsFixed)
         { 
             roleToUpdate.Name = role.Name; 
@@ -111,8 +126,9 @@ public class AdminController : Controller
         { 
             return RedirectToAction(nameof(Roles));
         }
-
-        return BadRequest();
+        
+        _logger.LogError("[AdminController] Unknown error updating role: {R})", role.Name);
+        return StatusCode(500);
     }
 
     [HttpGet]
@@ -139,6 +155,9 @@ public class AdminController : Controller
             { 
                 return RedirectToAction(nameof(Roles));
             }
+            
+            _logger.LogError("[AdminController] Unknown error deleting role: {R})", role.Name);
+            return StatusCode(500);
         }
 
         return BadRequest();
@@ -233,10 +252,7 @@ public class AdminController : Controller
     public async Task<IActionResult> Categories()
     {
         var categories = await _forumCategoryRepository.GetAll();
-        if (categories == null)
-        {
-            return NotFound();
-        }
+        if (categories == null) return NotFound();
         return View(categories);
     }
     
@@ -256,7 +272,7 @@ public class AdminController : Controller
         var result = await _forumCategoryRepository.CreateForumCategory(category);
         if (result) return RedirectToAction(nameof(Categories));
         
-        return BadRequest();
+        return StatusCode(500);
     }
 
     [HttpGet]
@@ -264,10 +280,7 @@ public class AdminController : Controller
     public async Task<IActionResult> EditCategory(int id)
     {
         var category = await _forumCategoryRepository.GetForumCategoryById(id);
-        if (category == null)
-        {
-            return NotFound();
-        }
+        if (category == null) return NotFound();
         return View(category);
     }
 
@@ -281,7 +294,7 @@ public class AdminController : Controller
         var result = await _forumCategoryRepository.UpdateForumCategory(category);
         if (result) return RedirectToAction(nameof(Categories));
 
-        return BadRequest();
+        return StatusCode(500);
     }
 
     [HttpGet]
@@ -303,23 +316,16 @@ public class AdminController : Controller
             
         var result = await _forumCategoryRepository.DeleteForumCategory(categoryToDelete);
         if (result) return RedirectToAction(nameof(Categories));
-        
-        return BadRequest();
+        return StatusCode(500);
     }
     
     [HttpGet]
     [Route("/ForumThread/Admin/Threads")]
     public async Task<IActionResult> ViewAllSoftDeletedThreads()
     {
-        List<ForumThread> allSoftDeletedThreads = new List<ForumThread>();
-        var allThreads = _forumThreadRepository.GetAll();
-        foreach (var thread in allThreads.Result)
-        {
-            if (thread.IsSoftDeleted)
-            {
-                allSoftDeletedThreads.Add(thread);
-            }
-        }
+        var allThreads = await _forumThreadRepository.GetAll();
+        if (allThreads == null) return View(new List<ForumThread>());
+        var allSoftDeletedThreads = allThreads.Where(thread => thread.IsSoftDeleted).ToList();
 
         return View(allSoftDeletedThreads);
     }
@@ -328,15 +334,9 @@ public class AdminController : Controller
     [Route("/ForumThread/Admin/Posts")]
     public async Task<IActionResult> ViewAllSoftDeletedPosts()
     {
-        List<ForumPost> allSoftDeletedPosts = new List<ForumPost>();
-        var allPosts = _forumPostRepository.GetAll();
-        foreach (var post in allPosts.Result)
-        {
-            if (post.IsSoftDeleted)
-            {
-                allSoftDeletedPosts.Add(post);
-            }
-        }
+        var allPosts = await _forumPostRepository.GetAll();
+        if (allPosts == null) return View(new List<ForumPost>());
+        var allSoftDeletedPosts = allPosts.Where(post => post.IsSoftDeleted).ToList();
 
         return View(allSoftDeletedPosts);
     }

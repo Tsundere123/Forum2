@@ -15,6 +15,7 @@
         </a>
     }
 </div>
+<p class="lead">@Model.ForumCategory.Description</p>
 
 @if (Model.PinnedThreads is {Count: > 0})
 {
@@ -28,10 +29,16 @@
 }
 
 <ul class="list-group list-group-flush">
-    @foreach (var thread in Model.ForumThreads)
-    {
-        <partial name="_ThreadListItem" model="thread"/>
+    @{
+        if (Model.ForumThreads != null)
+        {
+            foreach (var thread in Model.ForumThreads)
+            {
+                <partial name="_ThreadListItem" model="thread"/>
+            }
+        }
     }
+
 </ul>
 
 @if (Model.TotalPages > 1)
