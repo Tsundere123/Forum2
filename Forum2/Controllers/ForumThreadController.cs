@@ -128,6 +128,7 @@ public class ForumThreadController : Controller
 
         model.ForumPost.ThreadId = addThread.Id;
         model.ForumPost.CreatorId = addThread.CreatorId;
+        model.ForumPost.CreatedAt = DateTime.UtcNow;
         var resultPost = await _forumPostRepository.CreateNewForumPost(model.ForumPost);
 
         if (resultThread && resultPost)
