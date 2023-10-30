@@ -107,7 +107,7 @@ namespace Forum2.Areas.Identity.Pages.Account.Manage
             // Check if DisplayName is changed and taken
             if (user.DisplayName != Input.DisplayName)
             {
-                var userWithSameDisplayName = _userManager.Users.FirstOrDefault(u => u.DisplayName == Input.DisplayName);
+                var userWithSameDisplayName = _userManager.Users.FirstOrDefault(u => u.DisplayName.ToUpper() == Input.DisplayName.ToUpper());
                 if (userWithSameDisplayName != null)
                 {
                     ModelState.AddModelError(string.Empty, "Username is already taken.");
