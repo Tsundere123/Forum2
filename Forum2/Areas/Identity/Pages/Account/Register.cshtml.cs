@@ -101,7 +101,7 @@ namespace Forum2.Areas.Identity.Pages.Account
             public string DisplayName { get; set; }
             
             [Display(Name = "Avatar")]
-            public IFormFile AvatarUrl { get; set; }
+            public IFormFile Avatar { get; set; }
         }
 
 
@@ -129,10 +129,10 @@ namespace Forum2.Areas.Identity.Pages.Account
                 var user = CreateUser();
                 
                 // Set avatar
-                if (Input.AvatarUrl.Length > 0)
+                if (Input.Avatar is { Length: > 0 })
                 {
                     // Ensure avatar is an image
-                    var isImage = Input.AvatarUrl.ContentType.StartsWith("image/");
+                    var isImage = Input.Avatar.ContentType.StartsWith("image/");
                     if (!isImage)
                     {
                         ModelState.AddModelError(string.Empty, "The avatar must be an image.");
@@ -140,7 +140,7 @@ namespace Forum2.Areas.Identity.Pages.Account
                     }
                     
                     // Ensure avatar is not too large
-                    var isTooLarge = Input.AvatarUrl.Length > 1024 * 1024 * 2;
+                    var isTooLarge = Input.Avatar.Length > 1024 * 1024 * 2;
                     if (isTooLarge)
                     {
                         ModelState.AddModelError(string.Empty, "The avatar must be less than 2 MB.");
@@ -148,14 +148,14 @@ namespace Forum2.Areas.Identity.Pages.Account
                     }
                     
                     // Get file extension
-                    var extension = Input.AvatarUrl.FileName.Split('.').Last().ToLower();
+                    var extension = Input.Avatar.FileName.Split('.').Last().ToLower();
                     
                     // Save avatar to disk
                     var avatarFileName = $"{Guid.NewGuid()}.{extension}";
                     var avatarPath = $"wwwroot/avatars/{avatarFileName}";
                     await using (var stream = System.IO.File.Create(avatarPath))
                     {
-                        await Input.AvatarUrl.CopyToAsync(stream);
+                        await Input.Avatar.CopyToAsync(stream);
                     }
                     
                     user.Avatar = $"{avatarFileName}";
