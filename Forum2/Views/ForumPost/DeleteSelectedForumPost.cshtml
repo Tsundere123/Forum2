@@ -1,38 +1,36 @@
-﻿@model ForumPost
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@model ForumPost
 @{
     ViewData["Title"] = "Delete Post";
 }
 
-<h2>Permanently delete this forum post?</h2>
+<h1 class="h2 fw-normal">@ViewData["Title"]</h1>
 
 <dl class="row">
-    <dt class="col-sm-2">Post Id</dt>
-    <dd class="col-sm-10">@Model.Id</dd>
-        
-    <dt class="col-sm-2">Thread Name</dt>
-    <dd class="col-sm-10">@Model.ThreadId</dd>
-        
-    <dt class="col-sm-2">Poster ID</dt>
-    <dd class="col-sm-10">@Model.CreatorId</dd>
+    <dt class="col-sm-2">Thread</dt>
+    <dd class="col-sm-10">@Model.Thread.Title</dd>
+    
+    <dt class="col-sm-2">Created by</dt>
+    <dd class="col-sm-10">@UserManager.FindByIdAsync(Model.CreatorId).Result.DisplayName</dd>
         
     <dt class="col-sm-2">Posted at</dt>
-    <dd class="col-sm-10">@Model.CreatedAt</dd>
+    <dd class="col-sm-10">@Model.CreatedAt.ToString("g")</dd>
     
     <dt class="col-sm-2">Content</dt>
     <dd class="col-sm-10">@Model.Content</dd>
     
-    @* Hard delete only visible to Admins and Mods *@
-    @* Hard delete (Commented out, functionality shuffles posts around and can create new OP *@
-    
-    @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
+    <div class="d-flex gap-2">
+        @* Hard delete only visible to Admins and Mods *@
+        @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
         {
-            <form asp-controller="ForumPost" asp-action="PermaDeleteSelectedForumPostConfirmed" asp-route-forumPostId="@Model.Id" method="post">
-                <button type="submit" class="btn btn-danger">Permanently Delete</button>
+            <form asp-controller="ForumPost" asp-action="PermaDeleteSelectedForumPostConfirmed" asp-route-forumPostId="@Model.Id.ToString()" method="post">
+                <button type="submit" class="btn btn-sm btn-danger">Delete Permanently</button>
             </form>
-        }
-
-    <form asp-controller="ForumPost" asp-action="SoftDeleteSelectedForumPostContent" asp-route-forumPostId="@Model.Id" method="post">
-        <button type="submit" class="btn btn-danger">Soft Delete</button>
-    </form>
-    <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ThreadId" class="btn btn-secondary">Cancel</a>
+            }
+        <form asp-controller="ForumPost" asp-action="SoftDeleteSelectedForumPostContent" asp-route-forumPostId="@Model.Id.ToString()" method="post">
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+        </form>
+        <a asp-controller="ForumPost" asp-action="ForumPostView" asp-route-forumThreadId="@Model.ThreadId.ToString()" class="btn btn-sm btn-dark">Cancel</a>
+    </div>
 </dl>

@@ -96,6 +96,13 @@ public class AdminController : Controller
     public async Task<IActionResult> EditRole(string id, ApplicationRole role)
     {
         if (!ModelState.IsValid) return View(role);
+        
+        var roleNameInUse = await _roleManager.RoleExistsAsync(role.Name);
+        if (roleNameInUse)
+        {
+            ModelState.AddModelError("Name", "Role already exists with that name");
+            return View(role);
+        }
 
         var roleToUpdate = await _roleManager.FindByIdAsync(id);
         if (!roleToUpdate.IsFixed)

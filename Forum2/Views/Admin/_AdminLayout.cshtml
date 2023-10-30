@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<h1 class="h2 fw-normal">Admin Panel</h1>
+
+<div>
+    <h2 class="h3 fw-normal">@ViewData["Title"]</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <partial name="_AdminNavListPartial" />
+        </div>
+        <div class="col-md-9">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
