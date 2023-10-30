@@ -58,7 +58,7 @@
                     }
                     else
                     {
-                        var lastPost = lastThread.Posts.LastOrDefault(p => p.IsSoftDeleted == false);
+                        var lastPost = lastThread.Posts!.LastOrDefault(p => p.IsSoftDeleted == false);
                         if (lastPost is null)
                         {
                             <div style="font-size: 14px;">

@@ -1,5 +1,4 @@
-﻿using Forum2.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Forum2.DAL;
 
 namespace Forum2.Controllers;

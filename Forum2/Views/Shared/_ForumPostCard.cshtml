@@ -54,14 +54,14 @@ else
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <div class="card-footer py-2 px-3">
-                        @if (!Model.Thread!.IsLocked)
+                        @if (!Model.Thread.IsLocked)
                         {
                             <button class="btn btn-sm btn-dark d-inline" id="quoteThisPost_@Model.Id.ToString()">Quote Post</button>
                         }
 
                         @if (User.IsInRole("Administrator") || User.IsInRole("Moderator") || UserManager.GetUserAsync(User).Result.Id == Model.CreatorId)
                         {
-                            @if (!Model.Thread!.IsLocked)
+                            @if (!Model.Thread.IsLocked)
                             {
                                 <a class="btn btn-sm btn-dark" asp-controller="ForumPost" asp-action="UpdateForumPostContent" asp-route-forumPostId="@Model.Id.ToString()">Edit Post</a>
                             }
@@ -74,7 +74,7 @@ else
     </div>
 }
 
-@if (SignInManager.IsSignedIn(User) && !Model.Thread!.IsLocked)
+@if (SignInManager.IsSignedIn(User) && !Model.Thread.IsLocked)
 {
     <script>
         //Check if create new post input box is visible, if not, enable

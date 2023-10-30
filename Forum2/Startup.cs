@@ -1,4 +1,5 @@
-﻿using Forum2.Models;
+﻿using Forum2.DAL;
+using Forum2.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum2;

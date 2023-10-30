@@ -6,7 +6,7 @@ namespace Forum2.ViewModels;
 public class ProfileReplyWallPostViewModel
 {
     [ValidateNever]
-    public ApplicationUser User { get; set; }
+    public ApplicationUser User { get; set; } = default!;
     
     [ValidateNever]
     public int WallPostId { get; set; }
