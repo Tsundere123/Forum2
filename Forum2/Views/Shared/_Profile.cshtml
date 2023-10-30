@@ -11,7 +11,7 @@
 
 <div class="card">
     <div class="card-body">
-        <div class="text-center d-flex d-md-block align-items-center">
+        <div class="text-center d-flex d-lg-block align-items-center">
             <a asp-controller="Profile"
                asp-action="Index"
                asp-route-displayName="@Model.DisplayName">
@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-    <div class="card-footer py-1 py-md-2">
+    <div class="card-footer py-1 py-lg-2">
         <div class="d-flex gap-2 justify-content-md-between" style="font-size:14px;">
             <span>Joined</span>
             <span>@Model.CreatedAt.ToString("d")</span>
