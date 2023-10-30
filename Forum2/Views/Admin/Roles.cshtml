@@ -1,54 +1,47 @@
 ﻿@using Microsoft.AspNetCore.Identity
-
 @inject RoleManager<ApplicationRole> RoleManager
-
 @{
     ViewData["Title"] = "Roles";
+    Layout = "_AdminLayout";
 }
 
-<h1>Admin Panel</h1>
-
-<div>
-    <h2>Roles</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3 mb-2 mb-md-0">
-            <partial name="_AdminNavListPartial" />
-        </div>
-        <div class="col-md-9">
-            <div class="d-flex justify-content-between align-items-end mb-2">
-                <div><span class="text-danger">*</span> Role is fixed and cannot be renamed or deleted.</div>
-                <div>
-                    <a class="btn btn-success" asp-area="" asp-controller="Admin" asp-action="NewRole">Add Role</a>
-                </div>
-            </div>
-            <table class="table table-striped">
-                <tr>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        Color
-                    </th>
-                    <th>
-                        Actions
-                    </th>
-                </tr>
-                @foreach (var role in RoleManager.Roles)
-                {
-                    <tr>
-                        <td>
-                            @role.Name
-                            @if(role.IsFixed) { <span class="text-danger">*</span> }
-                        </td>
-                        <td style="background:@role.Color;color: #ffffff;">@role.Color</td>
-                        <td>
-                            <a asp-controller="Admin" asp-action="EditRole" asp-route-id="@role.Id">Edit</a>
-                            @if (!role.IsFixed) { <a asp-controller="Admin" asp-action="DeleteRole" asp-route-id="@role.Id">Delete</a> }
-                        </td>
-                    </tr>
-                }
-            </table>
-        </div>
+<div class="d-flex justify-content-between align-items-end mb-2">
+    <div><span class="text-danger">*</span> Role is fixed and cannot be renamed or deleted.</div>
+    <div>
+        <a class="btn btn-sm btn-success" asp-controller="Admin" asp-action="NewRole">Add Role</a>
     </div>
 </div>
+
+<table class="table table-striped">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Color
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+    @foreach (var role in RoleManager.Roles)
+    {
+        <tr>
+            <td>
+                @role.Name
+                @if (role.IsFixed)
+                {
+                    <span class="text-danger">*</span>
+                }
+            </td>
+            <td style="background:@role.Color;color: #ffffff;">@role.Color</td>
+            <td>
+                <a asp-controller="Admin" asp-action="EditRole" asp-route-id="@role.Id">Edit</a>
+                @if (!role.IsFixed)
+                {
+                    <a asp-controller="Admin" asp-action="DeleteRole" asp-route-id="@role.Id">Delete</a>
+                }
+            </td>
+        </tr>
+    }
+</table>

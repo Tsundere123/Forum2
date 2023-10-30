@@ -1,43 +1,33 @@
-﻿@{
+﻿@model IEnumerable<ForumCategory>
+@{
     ViewData["Title"] = "Categories";
+    Layout = "_AdminLayout";
 }
-@model IEnumerable<ForumCategory>
 
-<h1>Admin Panel</h1>
 
-<div>
-    <h2>Categories</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3 mb-2 mb-md-0">
-            <partial name="_AdminNavListPartial" />
-        </div>
-        <div class="col-md-9">
-            <div class="d-flex justify-content-end mb-2">
-                <a class="btn btn-success" asp-controller="Admin" asp-action="NewCategory">
-                    New Category
-                </a>
-            </div>
-            <table class="table table-striped">
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                </tr>
-                @foreach (var category in Model)
-                {
-                    <tr>
-                        <td>@category.Id.ToString()</td>
-                        <td>@category.Name</td>
-                        <td>@category.Description</td>
-                        <td>
-                            <a asp-controller="Admin" asp-action="EditCategory" asp-route-id="@category.Id.ToString()">Edit</a>
-                            <a asp-controller="Admin" asp-action="DeleteCategory" asp-route-id="@category.Id.ToString()">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </table>
-        </div>
-    </div>
+<div class="d-flex justify-content-end mb-2">
+    <a class="btn btn-sm btn-success" asp-controller="Admin" asp-action="NewCategory">
+        New Category
+    </a>
 </div>
+
+<table class="table table-striped">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var category in Model)
+    {
+        <tr>
+            <td>@category.Id.ToString()</td>
+            <td>@category.Name</td>
+            <td>@category.Description</td>
+            <td>
+                <a asp-controller="Admin" asp-action="EditCategory" asp-route-id="@category.Id.ToString()">Edit</a>
+                <a asp-controller="Admin" asp-action="DeleteCategory" asp-route-id="@category.Id.ToString()">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
